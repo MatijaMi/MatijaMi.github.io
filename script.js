@@ -36,8 +36,11 @@ function collectData(){
 	
 	var ifdLength = findIFDZeroLegth();
 	var ifd0Entries = [];
+	ifd0Entries.push('Model=');
 	ifd0Entries.push(findIFDZeroEntries(ifdLength, 16, 1));
+	ifd0Entries.push('Make=');
 	ifd0Entries.push(findIFDZeroEntries(ifdLength, 15, 1));
+	ifd0Entries.push('EXIF=');
 	ifd0Entries.push(findIFDZeroEntries(ifdLength, 105, 135));
 	
 	
