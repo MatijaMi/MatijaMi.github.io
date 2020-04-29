@@ -34,14 +34,17 @@ function findIFDZeroLegth(){
 
 function collectData(){
 	
-	var ifdLength = findIFDZeroLegth();
 	var ifd0Entries = [];
-	ifd0Entries.push('Model=');
-	ifd0Entries.push(findIFDZeroEntries(ifdLength, 16, 1));
-	ifd0Entries.push('Make=');
-	ifd0Entries.push(findIFDZeroEntries(ifdLength, 15, 1));
-	ifd0Entries.push('EXIF=');
-	ifd0Entries.push(findIFDZeroEntries(ifdLength, 105, 135));
+	var ifdLength = findIFDZeroLegth();
+	
+	var model = findIFDEntries(ifdLength,18, 16, 1);
+	var modelOffset =transformFourBytes.apply(null,model.slice(8,12));
+	var modelLength = transformFourBytes.apply(null, model.slice(4,8))
+	var modelName =findModelName(modelOffset, modelLength);
+	ifd0Entries.push(modelName);
+	
+	var exif = findIFDEntries(ifdLength, 105, 135);
+	
 	
 	
 	
@@ -49,12 +52,29 @@ function collectData(){
 }
 
 
-function findIFDZeroEntries(ifdLength, ID1, ID2){
+function transformFourBytes(byte1, byte2,byte3,byte4){
+	
+	return byte1+ byte2*Math.pow(2,8) + byte3*Math.pow(2,16) + byte4*Math.pow(2,24);
+	
+}
+
+function findModelName(modelOffset, modelLength){
+	var model = "";
+	for(var i =0; i< modelLength; i++){
+		model= model +String.fromCharCode(bytes[modelOffset+i]);
+	}
+	
+	return model;
+}
+
+
+
+function findIFDEntries(ifdLength, ifdOffset, ID1, ID2){
 	
 	var ifdEntry = [];
 	for(var i =0; i <ifdLength; i++){
-		var tagID1 = bytes[18+12*i];
-		var tagID2 = bytes[19+12*i]; 
+		var tagID1 = bytes[ifdOffset+12*i];
+		var tagID2 = bytes[ifdOffset+1+12*i]; 
 			
 		if(tagID1==ID1 && tagID2==ID2){
 			for(var j =0; j <12; j++){
