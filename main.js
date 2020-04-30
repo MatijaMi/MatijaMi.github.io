@@ -38,24 +38,36 @@ function collectMetaData(){
 	var fNumber = findIFDTagValue(exifOffset,157,130,false,false);
 	//var imageType = findIFDTagValue(makerNoteOffset,6,0,true,true);
 	//TODO IMPLEMENT METHODS FOR MAKERNOTE VALUES
-	
+	//MakerNotes code
 	var cameraSettingsOffset = findIFDTagValue(makerNoteOffset,1,0,false,false);
 	var cameraSettings = saveCameraSettings(cameraSettingsOffset);
 	
 	
-	
-	
 	//var sensorInfo = findIFDTagValue(makerNoteOffset,224,0,true,false); Format: N of entries then use offset
+	
+	
+	//IFD3 Code
+	
+	var ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
+	var ifdThreeLength = transformTwoBytes(bytes[ifdThreeOffset],bytes[ifdThreeOffset+1]);
+	var rawDateLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
+	
+	
+	
 	
 	ifd0Entries.push(makeName);
 	ifd0Entries.push(modelName);
 	//ifd0Entries.push(exifOffset);
 	//ifd0Entries.push(makerNoteOffset);
 	ifd0Entries.push(date);
+	ifd0Entries.push(ifdThreeOffset);
+	ifd0Entries.push(ifdThreeLength);
+	ifd0Entries.push(rawDateLength);
+	ifd0Entries.push(getAllEntries(ifdThreeOffset));
 	//ifd0Entries.push(exposureTime);
 	//ifd0Entries.push(fNumber);
-	ifd0Entries.push(imageType);
-	ifd0Entries.push(sensorInfo);
+	//ifd0Entries.push(imageType);
+	//ifd0Entries.push(sensorInfo);NEEDS TO BE PROPERLY IMPLEMENTED
 	//ifd0Entries.push(getAllEntries(ifdZeroOffset));
 	//ifd0Entries.push(getAllEntries(exifOffset));
 	//ifd0Entries.push(getAllEntries(makerNoteOffset));
