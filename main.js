@@ -25,54 +25,58 @@ function startScan() {
 
 function collectMetaData(){
 	//Variables for working with IFDZero
-	var ifd0Entries = [];
+	var ifdEntries = [];
+	var output=[];
 	var ifdZeroOffset = 16;
+	
 	var modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
 	var makeName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
 	//Code for finding the EXIF Sub-IFD
 	var exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
 	var makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
-	var date = findIFDTagValue(ifdZeroOffset,50,1,true,true);
-	//Code for getting some of the Exif tags
-	var exposureTime=findIFDTagValue(exifOffset,154,130,false,false);
-	var fNumber = findIFDTagValue(exifOffset,157,130,false,false);
-	//var imageType = findIFDTagValue(makerNoteOffset,6,0,true,true);
+	var makerNoteLength = transformTwoBytes(bytes[makerNoteOffset],bytes[makerNoteOffset+1]);
+	
 	//TODO IMPLEMENT METHODS FOR MAKERNOTE VALUES
 	//MakerNotes code
-	var cameraSettingsOffset = findIFDTagValue(makerNoteOffset,1,0,false,false);
-	var cameraSettings = saveCameraSettings(cameraSettingsOffset);
-	
-	
-	//var sensorInfo = findIFDTagValue(makerNoteOffset,224,0,true,false); Format: N of entries then use offset
-	
+	var imageType = findIFDTagValue(makerNoteOffset,16,0,false,false);
 	
 	//IFD3 Code
 	
 	var ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	var ifdThreeLength = transformTwoBytes(bytes[ifdThreeOffset],bytes[ifdThreeOffset+1]);
-	var rawDateLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
+	var rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
+	var rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
+	//TO BE SEEN
+	//var colorBalanceOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
+	
+	var slices = findIFDTagValue(ifdThreeOffset,64,198,true,false);
+	var width = slices[0]*slices[1]+slices[2];
 	
 	
 	
 	
-	ifd0Entries.push(makeName);
-	ifd0Entries.push(modelName);
-	//ifd0Entries.push(exifOffset);
-	//ifd0Entries.push(makerNoteOffset);
-	ifd0Entries.push(date);
-	ifd0Entries.push(ifdThreeOffset);
-	ifd0Entries.push(ifdThreeLength);
-	ifd0Entries.push(rawDateLength);
-	ifd0Entries.push(getAllEntries(ifdThreeOffset));
-	//ifd0Entries.push(exposureTime);
-	//ifd0Entries.push(fNumber);
-	//ifd0Entries.push(imageType);
-	//ifd0Entries.push(sensorInfo);NEEDS TO BE PROPERLY IMPLEMENTED
-	//ifd0Entries.push(getAllEntries(ifdZeroOffset));
-	//ifd0Entries.push(getAllEntries(exifOffset));
-	//ifd0Entries.push(getAllEntries(makerNoteOffset));
-	//ifd0Entries.push(getValueFromOffset(sensorInfo,34));
-	document.getElementById("ifd0").innerHTML= '<ul>' + ifd0Entries.join('<p>') + '</ul>';	
+	ifdEntries.push(makeName);
+	ifdEntries.push(modelName);
+	ifdEntries.push(imageType);
+	ifdEntries.push(ifdThreeOffset);
+	ifdEntries.push(rawLength);
+	ifdEntries.push(slices);
+	
+	
+	output.push(makeName);
+	output.push(modelName);
+	output.push(imageType);
+	output.push(ifdThreeOffset);
+	output.push(rawLength);
+	output.push(makerNoteOffset);
+	output.push(makerNoteLength);
+	//output.push(colorBalanceOffset);
+	//output.push(getValueFromOffset(colorBalanceOffset,3000));
+	output.push(slices);
+	output.push(printDHT(rawOffset));
+	
+	
+	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('<p>') + '</ul>';	
 	
 } 
 
