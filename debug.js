@@ -43,9 +43,16 @@ function printDHT(rawOffset){
 	for(var i =0; i <(length-2)/2; i++){
 		
 		huffTable1.push(bytes[rawOffset+6+i]);	
-		huffTable2.push(bytes[rawOffset+38+i]);
+		huffTable2.push(bytes[rawOffset+6+(length-2)/2+i]);
 	}
+	huffTable2.push( bytes[rawOffset+70]);
+	huffTable2.push( bytes[rawOffset+71]);
+	huffTable2.push( bytes[rawOffset+72]);
+	huffTable2.push( bytes[rawOffset+73]);
+	huffTable2.push( bytes[rawOffset+74]);
+	huffTable2.push( bytes[rawOffset+75]);
+	huffTable2.push( bytes[rawOffset+76]);
+	huffTable2.push( bytes[rawOffset+77]);
 	
-	
-	return huffTable1;
+	return huffTable1 + " " + huffTable2;
 }

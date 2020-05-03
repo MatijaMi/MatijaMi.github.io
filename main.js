@@ -73,9 +73,10 @@ function collectMetaData(){
 	//output.push(colorBalanceOffset);
 	//output.push(getValueFromOffset(colorBalanceOffset,3000));
 	output.push(slices);
+	
 	output.push(printDHT(rawOffset));
 	
-	
+	output.push(getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]));
 	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('<p>') + '</ul>';	
 	
 } 
