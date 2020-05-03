@@ -23,6 +23,7 @@ function getDecodedHTs(rawOffset, length){
 	
 	var huffmanTable1 = decodeHuffmanTree(frequencyTable1,valueTable1);
 	var huffmanTable2 = decodeHuffmanTree(frequencyTable2,valueTable1);
+	
 	return huffmanTable1;
 }
 
@@ -46,7 +47,7 @@ function decodeHuffmanTree(frequencies, values){
 	for(var i =0; i <minimumValue.length; i++){
 		if(frequencies[i]>0){
 			for(var j = 0; j< frequencies[i]; j++){
-				codes.push(j+minimumValue[i]);
+				codes.push(numberToBitString(j+minimumValue[i],16));
 			}
 		}
 		
