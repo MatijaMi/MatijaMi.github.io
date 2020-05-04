@@ -54,7 +54,8 @@ function collectMetaData(){
 	var width = slices[0]*slices[1]+slices[2];
 	
 	var hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
-	var sof3Offset = rawOffset+getDHTLength(rawOffset) +4;
+	var sof3Offset = rawOffset+getDHTLength(rawOffset) + 4;
+	var sof3Length = getSOF3Length(sof3Offset);
 	
 	metaData.set("MakerName", makerName);
 	metaData.set("modelName", modelName);
@@ -81,8 +82,13 @@ function collectMetaData(){
 		}
 	*/
 	
-	
-	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('<p>') + '</ul>';	
+	output.push(sof3Length);
+	output.push('<p>');
+	var sof3 = getSOF3Data(sof3Offset);
+	for(let[key,value] of sof3){
+		output.push(key +"---" + value);
+	}
+	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('--') + '</ul>';	
 	
 } 
 
