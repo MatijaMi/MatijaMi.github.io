@@ -47,7 +47,7 @@ function decodeHuffmanTree(frequencies, values){
 	for(var i =0; i <minimumValue.length; i++){
 		if(frequencies[i]>0){
 			for(var j = 0; j< frequencies[i]; j++){
-				codes.push(numberToBitString(j+minimumValue[i],16));
+				codes.push(numberToBitString(j+minimumValue[i],i+1));
 			}
 		}
 		
@@ -57,10 +57,7 @@ function decodeHuffmanTree(frequencies, values){
 	var huffmanTable = new Map();
 	
 	for( var i =0; i < values.length; i++){
-		
 		huffmanTable.set(codes[i],values[i]);
-		console.log(codes[i] + "----" +values[i])
-		
 	}
 	
 	return huffmanTable;

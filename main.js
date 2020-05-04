@@ -1,5 +1,6 @@
 var data = []; 
 
+//Function that gets called when the file is submitted
 function startScan() {
 
     var files = document.getElementById('fileInput').files;
@@ -11,41 +12,41 @@ function startScan() {
 	
     	var file = files[0];
 		var reader = new FileReader();
-		
+		//Once the .cr2 file has been read it gets saved as a byte array(==Uint8Array)
 	reader.onload = function(){
       	var arrayBuffer = reader.result;
 		var bits = [];
 		window.bytes = new Uint8Array(arrayBuffer);
+		//the metaData that might need to be collected
 		collectMetaData();
     };
 	
 	  reader.readAsArrayBuffer(file);
   };
 
-
+//Function to collect data from IFD#0,IFD#3, EXIF and MakerNote-SubIFD
 function collectMetaData(){
 	//Variables for working with IFDZero
 	var ifdEntries = [];
 	var output=[];
-	var ifdZeroOffset = 16;
+	//The offset to IFD#0 is always 16
+	const ifdZeroOffset = 16;
 	
-	var modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
-	var makeName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
+	const modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
+	const makeName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
 	//Code for finding the EXIF Sub-IFD
-	var exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
-	var makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
-	var makerNoteLength = transformTwoBytes(bytes[makerNoteOffset],bytes[makerNoteOffset+1]);
+	const exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
+	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
+	const makerNoteLength = transformTwoBytes(bytes[makerNoteOffset],bytes[makerNoteOffset+1]);
 	
-	//TODO IMPLEMENT METHODS FOR MAKERNOTE VALUES
+	//TODO IMPLEMENT METHODS FOR MAKERNOTE VALUES(TO BE SEEN)
 	//MakerNotes code
-	var imageType = findIFDTagValue(makerNoteOffset,16,0,false,false);
-	
+	const imageType = findIFDTagValue(makerNoteOffset,16,0,false,false);
 	//IFD3 Code
-	
-	var ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
-	var ifdThreeLength = transformTwoBytes(bytes[ifdThreeOffset],bytes[ifdThreeOffset+1]);
-	var rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
-	var rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
+	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
+	const ifdThreeLength = transformTwoBytes(bytes[ifdThreeOffset],bytes[ifdThreeOffset+1]);
+	const rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
+	const rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
 	//TO BE SEEN
 	//var colorBalanceOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
 	
@@ -62,7 +63,7 @@ function collectMetaData(){
 	ifdEntries.push(rawLength);
 	ifdEntries.push(slices);
 	
-	
+	//OUTPUT for testing and debugging 
 	output.push(makeName);
 	output.push(modelName);
 	output.push(imageType);
@@ -75,8 +76,10 @@ function collectMetaData(){
 	output.push(slices);
 	
 	output.push(printDHT(rawOffset));
-	
-	output.push(getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]));
+	var ht = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
+	for( let [key,value] of ht){
+		output.push(key +"---" + value)
+	}
 	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('<p>') + '</ul>';	
 	
 } 
