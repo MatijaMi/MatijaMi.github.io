@@ -27,13 +27,13 @@ function startScan() {
 //Function to collect data from IFD#0,IFD#3, EXIF and MakerNote-SubIFD
 function collectMetaData(){
 	//Variables for working with IFDZero
-	var ifdEntries = [];
+	var metaData = new Map();
 	var output=[];
 	//The offset to IFD#0 is always 16
 	const ifdZeroOffset = 16;
 	
 	const modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
-	const makeName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
+	const makerName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
 	//Code for finding the EXIF Sub-IFD
 	const exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
 	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
@@ -53,33 +53,35 @@ function collectMetaData(){
 	var slices = findIFDTagValue(ifdThreeOffset,64,198,true,false);
 	var width = slices[0]*slices[1]+slices[2];
 	
+	var hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
+	var sof3Offset = rawOffset+getDHTLength(rawOffset) +4;
 	
+	metaData.set("MakerName", makerName);
+	metaData.set("modelName", modelName);
+	metaData.set("ImageType", imageType);
+	metaData.set("IFD3Offset", ifdThreeOffset);
+	metaData.set("RawLength", rawLength);
+	metaData.set("Slices", slices);
+	metaData.set("HT1", hts[0]);
+	metaData.set("HT2", hts[1]);
 	
-	
-	ifdEntries.push(makeName);
-	ifdEntries.push(modelName);
-	ifdEntries.push(imageType);
-	ifdEntries.push(ifdThreeOffset);
-	ifdEntries.push(rawLength);
-	ifdEntries.push(slices);
+	for(let[key, value] of metaData){
+		output.push(key+ ":"+value);
+	}
 	
 	//OUTPUT for testing and debugging 
-	output.push(makeName);
-	output.push(modelName);
-	output.push(imageType);
-	output.push(ifdThreeOffset);
-	output.push(rawLength);
-	output.push(makerNoteOffset);
-	output.push(makerNoteLength);
+	//output.push(makerNoteOffset);
+	//output.push(makerNoteLength);
 	//output.push(colorBalanceOffset);
 	//output.push(getValueFromOffset(colorBalanceOffset,3000));
-	output.push(slices);
+	//output.push(printDHT(rawOffset));
+	/*
+		for( let [key,value] of ht){
+			output.push(key +"---" + value)
+		}
+	*/
 	
-	output.push(printDHT(rawOffset));
-	var ht = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
-	for( let [key,value] of ht){
-		output.push(key +"---" + value)
-	}
+	
 	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('<p>') + '</ul>';	
 	
 } 

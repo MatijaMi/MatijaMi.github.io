@@ -1,3 +1,7 @@
+//Functions purely for debugging and testing while working on the project
+//will probably be removed or altered after it is done
+
+
 function getAllEntries(ifdOffset){
 	var ifdLength = transformTwoBytes(bytes[ifdOffset],bytes[ifdOffset+1]);
 	var entries = [];
@@ -45,14 +49,6 @@ function printDHT(rawOffset){
 		huffTable1.push(bytes[rawOffset+6+i]);	
 		huffTable2.push(bytes[rawOffset+6+(length-2)/2+i]);
 	}
-	huffTable2.push( bytes[rawOffset+70]);
-	huffTable2.push( bytes[rawOffset+71]);
-	huffTable2.push( bytes[rawOffset+72]);
-	huffTable2.push( bytes[rawOffset+73]);
-	huffTable2.push( bytes[rawOffset+74]);
-	huffTable2.push( bytes[rawOffset+75]);
-	huffTable2.push( bytes[rawOffset+76]);
-	huffTable2.push( bytes[rawOffset+77]);
 	
 	return huffTable1 + " " + huffTable2;
 }
