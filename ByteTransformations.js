@@ -26,3 +26,10 @@ function numberToBitString(number, bitCount){
 	}
 	return bitString;
 }
+
+
+function byteToString(byte){
+	
+	return ("000000000" + byte.toString(2)).substr(-8)
+	
+}

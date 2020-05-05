@@ -80,13 +80,27 @@ function collectMetaData(){
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
 	
+	var result = decompress(metaData,imageDataOffset);
 	
-	
-	
+	output.push(result);
 	
 	for(let[key, value] of metaData){
 		output.push(key+ ":"+value);
 	}
+	output.push("<p>");
+	for(let[key, value] of sof3Data){
+		output.push(key+ ":"+value);
+	}
+	output.push("<p>");
+	output.push(result);
+	output.push("<p>");
+	var debytes =printBytesFromOffset(imageDataOffset,10);
+	for(var i =0; i < debytes.length;i++){
+		
+		output.push(byteToString(debytes[i]));
+		output.push("<p>");
+	}
+	
 	/*
 	output.push('<p>');
 	var sof3 = getSOF3Data(sof3Offset);
@@ -98,10 +112,12 @@ function collectMetaData(){
 	for(let[key,value] of sosData){
 		output.push(key +"---" + value);
 	}
-	*/
-	output.push("<p>")
-	output.push(printBytesFromOffset(imageDataOffset,30));
 	
+	output.push("<p>")
+	output.push("Start");
+	var rawBits = rawToBits(imageDataOffset);
+	output.push("End");
+	*/
 	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('') + '</ul>';	
 	
 } 

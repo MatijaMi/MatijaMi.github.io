@@ -1,0 +1,6 @@
+function decompressYYYYCC(metaData,rawOffset){
+	
+	
+	
+	
+}

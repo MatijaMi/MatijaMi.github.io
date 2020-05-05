@@ -1,0 +1,6 @@
+function decompressRGGB(metaData,rawOffset){
+	
+	
+	
+	
+}
