@@ -28,7 +28,7 @@ function getValueFromOffsetList(offset, length){
 }
 
 
-function getValueFromOffset(offset, length){
+function printBytesFromOffset(offset, length){
 	
 	var val = [];
 	for(var i =0; i<length; i++){
@@ -52,3 +52,24 @@ function printDHT(rawOffset){
 	
 	return huffTable1 + " " + huffTable2;
 }
+
+
+function printRawLength(offset){
+	var output = [];
+	var c = 0;
+	var i = 1;
+	var byte1 = bytes[offset];
+	var byte2 = bytes[offset+1];
+	console.log(byte1);
+	console.log(byte2);
+	while(!(byte1 == 255 & byte2 == 217)){
+		
+		c=c+1;
+		byte1 = bytes[offset+i];
+		byte2 = bytes[offset+i+1];
+		i=i+1;
+	}
+	return c;
+	
+}
+

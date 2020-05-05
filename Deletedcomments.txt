@@ -30,3 +30,16 @@
 	//var sensorInfo = findIFDTagValue(makerNoteOffset,224,0,true,false); Format: N of entries then use offset
 	
 	
+	
+	
+	//OUTPUT for testing and debugging 
+	//output.push(makerNoteOffset);
+	//output.push(makerNoteLength);
+	//output.push(colorBalanceOffset);
+	//output.push(getValueFromOffset(colorBalanceOffset,3000));
+	//output.push(printDHT(rawOffset));
+	/*
+		for( let [key,value] of ht){
+			output.push(key +"---" + value)
+		}
+	*/

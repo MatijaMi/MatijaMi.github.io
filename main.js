@@ -55,7 +55,15 @@ function collectMetaData(){
 	
 	var hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
 	var sof3Offset = rawOffset+getDHTLength(rawOffset) + 4;
+	var sof3Data = getSOF3Data(sof3Offset);
 	var sof3Length = getSOF3Length(sof3Offset);
+	
+	
+	var sosOffset = sof3Offset +sof3Length+2;
+	var sosData = getSOSData(sosOffset);
+	
+	
+	
 	
 	metaData.set("MakerName", makerName);
 	metaData.set("modelName", modelName);
@@ -65,30 +73,36 @@ function collectMetaData(){
 	metaData.set("Slices", slices);
 	metaData.set("HT1", hts[0]);
 	metaData.set("HT2", hts[1]);
+	metaData.set("SOF3", sof3Data);
+	metaData.set("SOS", sosData);
+	
+	
+	var sosLength = getSOSLength(sosOffset);
+	var imageDataOffset = sosOffset+sosLength+2;
+	
+	
+	
+	
 	
 	for(let[key, value] of metaData){
 		output.push(key+ ":"+value);
 	}
-	
-	//OUTPUT for testing and debugging 
-	//output.push(makerNoteOffset);
-	//output.push(makerNoteLength);
-	//output.push(colorBalanceOffset);
-	//output.push(getValueFromOffset(colorBalanceOffset,3000));
-	//output.push(printDHT(rawOffset));
 	/*
-		for( let [key,value] of ht){
-			output.push(key +"---" + value)
-		}
-	*/
-	
-	output.push(sof3Length);
 	output.push('<p>');
 	var sof3 = getSOF3Data(sof3Offset);
 	for(let[key,value] of sof3){
 		output.push(key +"---" + value);
 	}
-	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('--') + '</ul>';	
+	output.push('<p>');
+	
+	for(let[key,value] of sosData){
+		output.push(key +"---" + value);
+	}
+	*/
+	output.push("<p>")
+	output.push(printBytesFromOffset(imageDataOffset,30));
+	
+	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('') + '</ul>';	
 	
 } 
 
