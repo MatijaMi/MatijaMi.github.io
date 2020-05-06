@@ -80,14 +80,14 @@ function collectMetaData(){
 	metaData.set("SOF3", sof3Data);
 	metaData.set("SOS", sosData);
 	
-	bytes=bytes.slice(image0Offset,image0Offset+image0Length);
+	//bytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
 	
-	var result = decompress(metaData,imageDataOffset);
+	bytes=bytes.slice(imageDataOffset);
+	var result = decompress(metaData);
 	
-	output.push(result);
 	
 	for(let[key, value] of metaData){
 		output.push(key+ ":"+value);
@@ -99,14 +99,14 @@ function collectMetaData(){
 	output.push("<p>");
 	output.push(result);
 	output.push("<p>");
-	/*
-	var debytes =printBytesFromOffset(imageDataOffset,10);
+	
+	var debytes =printBytesFromOffset(0,20);
 	for(var i =0; i < debytes.length;i++){
 		
 		output.push(byteToString(debytes[i]));
 		output.push("<p>");
 	}
-	
+	/*
 	
 	output.push('<p>');
 	var sof3 = getSOF3Data(sof3Offset);
