@@ -7,18 +7,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CR2toF32</title>
         <link rel="stylesheet" href="style.css">
-        <script  src="main.js"></script>
-		<script src="ByteTransformations.js"></script>
-    	<script src="IFDFunctions.js"></script>
-		<script src="debug.js"></script>
-		<script src="MakerNoteFunctions.js"></script>
-		<script src="DHTFunctions.js"></script>
-		<script src="SOF3.js"> </script>
-		<script src="SOS.js"></script>
-		<script src="ImageDecompression.js"></script>
-		<script src="RGGB.js"></script>
-		<script src="YYCbCr.js"></script>
-		<script src="YYYYCbCr.js"></script>
+        <script src="Scripts/main.js"></script>
+		<script src="Scripts/ByteTransformations.js"></script>
+    	<script src="Scripts/IFDFunctions.js"></script>
+		<script src="Scripts/debug.js"></script>
+		<script src="Scripts/MakerNoteFunctions.js"></script>
+		<script src="Scripts/DHTFunctions.js"></script>
+		<script src="Scripts/SOF3.js"> </script>
+		<script src="Scripts/SOS.js"></script>
+		<script src="Scripts/ImageDecompression.js"></script>
+		<script src="Scripts/RGGB.js"></script>
+		<script src="Scripts/YYCbCr.js"></script>
+		<script src="Scripts/YYYYCbCr.js"></script>
+		
 		
     </head>
     
@@ -28,6 +29,14 @@
 			<output id="list"></output>
 		<output id="bits"></output>
 		<div id="ifd0"> Output:</div>
+		
+		<button onclick="download()"> Download</button>
 
+		<script>
+			function download(){
+				saveByteArray([bytes], "example.jpeg");
+			}
+		
+		</script>
     </body>
 </html>

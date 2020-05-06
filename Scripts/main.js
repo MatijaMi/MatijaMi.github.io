@@ -1,5 +1,4 @@
 var data = []; 
-
 //Function that gets called when the file is submitted
 function startScan() {
 
@@ -31,7 +30,12 @@ function collectMetaData(){
 	var output=[];
 	//The offset to IFD#0 is always 16
 	const ifdZeroOffset = 16;
+	//---------------------TEST WILL BE DELETED--------------------/////
 	
+	
+	var image0Offset = findIFDTagValue(ifdZeroOffset,17,1,false,false);
+	var image0Length = findIFDTagValue(ifdZeroOffset,23,1,false,false);
+	//--------------------------------------------------------////
 	const modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
 	const makerName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
 	//Code for finding the EXIF Sub-IFD
@@ -76,6 +80,7 @@ function collectMetaData(){
 	metaData.set("SOF3", sof3Data);
 	metaData.set("SOS", sosData);
 	
+	bytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
@@ -94,6 +99,7 @@ function collectMetaData(){
 	output.push("<p>");
 	output.push(result);
 	output.push("<p>");
+	/*
 	var debytes =printBytesFromOffset(imageDataOffset,10);
 	for(var i =0; i < debytes.length;i++){
 		
@@ -101,7 +107,7 @@ function collectMetaData(){
 		output.push("<p>");
 	}
 	
-	/*
+	
 	output.push('<p>');
 	var sof3 = getSOF3Data(sof3Offset);
 	for(let[key,value] of sof3){
@@ -121,7 +127,17 @@ function collectMetaData(){
 	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('') + '</ul>';	
 	
 } 
-
-
+function saveByteArray(data,name){
+	var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    var blob = new Blob(data, {type: "octet/stream"}),
+    url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = name;
+    a.click();
+    window.URL.revokeObjectURL(url);
+	
+}
 
 
