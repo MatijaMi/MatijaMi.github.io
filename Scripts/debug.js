@@ -34,6 +34,7 @@ function printBytesFromOffset(offset, length){
 	for(var i =0; i<length; i++){
 		
 		val.push(bytes[offset+i]);
+		console.log(bytes[offset+i]);
 	}
 	return val;
 }

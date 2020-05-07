@@ -10,6 +10,7 @@ function decompressYCC(metaData){
 	var samplePrecision = metaData.get("SOF3").get("SamplePrecision");
 	
 	
+	
 	var bits =[];
 	
 	bits.push("");
@@ -24,55 +25,114 @@ function decompressYCC(metaData){
 	}
 	bits.push(10);
 	
+	console.log(numberOfLines);
 	
 	
 	var imageSlices = new Map();
 	//for(var j =0; j< sliceDimensions[0]+1;j++){
 	for(var j =0; j< 1;j++){
 		var slice=[];
+		var res;
 		var numberOfSamples;
+		var sample =[];	
+		var prevY;
+		var prevCb=0;
+		var prevCr=0;
+		
+		
+		
 		if(j==sliceDimensions[0]+1){
 			numberOfSamples= sliceDimensions[2]/HSF;
+			console.log("NOS="+ numberOfSamples);
 		}else{
 			numberOfSamples= sliceDimensions[1]/HSF;
+			console.log("NOS="+ numberOfSamples);
 		}
-			var prevY,prevCb,prevCr;
-		//for(var i =0; i <numberOfSamples*numberOfLines;i++){
-		for(var i =0; i <1;i++){
-			var sample =[];
-			if(i==0 && j==0){
-				var firstDC = metaData.get("SOS").get("DCAC0");
+		
+		var counter = numberOfSamples*20/2;
+		console.log(counter);
+		if(j==0){
+			var i=1;
+			var firstDC = metaData.get("SOS").get("DCAC0");
 				var dcLengthHuff = bits[0].substring(0,8)+bits[0].substring(16,20);
 				var dcLength = hts[firstDC].get(dcLengthHuff);
 				var differenceCode = getDifferenceCode(bits[0].substr(dcLengthHuff.length+8,dcLength));
 				var y = Math.pow(2,samplePrecision-1) + differenceCode;
 				sample.push(y);
 				prevY=y;
-				console.log(prevY);
 				bits = adjustBits(bits,(dcLengthHuff+"00000000").length+dcLength);
-				console.log(bits);
-			}else{
-						
 				
-			}	
-			var res=  findNextValue(bits, hts[metaData.get("SOS").get("DCAC0")], prevY);
-				y= res[0];
+				res = findNextValue(bits, hts[0], prevY);
+				sample.push(res[0]);
+				prevY=res[0];
 				bits=res[1];
-			res=  findNextValue(bits, hts[metaData.get("SOS").get("DCAC1")], prevY);
+				
+			
+				res = findNextValue(bits, hts[0], prevY);
+				y = res[0];
+				prevY = res[0];
+				bits = res[1];
+			
+				res = findNextValue(bits, hts[1], prevCb);
+				prevCb = res[0];
+				sample.push(res[0]);
+				bits = res[1];
+			
+				res = findNextValue(bits, hts[1], prevCr);
+				sample.push(res[0]);
+				prevCr = res[0];
+				bits = res[1];
+			
+				slice.push(sample);
+				sample = [];
+				sample.push(y);
+				slice.push(sample);
+			
+		}else{
+			var i =0;
+		}
+		
+		while(i<counter){
+			
+			res = findNextValue(bits, hts[0], prevY);
 			sample.push(res[0]);
+			prevY=res[0];
 			bits=res[1];
-			res=  findNextValue(bits, hts[metaData.get("SOS").get("DCAC1")], prevY);
+				
+			
+			res = findNextValue(bits, hts[0], prevY);
+			y = res[0];
+			prevY = res[0];
+			bits = res[1];
+			
+			res = findNextValue(bits, hts[1], prevCb);
+			prevCb = res[0];
 			sample.push(res[0]);
-			bits=res[1];
+			bits = res[1];
+			
+			res = findNextValue(bits, hts[1], prevCr);
+			sample.push(res[0]);
+			prevCr = res[0];
+			bits = res[1];
+			
 			slice.push(sample);
-			sample=[];
+			sample = [];
 			sample.push(y);
 			slice.push(sample);
+			sample=[];
+			i++;
 		}	
 	}
 	
+	var output = [];
+	for(var i =0; i<10000;i++){
 	
-	return slice;
+		output.push("<p>" +byteToString(bytes[i]));
+		
+	}
+	
+	
+	return output;
 	
 }
 
@@ -82,18 +142,16 @@ function findNextValue(bits, huffTable, previousValue){
 	var i =0;
 	while(found==false){
 		i++;
-		console.log("CURRENT I:"+i);
-		if(typeof huffTable.get(bits[0].substring(0,i)) !== "undefined"){
-			console.log("SUCCES" + i);
+		var x =huffTable.get(bits[0].substring(0,i));
+		if(typeof x !== "undefined"){
 			found=true;
 		}
+		
 	}
 	
 	var dcLength =huffTable.get(bits[0].substring(0,i));
-	console.log("LENGTH OF CODE: "+dcLength);
 	var differenceValue= getDifferenceCode(bits[0].substring(i,dcLength+i));
-	 console.log("PREV:"+previousValue);
-	console.log("DIFFV:"+differenceValue);
+
 	output.push(previousValue+differenceValue);
 	bits=adjustBits(bits,i+dcLength);
 	output.push(bits);
@@ -109,6 +167,9 @@ function getDifferenceCode(differenceBits){
 	
 	if(differenceBits.length==0){
 		return 0;
+	}
+	if (differenceBits.length==1){
+		return parseInt(differenceBits)*2-1;
 	}
 	
 	var addition = parseInt(differenceBits.substring(1),2);
@@ -126,7 +187,7 @@ function getDifferenceCode(differenceBits){
  function adjustBits(bits, usedBits){
 	 var usedBytes;
 	 if(usedBits%8==0){
-		 usedBytes=totalBits/8;
+		 usedBytes=usedBits/8;
 	 }else{
 		 usedBytes= Math.floor(usedBits/8)+1;
 	 }
