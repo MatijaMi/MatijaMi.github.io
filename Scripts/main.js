@@ -30,12 +30,6 @@ function collectMetaData(){
 	var output=[];
 	//The offset to IFD#0 is always 16
 	const ifdZeroOffset = 16;
-	//---------------------TEST WILL BE DELETED--------------------/////
-	
-	
-	var image0Offset = findIFDTagValue(ifdZeroOffset,17,1,false,false);
-	var image0Length = findIFDTagValue(ifdZeroOffset,23,1,false,false);
-	//--------------------------------------------------------////
 	const modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
 	const makerName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
 	//Code for finding the EXIF Sub-IFD
@@ -66,9 +60,6 @@ function collectMetaData(){
 	var sosOffset = sof3Offset +sof3Length+2;
 	var sosData = getSOSData(sosOffset);
 	
-	
-	
-	
 	metaData.set("MakerName", makerName);
 	metaData.set("modelName", modelName);
 	metaData.set("ImageType", imageType);
@@ -80,8 +71,6 @@ function collectMetaData(){
 	metaData.set("SOF3", sof3Data);
 	metaData.set("SOS", sosData);
 	
-	//bytes=bytes.slice(image0Offset,image0Offset+image0Length);
-	
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
 	bytes=bytes.slice(imageDataOffset);
@@ -89,14 +78,21 @@ function collectMetaData(){
 	
 	var d = new Date();
 	console.log(d.getTime());
+	getBits();
+	
 	var b = new Date();
 	console.log(b.getTime());
 	console.log(b.getTime()-d.getTime());
-	
+	d = new Date();
+	console.log(d.getTime());
 	var result = decompress(metaData);
 	
+	bytes=result;
+	b = new Date();
+	console.log(b.getTime());
+	console.log(b.getTime()-d.getTime());
 	
-	//bytes=result;
+	//METADATA AND SOF3DATA
 	for(let[key, value] of metaData){
 		output.push(key+ ":"+value);
 	}
@@ -104,36 +100,7 @@ function collectMetaData(){
 	for(let[key, value] of sof3Data){
 		output.push(key+ ":"+value);
 	}
-
 	
-	output.push("<p>");
-	output.push(result);
-	
-	/*
-	var debytes =printBytesFromOffset(0,20);
-	for(var i =0; i < debytes.length;i++){
-		
-		output.push(byteToString(debytes[i]));
-		output.push("<p>");
-	}
-	
-	
-	output.push('<p>');
-	var sof3 = getSOF3Data(sof3Offset);
-	for(let[key,value] of sof3){
-		output.push(key +"---" + value);
-	}
-	output.push('<p>');
-	
-	for(let[key,value] of sosData){
-		output.push(key +"---" + value);
-	}
-	
-	output.push("<p>")
-	output.push("Start");
-	var rawBits = rawToBits(imageDataOffset);
-	output.push("End");
-	*/
 	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('') + '</ul>';	
 	
 } 
@@ -150,4 +117,14 @@ function saveByteArray(data,name){
 	
 }
 
+function getBits(){
+	window.bits =[];
+	for(var i =0; i <bytes.length;i++){
+		var byte = byteToString(bytes[i]);
+		if(bytes[i]==255){
+			i++;
+		}
+		bits.push(byte);
+	}
+}
 

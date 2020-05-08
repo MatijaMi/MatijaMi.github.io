@@ -1,47 +1,29 @@
 function decompressYCC(metaData){
 	
-	var hts = [];
-	hts.push(metaData.get("HT1"));
-	hts.push(metaData.get("HT2"));
+	
+	var ht1 =metaData.get("HT1");
+	var ht2 =metaData.get("HT2");
 	var numberOfLines = metaData.get("SOF3").get("NumberOfLines");
 	var samplesPerLine = metaData.get("SOF3").get("samplesPerLine");
 	var HSF = metaData.get("SOF3").get("HSF");
 	var sliceDimensions = metaData.get("Slices");
 	var samplePrecision = metaData.get("SOF3").get("SamplePrecision");
+	var imageSlices = [];
+	window.bitPointer=0;
 	
-	
-	
-	var bits =[];
-	
-	bits.push("");
-	
-	
-	for(var i =0; i <10;i++){
-		var byte = bytes[i].toString(2);
-		if(byte.length<8){
-			byte=("00000000" + byte.toString(2)).substr(-8);
-		}
-		bits[0]=bits[0]+byte;
-	}
-	bits.push(10);
-	
-	console.log(numberOfLines);
-	
-	
-	var imageSlices = new Map();
-	//for(var j =0; j< sliceDimensions[0]+1;j++){
-	for(var j =0; j< 1;j++){
+	for(var j =0; j< sliceDimensions[0]+1;j++){
+	//for(var j =0; j< 1;j++){
 		var slice=[];
 		var res;
 		var numberOfSamples;
 		var sample =[];	
-		var prevY;
+		var prevY=Math.pow(2,samplePrecision-1);
 		var prevCb=0;
 		var prevCr=0;
 		
 		
 		
-		if(j==sliceDimensions[0]+1){
+		if(j==sliceDimensions[0]){
 			numberOfSamples= sliceDimensions[2]/HSF;
 			console.log("NOS="+ numberOfSamples);
 		}else{
@@ -49,113 +31,68 @@ function decompressYCC(metaData){
 			console.log("NOS="+ numberOfSamples);
 		}
 		
-		var counter = numberOfSamples*20/2;
+		var counter = numberOfSamples*numberOfLines;
 		console.log(counter);
-		if(j==0){
-			var i=1;
-			var firstDC = metaData.get("SOS").get("DCAC0");
-				var dcLengthHuff = bits[0].substring(0,8)+bits[0].substring(16,20);
-				var dcLength = hts[firstDC].get(dcLengthHuff);
-				var differenceCode = getDifferenceCode(bits[0].substr(dcLengthHuff.length+8,dcLength));
-				var y = Math.pow(2,samplePrecision-1) + differenceCode;
-				sample.push(y);
-				prevY=y;
-				bits = adjustBits(bits,(dcLengthHuff+"00000000").length+dcLength);
-				
-				res = findNextValue(bits, hts[0], prevY);
-				sample.push(res[0]);
-				prevY=res[0];
-				bits=res[1];
-				
-			
-				res = findNextValue(bits, hts[0], prevY);
-				y = res[0];
-				prevY = res[0];
-				bits = res[1];
-			
-				res = findNextValue(bits, hts[1], prevCb);
-				prevCb = res[0];
-				sample.push(res[0]);
-				bits = res[1];
-			
-				res = findNextValue(bits, hts[1], prevCr);
-				sample.push(res[0]);
-				prevCr = res[0];
-				bits = res[1];
-			
-				slice.push(sample);
-				sample = [];
-				sample.push(y);
-				slice.push(sample);
-			
-		}else{
-			var i =0;
-		}
-		
+		var i =0;
 		while(i<counter){
-			
-			res = findNextValue(bits, hts[0], prevY);
-			sample.push(res[0]);
-			prevY=res[0];
-			bits=res[1];
-				
-			
-			res = findNextValue(bits, hts[0], prevY);
-			y = res[0];
-			prevY = res[0];
-			bits = res[1];
-			
-			res = findNextValue(bits, hts[1], prevCb);
-			prevCb = res[0];
-			sample.push(res[0]);
-			bits = res[1];
-			
-			res = findNextValue(bits, hts[1], prevCr);
-			sample.push(res[0]);
-			prevCr = res[0];
-			bits = res[1];
-			
-			slice.push(sample);
-			sample = [];
-			sample.push(y);
-			slice.push(sample);
 			sample=[];
+			prevY = findNextValue(ht1, prevY);
+			sample.push(prevY);
+		
+			prevY = findNextValue(ht1, prevY);
+						
+			prevCb = findNextValue(ht2, prevCb);
+			sample.push(prevCb);
+			
+			prevCr = findNextValue(ht2, prevCr);
+			sample.push(prevCr);
+			
+			slice.push(sample);
+			i++;
+			sample = [];
+			sample.push(prevY);
+			slice.push(sample);
 			i++;
 		}	
+		imageSlices.push(slice);
 	}
 	
-	var output = [];
-	for(var i =0; i<10000;i++){
-	
-		output.push("<p>" +byteToString(bytes[i]));
-		
-	}
-	
-	
-	return output;
+	return imageSlices;
 	
 }
 
-function findNextValue(bits, huffTable, previousValue){
+function findNextValue(huffTable, previousValue){
+	
 	var output=[];
-	var found =false;
+	var byte = Math.floor(bitPointer/8);
+	var bit = bitPointer%8;
 	var i =0;
-	while(found==false){
+	
+	while(i<16){
 		i++;
-		var x =huffTable.get(bits[0].substring(0,i));
-		if(typeof x !== "undefined"){
-			found=true;
+		if(bit+i<=8){
+			if(typeof huffTable.get(bits[byte].substring(bit,bit+i)) !== "undefined"){
+				var dcL = bits[byte].substring(bit,bit+i);
+				break;
+			}		
+		}else{
+			if(bit+i<=16){
+				if(typeof huffTable.get(bits[byte].substring(bit)+bits[byte+1].substring(0,bit+i-8)) !== "undefined"){
+					var dcL =bits[byte].substring(bit)+bits[byte+1].substring(0,bit+i-8);
+					break;
+				}
+		}else{
+			if(typeof huffTable.get(bits[byte].substring(bit)+bits[byte+1]+ bits[byte+2].substring(0,bit+i-16)) !== "undefined"){
+				var dcL = bits[byte].substring(bit)+bits[byte+1]+ bits[byte+2].substring(0,bit+i-16);
+					break;
+			}	
 		}
-		
+		}
 	}
 	
-	var dcLength =huffTable.get(bits[0].substring(0,i));
-	var differenceValue= getDifferenceCode(bits[0].substring(i,dcLength+i));
-
-	output.push(previousValue+differenceValue);
-	bits=adjustBits(bits,i+dcLength);
-	output.push(bits);
-	return output;
+	
+	bitPointer=bitPointer+dcL.length;
+	return previousValue+getDifferenceCode(getNextBits(huffTable.get(dcL)));;
 }
 
 
@@ -175,27 +112,19 @@ function getDifferenceCode(differenceBits){
 	var addition = parseInt(differenceBits.substring(1),2);
 	
 	if (differenceBits.charAt(0)==0){
-			number = -Math.pow(2,differenceBits.length)+1+addition;
+			number =0 - Math.pow(2,differenceBits.length)+1+addition;
 		}else{
 			number = Math.pow(2,differenceBits.length-1)+addition;			
 		}
+	bitPointer=bitPointer+differenceBits.length;
 	return number;
 }
-	
-	
-	
- function adjustBits(bits, usedBits){
-	 var usedBytes;
-	 if(usedBits%8==0){
-		 usedBytes=usedBits/8;
-	 }else{
-		 usedBytes= Math.floor(usedBits/8)+1;
-	 }
-	 bits[0]=bits[0].substring(usedBits);
-	 var byteCount=bits[1];
-	 for(var i =0; i <usedBytes;i++){
-		 bits[0]=bits[0]+byteToString(bytes[byteCount+i]); 
-	 }
-	 bits[1]=bits[1]+usedBytes;
-	 return bits;
- }
+
+
+function getNextBits(length){
+	var str="";
+	for(var i =0; i<length;i++){
+		str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+1)%8);	
+	}
+	return str;
+}

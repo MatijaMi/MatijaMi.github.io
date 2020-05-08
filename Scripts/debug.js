@@ -33,8 +33,8 @@ function printBytesFromOffset(offset, length){
 	var val = [];
 	for(var i =0; i<length; i++){
 		
-		val.push(bytes[offset+i]);
-		console.log(bytes[offset+i]);
+		val.push(byteToString(bytes[offset+i]));
+		
 	}
 	return val;
 }
@@ -72,5 +72,14 @@ function printRawLength(offset){
 	}
 	return c;
 	
+}
+
+
+function printBits(amount){
+	var output=[];
+	for(var i =0; i <amount;i++){
+		output.push(bits[i]);
+	}
+	return output;
 }
 
