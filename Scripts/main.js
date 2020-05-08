@@ -91,6 +91,7 @@ function collectMetaData(){
 	b = new Date();
 	console.log(b.getTime());
 	console.log(b.getTime()-d.getTime());
+	//output.push(bytes[Math.floor(bitPointer/8)-1]);
 	
 	//METADATA AND SOF3DATA
 	for(let[key, value] of metaData){

@@ -11,13 +11,14 @@ function decompressYCC(metaData){
 	var imageSlices = [];
 	window.bitPointer=0;
 	
-	for(var j =0; j< sliceDimensions[0]+1;j++){
-	//for(var j =0; j< 1;j++){
+	//for(var j =0; j< sliceDimensions[0]+1;j++){
+	for(var j =0; j< 1;j++){
 		var slice=[];
 		var res;
 		var numberOfSamples;
 		var sample =[];	
 		var prevY=Math.pow(2,samplePrecision-1);
+		console.log("PY:"+prevY);
 		var prevCb=0;
 		var prevCr=0;
 		
@@ -51,13 +52,15 @@ function decompressYCC(metaData){
 			i++;
 			sample = [];
 			sample.push(prevY);
+			sample.push(0);
+			sample.push(0);
 			slice.push(sample);
 			i++;
 		}	
 		imageSlices.push(slice);
 	}
-	
-	return imageSlices;
+
+	return slice;
 	
 }
 
@@ -92,27 +95,26 @@ function findNextValue(huffTable, previousValue){
 	
 	
 	bitPointer=bitPointer+dcL.length;
-	return previousValue+getDifferenceCode(getNextBits(huffTable.get(dcL)));;
+	var x =huffTable.get(dcL);
+	if(x==0){
+		bitPointer=bitPointer+dcL.length;
+		return previousValue;
+	}
+	return previousValue+getDifferenceCode(getNextBits(x));
 }
-
-
-
 
 
 function getDifferenceCode(differenceBits){
 	var number;
-	
-	if(differenceBits.length==0){
-		return 0;
-	}
 	if (differenceBits.length==1){
+		bitPointer=bitPointer+1;
 		return parseInt(differenceBits)*2-1;
 	}
 	
 	var addition = parseInt(differenceBits.substring(1),2);
 	
 	if (differenceBits.charAt(0)==0){
-			number =0 - Math.pow(2,differenceBits.length)+1+addition;
+			number = (1 - Math.pow(2,differenceBits.length))+addition;
 		}else{
 			number = Math.pow(2,differenceBits.length-1)+addition;			
 		}
