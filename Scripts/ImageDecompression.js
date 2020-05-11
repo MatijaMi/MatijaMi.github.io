@@ -12,6 +12,8 @@ function decompress(metaData){
 	}else{
 		if(VSF==1){
 			image = decompressYCC(metaData);
+			image = interpolateYCC(image);
+			image = YCCtoRGB(image);
 		}else{
 			image = decompressYYYYCC(metaData);
 		}
