@@ -74,7 +74,8 @@ function collectMetaData(){
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
 	bytes=bytes.slice(imageDataOffset);
-
+	console.log(bytes[bytes.length-2]);
+	console.log(bytes[bytes.length-1]);
 	
 	var d = new Date();
 	console.log(d.getTime());

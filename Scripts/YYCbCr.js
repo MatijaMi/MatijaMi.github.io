@@ -14,16 +14,13 @@ function decompressYCC(metaData){
 	}
 	window.bitPointer=0;
 	var prevY=Math.pow(2,samplePrecision-1);
-	var maxY=Math.pow(2,15)-1;
-	var maxC= Math.pow(2,14)-1;
-	var minC= -maxC;
+	var prevCb=0;
+	var prevCr=0;
 	for(var j =0; j< sliceDimensions[0]+1;j++){
 	//for(var j =0; j< 1;j++){
 		var res;
 		var numberOfSamples;
 		var sample =[];
-		var prevCb=16384;
-		var prevCr=16384;
 		
 		
 		if(j==sliceDimensions[0]){
@@ -37,38 +34,16 @@ function decompressYCC(metaData){
 		var i =0;
 		while(i<counter){
 			sample=[];
-			prevY = findNextValue(ht1, prevY)%maxY;
 			
-			
-			
+			prevY = findNextValue(ht1, prevY);
 			sample.push(prevY);
 		
-			prevY = findNextValue(ht1, prevY)%maxY;
-			if(prevY>maxY){
-				prevY=prevY%maxY;
-			}else{if(prevY<0){
-				prevY=maxY+prevY;
-				}
-			}
+			prevY = findNextValue(ht1, prevY);
 			
-			prevCb = findNextValue(ht2, prevCb)%maxC;
-			if(prevCb>maxC){
-				prevCb=minC+(prevCb-maxC)-1;
-			}else{
-				if(prevCb<minC){
-					prevCb=maxC+(prevCb-minC)+1;
-				}
-			}
+			prevCb = findNextValue(ht2, prevCb);
 			sample.push(prevCb);
 			
-			prevCr = findNextValue(ht2, prevCr)%maxC;
-			if(prevCr>maxC){
-				prevCr=minC+(prevCr-maxC)-1;
-			}else{
-				if(prevCr<minC){
-					prevCr=maxC+(prevCr-minC)+1;
-				}
-			}
+			prevCr = findNextValue(ht2, prevCr);
 			sample.push(prevCr);
 			
 			imageLines[Math.floor(i/numberOfSamples)].push(sample);
@@ -82,6 +57,35 @@ function decompressYCC(metaData){
 	}
 
 	return imageLines;
+	
+}
+
+
+function applyDiffCode(image,metaData){
+	var samplePrecision = metaData.get("SOF3").get("SamplePrecision");
+	var prevY=Math.pow(2,samplePrecision-1);
+	var prevCb=0;
+	var prevCr=0;
+	for(var i = 0; i <image.length;i++){
+		for(var j =0; j<image[i].length;j++){
+			if(j%2==0){
+				prevY=prevY+image[i][j][0];
+				prevCb=prevCb+image[i][j][1];
+				prevCr=prevCr+image[i][j][2];
+				image[i][j][0]= prevY;
+				image[i][j][1]= prevCb;
+				image[i][j][2]= prevCr;
+			}else{
+				prevY=prevY+image[i][j][0];
+				image[i][j][0]= prevY;
+			}
+			if(j<2000 && i<20){
+			console.log(prevY);
+			}
+		}
+	}
+	
+	return image;
 	
 }
 
@@ -118,7 +122,7 @@ function findNextValue(huffTable, previousValue){
 	bitPointer=bitPointer+dcL.length;
 	var x =huffTable.get(dcL);
 	
-	return previousValue+getDifferenceCode(getNextBits(x));
+	return getDifferenceCode(getNextBits(x));
 }
 
 
