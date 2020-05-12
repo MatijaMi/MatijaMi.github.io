@@ -74,20 +74,16 @@ function collectMetaData(){
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
 	bytes=bytes.slice(imageDataOffset);
-	console.log(bytes[bytes.length-2]);
-	console.log(bytes[bytes.length-1]);
 	
 	var d = new Date();
 	console.log(d.getTime());
 	getBits();
-	
 	var b = new Date();
 	console.log(b.getTime());
 	console.log(b.getTime()-d.getTime());
 	d = new Date();
 	console.log(d.getTime());
 	var result = decompress(metaData);
-	
 	bytes=result;
 	b = new Date();
 	console.log(b.getTime());

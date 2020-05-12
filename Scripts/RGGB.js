@@ -116,10 +116,7 @@ function getDifferenceCode(differenceBits){
 function getNextBits(length){
 	var str="";
 	for(var i =0; i<length;i++){
-		str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+1)%8);	
-	}
-	if(length==14){
-		console.log("f")
+		str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+i)%8);	
 	}
 	return str;
 }
