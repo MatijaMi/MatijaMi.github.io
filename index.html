@@ -25,14 +25,17 @@
     
     <body>
 		<input type="file" id="fileInput" name="files" />
-		<button onclick="startScan()"> Submit</button>
+		<button onclick="startScan()"> Convert</button>
 			<output id="list"></output>
 		<output id="bits"></output>
 		<div id="ifd0"> Output:</div>
 		
+		
 		<button onclick="download()"> Download</button>
 
-		<script>
+		
+		
+		<script  type="text/javascript">	
 			function download(){
 				saveByteArray([bytes], "example.txt");
 			}

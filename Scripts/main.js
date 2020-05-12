@@ -1,28 +1,53 @@
-var data = []; 
-//Function that gets called when the file is submitted
 function startScan() {
-
-    var files = document.getElementById('fileInput').files;
+		//Get the input files
+		var files = document.getElementById('fileInput').files;
     
-	if (!files.length) {
-      alert('Please select a file!');
-      return;
-    }
-	
+		if (!files.length) {
+      			alert('Please select a file!');
+      		return;
+    	}
+		
     	var file = files[0];
 		var reader = new FileReader();
 		//Once the .cr2 file has been read it gets saved as a byte array(==Uint8Array)
-	reader.onload = function(){
-      	var arrayBuffer = reader.result;
-		var bits = [];
-		window.bytes = new Uint8Array(arrayBuffer);
-		//the metaData that might need to be collected
-		collectMetaData();
-    };
-	
-	  reader.readAsArrayBuffer(file);
-  };
+		
+		reader.onload = function(){
+      		var arrayBuffer = reader.result;
+			var bits = [];
+			window.bytes = new Uint8Array(arrayBuffer);
+			
+			console.log("Collecting MetaData");
+			
+			var metaData =collectMetaData();
+			
+			//Output for debugging right now
+			var output =[];
+			for(let[key, value] of metaData){
+				output.push(key+ ":"+value);
+				output.push("<p>");
+				console.log(key+ ":"+value);
+			};
+				var sof3=metaData.get("SOF3");
+			output.push("<p>");
+			for(let[key, value] of sof3){
+				output.push(key+ ":"+value);
+				output.push("<p>");
+				console.log(key+ ":"+value);
+			};
+			document.getElementById("ifd0").innerHTML= '<ul>' + output.join('') + '</ul>';	
+			console.log("Transforming Bytes");
+			
+			getBits();
+			
+			console.log("Decompressing Data");
+			
+			decompressRaw(metaData);
+		};
+			
+	  	reader.readAsArrayBuffer(file);
+};
 
+//Function that gets called when the file is submitted
 //Function to collect data from IFD#0,IFD#3, EXIF and MakerNote-SubIFD
 function collectMetaData(){
 	//Variables for working with IFDZero
@@ -73,35 +98,32 @@ function collectMetaData(){
 	
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
-	bytes=bytes.slice(imageDataOffset);
 	
-	var d = new Date();
-	console.log(d.getTime());
-	getBits();
-	var b = new Date();
-	console.log(b.getTime());
-	console.log(b.getTime()-d.getTime());
-	d = new Date();
-	console.log(d.getTime());
+	bytes=bytes.slice(imageDataOffset);
+	return metaData;
+}
+
+
+function getBits(){
+	window.bits =[];
+	for(var i =0; i <bytes.length;i++){
+		var byte = byteToString(bytes[i]);
+		if(bytes[i]==255){
+			i++;
+		}
+		bits.push(byte);
+	}
+}	
+
+		
+function decompressRaw(metaData){
+	
 	var result = decompress(metaData);
 	bytes=result;
-	b = new Date();
-	console.log(b.getTime());
-	console.log(b.getTime()-d.getTime());
-	//output.push(bytes[Math.floor(bitPointer/8)-1]);
-	
-	//METADATA AND SOF3DATA
-	for(let[key, value] of metaData){
-		output.push(key+ ":"+value);
-	}
-	output.push("<p>");
-	for(let[key, value] of sof3Data){
-		output.push(key+ ":"+value);
-	}
-	
-	document.getElementById("ifd0").innerHTML= '<ul>' + output.join('') + '</ul>';	
 	
 } 
+
+
 function saveByteArray(data,name){
 	var a = document.createElement("a");
     document.body.appendChild(a);
@@ -115,14 +137,5 @@ function saveByteArray(data,name){
 	
 }
 
-function getBits(){
-	window.bits =[];
-	for(var i =0; i <bytes.length;i++){
-		var byte = byteToString(bytes[i]);
-		if(bytes[i]==255){
-			i++;
-		}
-		bits.push(byte);
-	}
-}
+
 

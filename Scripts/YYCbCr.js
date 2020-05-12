@@ -14,6 +14,7 @@ function decompressYCC(metaData){
 	}
 	
 	window.bitPointer=0;
+	var iii=Math.pow(2,samplePrecision);
 	var prevY=Math.pow(2,samplePrecision-1);
 	var prevCb=0;
 	var prevCr=0;
@@ -139,7 +140,7 @@ function interpolateYCC(image){
 		for(var j =1; j<image[i].length;j++){
 			var prevCb = image[i][j-1][1];
 			var prevCr = image[i][j-1][2];
-			if(j==image[i].length-1){
+			if(j==(image[i].length-1)){
 				image[i][j].push(prevCb);
 				image[i][j].push(nextCb);
 			

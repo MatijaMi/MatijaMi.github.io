@@ -39,6 +39,14 @@ function printBytesFromOffset(offset, length){
 	return val;
 }
 
+function wait(ms)
+{
+    var d = new Date();
+    var d2 = null;
+    do { d2 = new Date(); }
+    while(d2-d < ms);
+}
+
 function printDHT(rawOffset){
 	var output =[];
 	var length = bytes[rawOffset+4]*256 + bytes[rawOffset+5];

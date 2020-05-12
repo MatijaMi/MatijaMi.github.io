@@ -11,8 +11,11 @@ function decompress(metaData){
 		image = decompressRGGB(metaData);
 	}else{
 		if(VSF==1){
+			console.log("Decompressing YCC");
 			image = decompressYCC(metaData);
+			console.log("Interpolating YCC");
 			image = interpolateYCC(image);
+			console.log("YCC->RGB");
 			image = YCCtoRGB(image);
 		}else{
 			image = decompressYYYYCC(metaData);
