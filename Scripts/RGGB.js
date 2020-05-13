@@ -31,7 +31,8 @@ function decompressRGGB(metaData){
 		}
 		
 		var counter = numberOfSamples*numberOfLines;
-		
+		console.log("Counter =" +counter);
+		var temp = [];
 		var i =0;
 		while(i<counter){
 			sample=[];
@@ -43,11 +44,12 @@ function decompressRGGB(metaData){
 			prevC2 = findNextValueR(ht1, prevC2);
 			
 			sample.push(prevC2);
-			
+			temp.push(prevC1);
+			temp.push(prevC2);
 			imageLines[Math.floor(i/numberOfSamples)].push(sample);
 			i+=2;
 		}	
-	
+		
 	}
 	
 	return imageLines;

@@ -13,6 +13,7 @@ function decompress(metaData){
 		if(VSF==1){
 			console.log("Decompressing YCC");
 			image = decompressYCC(metaData);
+			//image = applyDiffs(image);
 			console.log("Interpolating YCC");
 			image = interpolateYCC(image);
 			console.log("YCC->RGB");
