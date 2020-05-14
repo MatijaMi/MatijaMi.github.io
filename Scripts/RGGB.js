@@ -20,6 +20,7 @@ function decompressRGGB(metaData){
 	for(var j =0; j< sliceDimensions[0]+1;j++){
 		console.log("Slice " +j);
 	//for(var j =0; j< 1;j++){
+		
 		var res;
 		var numberOfSamples;
 		var sample =[];
@@ -38,15 +39,13 @@ function decompressRGGB(metaData){
 			sample=[];
 			
 			prevC1 = findNextValueR(ht1, prevC1);
+			prevC1= limitComponent(prevC1,samplePrecision);
 			
-			sample.push(prevC1);
-		
-			prevC2 = findNextValueR(ht1, prevC2);
+			prevC2 = findNextValueR(ht2, prevC2);
+			prevC2= limitComponent(prevC2,samplePrecision);
 			
-			sample.push(prevC2);
-			temp.push(prevC1);
-			temp.push(prevC2);
-			imageLines[Math.floor(i/numberOfSamples)].push(sample);
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC1);
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
 			i+=2;
 		}	
 		
@@ -123,36 +122,40 @@ function getNextBits(length){
 	return str;
 }
 
-function interpolateYCC(image){
+function limitComponent(comp, sp){
+	var maxValue =Math.pow(2,sp);
 	
-		
-}
-
-function YCCtoRGB(image){
-	for(var i = 0; i <image.length;i++){
-		for(var j =0; j<image[i].length;j++){
-			var Y=image[i][j][0];
-			var Cb=image[i][j][1];
-			var Cr=image[i][j][2];
-			var r = Cr + Y;
-			var g = Y - 0.19*Cb - 0.5*Cr
-			var b =Cb + Y;
-			image[i][j][0]=r;
-			image[i][j][1]=g;
-			image[i][j][2]=b;
+	if(comp>maxValue){
+		comp=maxValue;
+	}else{
+		if(comp<0){
+			comp=0;
 		}
 	}
-	return image;
+	return comp;
 }
 
 
-
-
-
-
-
-
-
+function ruffBayer(image){
+	var newImg=[];
+	var pixel=[];
+	for(var i =0; i <image.length;i+=2){
+		for(var j=0; j<image[i].length;j+=2){
+			pixel=[];
+			var r = image[i][j];
+			var b = image[i+1][j+1];
+			var g = (image[i][j+1]+image[i+1][j])/2;
+			pixel.push(r);
+			pixel.push(g);
+			pixel.push(b);
+			
+			newImg.push(pixel);
+			
+		}
+	}
+	console.log("NEW" + newImg.length);
+	return newImg;
+}
 
 
 
