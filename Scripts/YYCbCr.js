@@ -20,7 +20,6 @@ function decompressYCC(metaData){
 	for(var j =0; j< sliceDimensions[0]+1;j++){
 		var numberOfSamples;
 		var sample =[];
-		var slice =[];
 		var prevY=Math.pow(2,samplePrecision-1);
 		var prevCb=0;
 		var prevCr=0;
@@ -35,7 +34,6 @@ function decompressYCC(metaData){
 		var Y,Cb,Cr;
 		var i =0;
 		while(i<counter){
-			
 			
 			
 			sample=[];
@@ -70,13 +68,13 @@ function decompressYCC(metaData){
 		}	
 		
 	}
-
+	
 	return imageLines;
 	
 }
 
 
-function findNextValue(huffTable, previousValue,c){
+function findNextValue(huffTable, previousValue){
 	
 	var byte = Math.floor(bitPointer/8);
 	var bit = bitPointer%8;
@@ -105,7 +103,7 @@ function findNextValue(huffTable, previousValue,c){
 	}
 	
 	
-	bitPointer=bitPointer+dcL.length;
+	bitPointer=bitPointer+i;
 	var x =huffTable.get(dcL);
 	
 	return previousValue+getDifferenceCode(getNextBits(x));
@@ -142,9 +140,9 @@ function applyDiffs(image){
 	for(var i =0;i<image.length;i++){
 		for(var j =0; j<image[i].length;j+=2){
 			image[i][j][0]=limitY(prevY+image[i][j][0],15);
-			image[i][j][1]= limitC(prevCb+image[i][j][1],15);
-			image[i][j][2]= limitC(prevCr+image[i][j][2],15);
-			image[i][j+1][0]= limitY(image[i][j][0]+image[i][j+1][0],15);
+			image[i][j][1]=limitC(prevCb+image[i][j][1],15);
+			image[i][j][2]=limitC(prevCr+image[i][j][2],15);
+			image[i][j+1][0]=limitY(image[i][j][0]+image[i][j+1][0],15);
 			
 			prevY=image[i][j+1][0];
 			prevCb=image[i][j][1];
@@ -176,14 +174,13 @@ function interpolateYCC(image){
 			var prevCr = image[i][j-1][2];
 			if(j==(image[i].length-1)){
 				image[i][j].push(prevCb);
-				image[i][j].push(nextCb);
-			
+				image[i][j].push(prevCr);
 			}else{
 				
 				var nextCb= image[i][j+1][1];
 				var nextCr=	image[i][j+1][2];
-				image[i][j].push(Math.floor((prevCb+nextCb)/2));
-				image[i][j].push(Math.floor((prevCr+nextCr)/2));
+				image[i][j].push((prevCb+nextCb)/2);
+				image[i][j].push((prevCr+nextCr)/2);
 			}
 			j++;
 		}
@@ -214,10 +211,10 @@ function YCCtoRGB(image){
 function limitY(y, sp){
 	var maxy= Math.pow(2,sp)-1;
 	if(y>maxy){
-		y=y-maxy;
+		y=maxy;
 	}else{
 		if(y<0){
-			y=maxy+y;
+			y=0;
 		}
 	}
 	
@@ -228,10 +225,10 @@ function limitC(c,sp){
 	var maxC= Math.pow(2,sp-1)-1;
 	var minC=0-maxC;
 	if(c>maxC){
-		c=minC+(c-maxC);
+		c=maxC;
 	}else{
 		if(c<minC){
-			c=maxC+(c - minC);
+			c=minC;
 		}
 	}
 	

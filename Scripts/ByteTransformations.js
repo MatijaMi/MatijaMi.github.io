@@ -14,17 +14,8 @@ function transformTwoBytes(byte1, byte2){
 
 //Function to correct the length of Huffman Code length
 function numberToBitString(number, bitCount){
-	
-	var bitString =number.toString(2);
-	
-	if(bitString.length < bitCount){
-		for(var i = 0; i < bitCount - bitString.length; i++){
-			bitString= "0" + bitString;
-		}
 		
-		
-	}
-	return bitString;
+	return ("00000000" +number.toString(2)).substr(-bitCount);
 }
 
 
