@@ -9,7 +9,8 @@ function decompress(metaData){
 	
 	if(HSF==1){
 		image = decompressRGGB(metaData);
-		image = ruffBayer(image);
+		//image = ruffBayer(image);
+		image = bayerInterpolation(image);
 	}else{
 		if(VSF==1){
 			console.log("Decompressing YCC");

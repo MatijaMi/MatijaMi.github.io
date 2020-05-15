@@ -26,17 +26,19 @@ function decompressRGGB(metaData){
 		var sample =[];
 		
 		if(j==sliceDimensions[0]){
-			numberOfSamples= sliceDimensions[2]/HSF;
+			numberOfSamples= sliceDimensions[2]/2;
 		}else{
-			numberOfSamples= sliceDimensions[1]/HSF;
+			numberOfSamples= sliceDimensions[1]/2;
 		}
-		
+				
 		var counter = numberOfSamples*numberOfLines;
 		console.log("Counter =" +counter);
 		var temp = [];
 		var i =0;
 		while(i<counter){
+		
 			sample=[];
+			
 			
 			prevC1 = findNextValueR(ht1, prevC1);
 			prevC1= limitComponent(prevC1,samplePrecision);
@@ -46,11 +48,12 @@ function decompressRGGB(metaData){
 			
 			imageLines[Math.floor(i/numberOfSamples)].push(prevC1);
 			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
-			i+=2;
+			i++;
 		}	
 		
 	}
-	
+	console.log(imageLines.length);
+	console.log(imageLines[0].length);
 	return imageLines;
 	
 }
@@ -123,7 +126,7 @@ function getNextBits(length){
 }
 
 function limitComponent(comp, sp){
-	var maxValue =Math.pow(2,sp);
+	var maxValue =Math.pow(2,sp)-1;
 	
 	if(comp>maxValue){
 		comp=maxValue;
@@ -134,30 +137,4 @@ function limitComponent(comp, sp){
 	}
 	return comp;
 }
-
-
-function ruffBayer(image){
-	var newImg=[];
-	var pixel=[];
-	for(var i =0; i <image.length;i+=2){
-		for(var j=0; j<image[i].length;j+=2){
-			pixel=[];
-			var r = image[i][j];
-			var b = image[i+1][j+1];
-			var g = (image[i][j+1]+image[i+1][j])/2;
-			pixel.push(r);
-			pixel.push(g);
-			pixel.push(b);
-			
-			newImg.push(pixel);
-			
-		}
-	}
-	console.log("NEW" + newImg.length);
-	return newImg;
-}
-
-
-
-
 
