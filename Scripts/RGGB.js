@@ -19,7 +19,6 @@ function decompressRGGB(metaData){
 	
 	for(var j =0; j< sliceDimensions[0]+1;j++){
 		console.log("Slice " +j);
-	//for(var j =0; j< 1;j++){
 		
 		var res;
 		var numberOfSamples;
@@ -38,6 +37,10 @@ function decompressRGGB(metaData){
 		while(i<counter){
 		
 			sample=[];
+			if(i>0 && i%numberOfSamples==0){
+				prevC1=imageLines[Math.floor(i/numberOfSamples)-1][0];
+				prevC2=imageLines[Math.floor(i/numberOfSamples)-1][1];
+			}
 			
 			
 			prevC1 = findNextValueR(ht1, prevC1);
@@ -110,7 +113,7 @@ function getDifferenceCode(differenceBits){
 	if (differenceBits.charAt(0)==0){
 			number = (1 - Math.pow(2,differenceBits.length))+addition;
 		}else{
-			number = Math.pow(2,differenceBits.length-1)+addition;			
+			number =parseInt(differenceBits);			
 		}
 	bitPointer=bitPointer+differenceBits.length;
 	return number;

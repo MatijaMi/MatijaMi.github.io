@@ -120,6 +120,7 @@ function decompressRaw(metaData){
 	
 	var result = decompress(metaData);
 	bytes=result;
+	//bytes= JSON.stringify(bytes);
 	
 } 
 
