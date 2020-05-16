@@ -1,47 +1,71 @@
-function startScan() {
+function startScan(file) {
 		//Get the input files
-		var files = document.getElementById('fileInput').files;
-    
-		if (!files.length) {
-      			alert('Please select a file!');
-      		return;
-    	}
 		
-    	var file = files[0];
+			
 		var reader = new FileReader();
 		//Once the .cr2 file has been read it gets saved as a byte array(==Uint8Array)
-		
 		reader.onload = function(){
       		var arrayBuffer = reader.result;
 			var bits = [];
 			window.bytes = new Uint8Array(arrayBuffer);
 			
-			console.log("Collecting MetaData");
-			
 			var metaData =collectMetaData();
-			
-			//Output for debugging right now
+			var sof3=metaData.get("SOF3");
 			var output =[];
-			for(let[key, value] of metaData){
-				output.push(key+ ":"+value);
-				output.push("<p>");
-				console.log(key+ ":"+value);
-			};
-				var sof3=metaData.get("SOF3");
 			output.push("<p>");
-			for(let[key, value] of sof3){
-				output.push(key+ ":"+value);
-				output.push("<p>");
-				console.log(key+ ":"+value);
-			};
-			document.getElementById("ifd0").innerHTML= '<ul>' + output.join('') + '</ul>';	
-			console.log("Transforming Bytes");
+			output.push("<b>Camera Model: </b>" + metaData.get("modelName"));
+			output.push("<p>");
+			output.push("<b>Length of Raw: </b>" + metaData.get("RawLength") +" Bytes");
+			output.push("<p>");
+			output.push("<b>Slices:</b> " + metaData.get("Slices"));
+			output.push("<p>");
+			output.push("<b>Sample Precision: </b>" + sof3.get("SamplePrecision"));
+			output.push("<p>");
+			output.push("<b>Image Components: </b>" + sof3.get("ImageComponents"));
+			output.push("<p>");
+			output.push("<b>Number of Lines: </b>" + sof3.get("NumberOfLines"));
+			output.push("<p>");
+			output.push("<b>Samples per Line: </b>" + sof3.get("SamplesPerLine"));
+			output.push("<p>");
+			output.push("<b>Horizontal Sampling Factor: </b>" + sof3.get("HSF"));
+			output.push("<p>");
+			output.push("<b>Vertical Sampling Factor: </b>" + sof3.get("VSF"));
+			output.push("<p>");
+			var image0Offset = findIFDTagValue(16,17,1,false,false);
+			var image0Length = findIFDTagValue(16,23,1,false,false);
 			
-			getBits();
+			var imageWidth = findIFDTagValue(16,0,1,false,false);
+			var imageHeight = findIFDTagValue(16,1,1,false,false);
+			var data=bytes.slice(image0Offset,image0Offset+image0Length);
+			var model = new String(metaData.get("modelName"));
 			
-			console.log("Decompressing Data");
+			if(model.includes("EOS-1Ds Mark II")&& !model.includes("EOS-1Ds Mark III")){
+			   setImage(data,imageWidth,imageHeight/5);
+			   }else{
+				   setImage(data,imageWidth,imageHeight);
+			   }
 			
-			decompressRaw(metaData);
+			if(sof3.get("HSF")==1){
+				document.getElementById("downloadR").style="display:block";
+				 document.getElementById("downloadY").style="display:none";
+				 document.getElementById("downloadYY").style="display:none";
+			}else{
+				if(sof3.get("VSF")==1){
+				   	document.getElementById("downloadR").style="display:none";
+				 	document.getElementById("downloadY").style="display:block";
+				 	document.getElementById("downloadYY").style="display:none";
+				   }else{
+				   	document.getElementById("downloadR").style="display:none";
+				 	document.getElementById("downloadY").style="display:none";
+					document.getElementById("downloadYY").style="display:block";
+				   }
+			}
+			
+			document.getElementById("left").style="display:block";
+			document.getElementById("right").style="display:block";
+			document.getElementById("info").style="text-align:left";
+			document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
+			
 		};
 			
 	  	reader.readAsArrayBuffer(file);
@@ -52,7 +76,6 @@ function startScan() {
 function collectMetaData(){
 	//Variables for working with IFDZero
 	var metaData = new Map();
-	var output=[];
 	//The offset to IFD#0 is always 16
 	const ifdZeroOffset = 16;
 	const modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
@@ -99,7 +122,7 @@ function collectMetaData(){
 	var sosLength = getSOSLength(sosOffset);
 	var imageDataOffset = sosOffset+sosLength+2;
 	
-	bytes=bytes.slice(imageDataOffset);
+	//bytes=bytes.slice(imageDataOffset);
 	return metaData;
 }
 
@@ -138,5 +161,17 @@ function saveByteArray(data,name){
 	
 }
 
+function setImage(data, x,y){
+	var blob = new Blob([data], {type: 'image/jpeg'});
+	// Use createObjectURL to make a URL for the blob
+	var image = new Image();
+	image.src = URL.createObjectURL(blob);
+	console.log(x);
+	console.log(y);
+	image.width=300;
+	image.height=300*(y/x);
+	document.getElementById("image").innerHTML="";
+	document.getElementById("image").appendChild(image);
+}
 
 

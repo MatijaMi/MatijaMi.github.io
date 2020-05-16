@@ -5,7 +5,7 @@
     <head>
     	<link rel="icon" href="icon.svg">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>CR2toF32</title>
+        <title>CR2 Decoder</title>
         <link rel="stylesheet" href="style.css">
         <script src="Scripts/main.js"></script>
 		<script src="Scripts/ByteTransformations.js"></script>
@@ -24,20 +24,93 @@
     </head>
     
     <body>
-		<input type="file" id="fileInput" name="files" />
-		<button onclick="startScan()"> Convert</button>
-			<output id="list"></output>
-		<output id="bits"></output>
-		<div id="ifd0"> Output:</div>
+		
+		<div class="header"> 
+			<a href="index.html">Home</a>
+			<a>CR2</a>
+			<a>FAQ</a>
+			<a>About</a>
+		</div>
+		
+		<div class="content"> 
+			
+			<h1> CR2 Decoder</h1>
+			<div  id="inputBox" class="inputBox">
+				<input type="file" id="fileInput" name="files" />
+				<div class="dropzone" id="dropzone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+					<label id="label" for="fileInput">Choose a file</label>
+				</div>
+				<button class="submit" onclick="startScan()"> Submit</button>
+				
+				
+				<div class="left" id="left">
+				<div id="info"></div>
+					</div>
+				<div class="right" id="right">
+					<div class="image" id="image"></div>
+					<button class="download" onclick="downloadJpeg()"> Download as Jpeg</button>
+					<button class="download" onclick="downloadJpeg()"> Download Raw Bytes</button>
+					
+					<div class="downloadY" id="downloadY">
+						<button onclick="downloadJpeg()"> Download as YYCbCr</button>
+						<button onclick="downloadJpeg()"> Download as RGB</button>
+					</div>
+					<div  class="downloadR" id="downloadR">
+						<button onclick="downloadJpeg()"> Download as RGGB</button>
+						<button onclick="downloadJpeg()"> Download as RGB</button>
+					</div>
+					<div  class="downloadYY" id="downloadYY">
+						<button onclick="downloadJpeg()"> Download as YYYYCbCr</button>
+						<button onclick="downloadJpeg()"> Download as RGB</button>
+					</div>
+					
+				</div>
+			</div>
+		
+			
+			
+			
+			
+		</div>
 		
 		
-		<button onclick="download()"> Download</button>
-
 		
 		
-		<script  type="text/javascript">	
+		
+		
+		<script  type="text/javascript">
+			const inputElement = document.getElementById("fileInput");
+			inputElement.addEventListener("change", handleFiles, false);
+			window.imageCount=0;
+			function handleFiles() {
+					const fileList = this.files; /* now you can work with the file list */
+				console.log(fileList.length);
+				startScan(fileList[0]);
+				
+			}
+			
 			function download(){
-				saveByteArray([bytes], "example.txt");
+				saveByteArray([bytes], "example.jpg");
+			}
+			function downloadJpeg(){
+				var image0Offset = findIFDTagValue(16,17,1,false,false);
+				var image0Length = findIFDTagValue(16,23,1,false,false);
+				var data=bytes.slice(image0Offset,image0Offset+image0Length);
+				saveByteArray([data], "example.jpg");
+			}
+			
+			function dragOverHandler(ev) {
+  				ev.preventDefault();
+			}
+			
+			function dropHandler(ev) {
+  				ev.preventDefault();
+
+  				if (ev.dataTransfer.items) {
+					startScan(ev.dataTransfer.items[0].getAsFile());
+					
+
+  				}
 			}
 		
 		</script>

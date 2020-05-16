@@ -13,10 +13,10 @@ function findIFDEntry(ifdOffset, ifdLength, ID1, ID2){
 			for(var j =0; j <12; j++){
 				ifdEntry.push(bytes[ifdOffset+2+j+12*i]);
 			}
+			return ifdEntry;
 		}	
 	}
-	
-	return ifdEntry;
+	return [];
 }
 //Function to find the value of an IFD tag if the value in the 12 bytes is an offset
 function findValue(valueOffset, valueLength, isValueString){
