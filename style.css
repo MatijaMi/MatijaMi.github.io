@@ -85,7 +85,7 @@ label{
 	margin-bottom: 10px;
 }
 
-.downloadR button, .downloadYY button, .downloadY button{
+.decodeR button, .decodeY button, .decodeYY button{
 	
 	color:white;
 	background-color: blue;
@@ -94,7 +94,7 @@ label{
 	padding: 10px;
 	
 }
-.downloadR, .downloadYY, .downloadY{
+.decodeR, .decodeY, .decodeYY{
 	display: none;
 	
 }

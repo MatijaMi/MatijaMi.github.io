@@ -46,18 +46,18 @@ function startScan(file) {
 			   }
 			
 			if(sof3.get("HSF")==1){
-				document.getElementById("downloadR").style="display:block";
-				 document.getElementById("downloadY").style="display:none";
-				 document.getElementById("downloadYY").style="display:none";
+				document.getElementById("decodeR").style="display:block";
+				 document.getElementById("decodeY").style="display:none";
+				 document.getElementById("decodeYY").style="display:none";
 			}else{
 				if(sof3.get("VSF")==1){
-				   	document.getElementById("downloadR").style="display:none";
-				 	document.getElementById("downloadY").style="display:block";
-				 	document.getElementById("downloadYY").style="display:none";
+				   	document.getElementById("decodeR").style="display:none";
+				 	document.getElementById("decodeY").style="display:block";
+				 	document.getElementById("decodeYY").style="display:none";
 				   }else{
-				   	document.getElementById("downloadR").style="display:none";
-				 	document.getElementById("downloadY").style="display:none";
-					document.getElementById("downloadYY").style="display:block";
+				   	document.getElementById("decodeR").style="display:none";
+				 	document.getElementById("decodeY").style="display:none";
+					document.getElementById("decodeYY").style="display:block";
 				   }
 			}
 			
@@ -166,8 +166,6 @@ function setImage(data, x,y){
 	// Use createObjectURL to make a URL for the blob
 	var image = new Image();
 	image.src = URL.createObjectURL(blob);
-	console.log(x);
-	console.log(y);
 	image.width=300;
 	image.height=300*(y/x);
 	document.getElementById("image").innerHTML="";
