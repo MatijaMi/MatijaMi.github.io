@@ -1,7 +1,7 @@
-function decompressYCC(rgb){
+function decompressYCC(metaData,rgb,bytes){
 	
 	
-	getBits();
+	
 	var ht1 =metaData.get("HT1");
 	var ht2 =metaData.get("HT2");
 	var numberOfLines = metaData.get("SOF3").get("NumberOfLines");
@@ -13,7 +13,7 @@ function decompressYCC(rgb){
 	for(var k =0; k <numberOfLines;k++){
 		imageLines.push([]);
 	}
-	
+	getBits(bytes);
 	window.bitPointer=0;
 	
 	
@@ -70,9 +70,8 @@ function decompressYCC(rgb){
 		
 	}
 	if(rgb==false){
-		downloadBytes=imageLines;
+		return imageLines;
 		
-		document.getElementById("decodeY").innerHTML="<button onclick=\"downloadYCC()\"> Download YCbCr</button>";
 	}else{
 		return YCCtoRGB(interpolateYCC(imageLines));
 	}
@@ -239,4 +238,15 @@ function limitC(c,sp){
 		}
 	}
 	return c;
+}
+
+function decompressYCC2(rgb){
+	document.getElementById("decodeY").innerHTML="Decoding...";
+	
+	var w = new Worker('Scripts/worker.js');
+	w.postMessage([metaData,"YCC", false,bytes]);
+	w.onmessage=function(e){
+		downloadBytes=e.data[0];
+		document.getElementById("decodeY").innerHTML="<button onclick=\"downloadYCC()\"> Download YCbCr</button>";
+	}
 }

@@ -126,7 +126,7 @@ function collectMetaData(){
 }
 
 
-function getBits(){
+function getBits(bytes){
 	window.bits =[];
 	for(var i =0; i <bytes.length;i++){
 		var byte = byteToString(bytes[i]);
