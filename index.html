@@ -20,7 +20,7 @@
 		<script src="Scripts/YYCbCr.js"></script>
 		<script src="Scripts/YYYYCbCr.js"></script>
 		<script src="Scripts/BayerInterpolation.js"></script>
-		
+		<script src="Scripts/DownloadFunctions.js"></script>
     </head>
     
     <body>
@@ -49,11 +49,11 @@
 				<div class="right" id="right">
 					<div class="image" id="image"></div>
 					<button class="download" onclick="downloadJpeg()"> Download as Jpeg</button>
-					<button class="download" onclick="downloadJpeg()"> Download Raw Bytes</button>
+					<button class="download" onclick="downloadRaw()"> Download Raw Bytes</button>
 					
 					<div class="decodeY" id="decodeY">
-						<button onclick="downloadJpeg()"> Decode as YYCbCr</button>
-						<button onclick="downloadJpeg()"> Decode as RGB</button>
+						<button onclick="decompressYCC(false)"> Decode as YYCbCr</button>
+						<button onclick="decompressYCC(true)"> Decode as RGB</button>
 					</div>
 					<div  class="decodeR" id="decodeR">
 						<button onclick="downloadJpeg()"> Decode as RGGB</button>
@@ -65,12 +65,7 @@
 					</div>
 					
 				</div>
-			</div>
-		
-			
-			
-			
-			
+			</div>	
 		</div>
 		
 		
@@ -79,11 +74,13 @@
 		
 		
 		<script  type="text/javascript">
+			
 			const inputElement = document.getElementById("fileInput");
 			inputElement.addEventListener("change", handleFiles, false);
 			window.imageCount=0;
+			
 			function handleFiles() {
-					const fileList = this.files; /* now you can work with the file list */
+					window.fileList = this.files; /* now you can work with the file list */
 				console.log(fileList.length);
 				startScan(fileList[0]);
 				

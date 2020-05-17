@@ -8,8 +8,7 @@ function startScan(file) {
       		var arrayBuffer = reader.result;
 			var bits = [];
 			window.bytes = new Uint8Array(arrayBuffer);
-			
-			var metaData =collectMetaData();
+			window.metaData=collectMetaData();
 			var sof3=metaData.get("SOF3");
 			var output =[];
 			output.push("<p>");
@@ -65,7 +64,7 @@ function startScan(file) {
 			document.getElementById("right").style="display:block";
 			document.getElementById("info").style="text-align:left";
 			document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
-			
+			window.downloadBytes=[];
 		};
 			
 	  	reader.readAsArrayBuffer(file);
@@ -143,23 +142,9 @@ function decompressRaw(metaData){
 	
 	var result = decompress(metaData);
 	bytes=result;
-	//bytes= JSON.stringify(bytes);
 	
 } 
 
-
-function saveByteArray(data,name){
-	var a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style = "display: none";
-    var blob = new Blob(data, {type: "octet/stream"}),
-    url = window.URL.createObjectURL(blob);
-    a.href = url;
-    a.download = name;
-    a.click();
-    window.URL.revokeObjectURL(url);
-	
-}
 
 function setImage(data, x,y){
 	var blob = new Blob([data], {type: 'image/jpeg'});

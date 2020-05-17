@@ -1,6 +1,7 @@
-function decompressYCC(metaData){
+function decompressYCC(rgb){
 	
 	
+	getBits();
 	var ht1 =metaData.get("HT1");
 	var ht2 =metaData.get("HT2");
 	var numberOfLines = metaData.get("SOF3").get("NumberOfLines");
@@ -68,8 +69,14 @@ function decompressYCC(metaData){
 		}	
 		
 	}
+	if(rgb==false){
+		downloadBytes=imageLines;
+		
+		document.getElementById("decodeY").innerHTML="<button onclick=\"downloadYCC()\"> Download YCbCr</button>";
+	}else{
+		return YCCtoRGB(interpolateYCC(imageLines));
+	}
 	
-	return imageLines;
 	
 }
 
@@ -231,19 +238,5 @@ function limitC(c,sp){
 			c=minC;
 		}
 	}
-	
-	
 	return c;
 }
-
-
-
-
-
-
-
-
-
-
-
-
