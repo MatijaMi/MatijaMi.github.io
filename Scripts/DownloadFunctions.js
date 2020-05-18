@@ -2,7 +2,10 @@ function downloadYCC(){
 	var name =fileList[0].name +"YCC.txt";
 	saveByteArray(downloadBytes,name);
 }
-
+function downloadRGB(){
+	var name =fileList[0].name +"RGB.txt";
+	saveByteArray(downloadBytes,name);
+}
 function saveByteArray(data,name){
 	var a = document.createElement("a");
     document.body.appendChild(a);

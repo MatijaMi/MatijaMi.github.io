@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CR2 Decoder</title>
         <link rel="stylesheet" href="style.css">
-        <script src="Scripts/main.js"></script>
+        <script src="Scripts/metaData.js"></script>
 		<script src="Scripts/ByteTransformations.js"></script>
     	<script src="Scripts/IFDFunctions.js"></script>
 		<script src="Scripts/debug.js"></script>
@@ -93,7 +93,7 @@
 			
 			function handleFiles() {
 					window.fileList = this.files; /* now you can work with the file list */
-				startScan(fileList[0]);
+				readFile(fileList[0]);
 				
 			}
 			
@@ -115,7 +115,7 @@
   				ev.preventDefault();
 
   				if (ev.dataTransfer.items) {
-					startScan(ev.dataTransfer.items[0].getAsFile());
+					readFile(ev.dataTransfer.items[0].getAsFile());
 					
 
   				}

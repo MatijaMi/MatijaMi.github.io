@@ -92,6 +92,7 @@ label{
 	border-radius: 10px;
 	border-color: blue;
 	padding: 10px;
+	margin-bottom: 10px;
 	
 }
 .decodeR, .decodeY, .decodeYY{
@@ -109,8 +110,9 @@ label{
 }
 
 .progressBar{
+	margin-bottom: 10px;
 	position: relative;
-	float: left;
+	left: 10%;
 	width: 80%;
 	height: 15px;
 	display: none;

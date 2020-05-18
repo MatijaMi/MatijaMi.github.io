@@ -1,4 +1,4 @@
-function startScan(file) {
+function readFile(file) {
 		//Get the input files
 		
 			
@@ -9,62 +9,7 @@ function startScan(file) {
 			var bits = [];
 			window.bytes = new Uint8Array(arrayBuffer);
 			window.metaData=collectMetaData();
-			var sof3=metaData.get("SOF3");
-			var output =[];
-			output.push("<p>");
-			output.push("<b>Camera Model: </b>" + metaData.get("modelName"));
-			output.push("<p>");
-			output.push("<b>Length of Raw: </b>" + metaData.get("RawLength") +" Bytes");
-			output.push("<p>");
-			output.push("<b>Slices:</b> " + metaData.get("Slices"));
-			output.push("<p>");
-			output.push("<b>Sample Precision: </b>" + sof3.get("SamplePrecision"));
-			output.push("<p>");
-			output.push("<b>Image Components: </b>" + sof3.get("ImageComponents"));
-			output.push("<p>");
-			output.push("<b>Number of Lines: </b>" + sof3.get("NumberOfLines"));
-			output.push("<p>");
-			output.push("<b>Samples per Line: </b>" + sof3.get("SamplesPerLine"));
-			output.push("<p>");
-			output.push("<b>Horizontal Sampling Factor: </b>" + sof3.get("HSF"));
-			output.push("<p>");
-			output.push("<b>Vertical Sampling Factor: </b>" + sof3.get("VSF"));
-			output.push("<p>");
-			var image0Offset = findIFDTagValue(16,17,1,false,false);
-			var image0Length = findIFDTagValue(16,23,1,false,false);
-			
-			var imageWidth = findIFDTagValue(16,0,1,false,false);
-			var imageHeight = findIFDTagValue(16,1,1,false,false);
-			//var data=bytes.slice(image0Offset,image0Offset+image0Length);
-			var model = new String(metaData.get("modelName"));
-			
-			if(model.includes("EOS-1Ds Mark II")&& !model.includes("EOS-1Ds Mark III")){
-			   //setImage(data,imageWidth,imageHeight/5);
-			   }else{
-				   //setImage(data,imageWidth,imageHeight);
-			   }
-			
-			if(sof3.get("HSF")==1){
-				document.getElementById("decodeR").style="display:block";
-				 document.getElementById("decodeY").style="display:none";
-				 document.getElementById("decodeYY").style="display:none";
-			}else{
-				if(sof3.get("VSF")==1){
-				   	document.getElementById("decodeR").style="display:none";
-				 	document.getElementById("decodeY").style="display:block";
-				 	document.getElementById("decodeYY").style="display:none";
-				   }else{
-				   	document.getElementById("decodeR").style="display:none";
-				 	document.getElementById("decodeY").style="display:none";
-					document.getElementById("decodeYY").style="display:block";
-				   }
-			}
-			
-			document.getElementById("left").style="display:block";
-			document.getElementById("right").style="display:block";
-			document.getElementById("info").style="text-align:left";
-			document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
-			window.downloadBytes=[];
+			showFile();
 		};
 			
 	  	reader.readAsArrayBuffer(file);
@@ -126,6 +71,65 @@ function collectMetaData(){
 	return metaData;
 }
 
+function showFile(){
+		var sof3=metaData.get("SOF3");
+		var output =[];
+		output.push("<p>");
+		output.push("<b>Camera Model: </b>" + metaData.get("modelName"));
+		output.push("<p>");
+		output.push("<b>Length of Raw: </b>" + metaData.get("RawLength") +" Bytes");
+		output.push("<p>");
+		output.push("<b>Slices:</b> " + metaData.get("Slices"));
+		output.push("<p>");
+		output.push("<b>Sample Precision: </b>" + sof3.get("SamplePrecision"));
+		output.push("<p>");
+		output.push("<b>Image Components: </b>" + sof3.get("ImageComponents"));
+		output.push("<p>");
+		output.push("<b>Number of Lines: </b>" + sof3.get("NumberOfLines"));
+		output.push("<p>");
+		output.push("<b>Samples per Line: </b>" + sof3.get("SamplesPerLine"));
+		output.push("<p>");
+		output.push("<b>Horizontal Sampling Factor: </b>" + sof3.get("HSF"));
+		output.push("<p>");
+		output.push("<b>Vertical Sampling Factor: </b>" + sof3.get("VSF"));
+		output.push("<p>");
+		
+		var image0Offset = findIFDTagValue(16,17,1,false,false);
+		var image0Length = findIFDTagValue(16,23,1,false,false);	
+		var imageWidth = findIFDTagValue(16,0,1,false,false);
+		var imageHeight = findIFDTagValue(16,1,1,false,false);
+		var JpegData=bytes.slice(image0Offset,image0Offset+image0Length);
+		var model = new String(metaData.get("modelName"));
+			
+		if(model.includes("EOS-1Ds Mark II")&& !model.includes("EOS-1Ds Mark III")){
+			setImage(JpegData,imageWidth,imageHeight/5);
+		}else{
+			setImage(JpegData,imageWidth,imageHeight);
+		}
+			
+		if(sof3.get("HSF")==1){
+			document.getElementById("decodeR").style="display:block";
+			document.getElementById("decodeY").style="display:none";
+			document.getElementById("decodeYY").style="display:none";
+		}else{
+			if(sof3.get("VSF")==1){
+				document.getElementById("decodeR").style="display:none";
+				document.getElementById("decodeY").style="display:block";
+				document.getElementById("decodeYY").style="display:none";
+			}else{
+				document.getElementById("decodeR").style="display:none";
+				document.getElementById("decodeY").style="display:none";
+				document.getElementById("decodeYY").style="display:block";
+			}
+			}
+			
+		document.getElementById("left").style="display:block";
+		document.getElementById("right").style="display:block";
+		document.getElementById("info").style="text-align:left";
+		document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
+		window.downloadBytes=[];
+}
+
 
 
 function setImage(data, x,y){
@@ -133,21 +137,10 @@ function setImage(data, x,y){
 	// Use createObjectURL to make a URL for the blob
 	var image = new Image();
 	image.src = URL.createObjectURL(blob);
-	image.width=300;
-	image.height=300*(y/x);
+	image.style.width="90%";
 	document.getElementById("image").innerHTML="";
 	document.getElementById("image").appendChild(image);
 }
 
-function getBits(data){
-	window.bits =[];
-	for(var i =0; i <data.length;i++){
-		var byte = byteToString(data[i]);
-		if(data[i]==255){
-			i++;
-		}
-		bits.push(byte);
-	}
-}
 
 

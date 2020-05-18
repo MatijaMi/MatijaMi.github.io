@@ -1,4 +1,5 @@
-function decompressYCC(data){
+function decompressYCC(data,mData){
+	var metaData = mData;
 	var d = new Date();
 	console.log(d.getTime());
 	
@@ -17,8 +18,6 @@ function decompressYCC(data){
 	
 	window.bitPointer=0;
 	
-	
-	
 	for(var j =0; j< sliceDimensions[0]+1;j++){
 		var numberOfSamples;
 		var sample =[];
@@ -32,7 +31,7 @@ function decompressYCC(data){
 		}
 		
 		var counter = numberOfSamples*numberOfLines;
-		console.log(counter);
+		
 		var Y,Cb,Cr;
 		var i =0;
 		while(i<counter){
@@ -41,6 +40,7 @@ function decompressYCC(data){
 				prevY=imageLines[Math.floor(i/numberOfSamples)-1][0][0];
 				prevCb=imageLines[Math.floor(i/numberOfSamples)-1][0][1];
 				prevCr=imageLines[Math.floor(i/numberOfSamples)-1][0][2];
+			
 			}
 			
 			sample=[];
@@ -73,13 +73,12 @@ function decompressYCC(data){
 			imageLines[Math.floor(i/numberOfSamples)].push(sample);
 			i++;
 		}	
-		
+		console.log(counter);
+		postMessage([(((j+1)/(sliceDimensions[0]+1))*100).toFixed(2)]);
 	}
 	var b = new Date();
 		console.log(b.getTime());
 		console.log(b.getTime()-d.getTime());
-		document.getElementById("dycc").style="display:block";
-		
 		return imageLines;
 	
 }
