@@ -98,7 +98,7 @@ function findNextValueR(huffTable, previousValue){
 }
 
 
-function getDifferenceCode(differenceBits){
+function getDifferenceCodeR(differenceBits){
 	var number;
 	if(differenceBits.length==0){
 		return 0;
@@ -120,7 +120,7 @@ function getDifferenceCode(differenceBits){
 }
 
 
-function getNextBits(length){
+function getNextBitsR(length){
 	var str="";
 	for(var i =0; i<length;i++){
 		str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+i)%8);	

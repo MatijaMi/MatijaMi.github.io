@@ -98,6 +98,29 @@ label{
 	display: none;
 	
 }
+.download2{
+	display: none;
+	color:white;
+	background-color: blue;
+	border-radius: 10px;
+	border-color: blue;
+	padding: 10px;
+	margin-bottom: 10px;
+}
 
+.progressBar{
+	position: relative;
+	float: left;
+	width: 80%;
+	height: 15px;
+	display: none;
+	background-color: gray;
+}
 
+.bar{
+	width:1%;
+	height: 100%;
+	background-color: blue;
+	text-align: center;
+}
 

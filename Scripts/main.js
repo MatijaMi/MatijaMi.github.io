@@ -35,13 +35,13 @@ function startScan(file) {
 			
 			var imageWidth = findIFDTagValue(16,0,1,false,false);
 			var imageHeight = findIFDTagValue(16,1,1,false,false);
-			var data=bytes.slice(image0Offset,image0Offset+image0Length);
+			//var data=bytes.slice(image0Offset,image0Offset+image0Length);
 			var model = new String(metaData.get("modelName"));
 			
 			if(model.includes("EOS-1Ds Mark II")&& !model.includes("EOS-1Ds Mark III")){
-			   setImage(data,imageWidth,imageHeight/5);
+			   //setImage(data,imageWidth,imageHeight/5);
 			   }else{
-				   setImage(data,imageWidth,imageHeight);
+				   //setImage(data,imageWidth,imageHeight);
 			   }
 			
 			if(sof3.get("HSF")==1){
@@ -106,6 +106,10 @@ function collectMetaData(){
 	
 	var sosOffset = sof3Offset +sof3Length+2;
 	var sosData = getSOSData(sosOffset);
+	var sosLength = getSOSLength(sosOffset);
+	console.log(sosLength);
+	var imageDataOffset = sosOffset+sosLength+2;
+	console.log(imageDataOffset);
 	
 	metaData.set("MakerName", makerName);
 	metaData.set("modelName", modelName);
@@ -117,33 +121,11 @@ function collectMetaData(){
 	metaData.set("HT2", hts[1]);
 	metaData.set("SOF3", sof3Data);
 	metaData.set("SOS", sosData);
+	metaData.set("RawBitOffset", imageDataOffset);
 	
-	var sosLength = getSOSLength(sosOffset);
-	var imageDataOffset = sosOffset+sosLength+2;
-	
-	//bytes=bytes.slice(imageDataOffset);
 	return metaData;
 }
 
-
-function getBits(bytes){
-	window.bits =[];
-	for(var i =0; i <bytes.length;i++){
-		var byte = byteToString(bytes[i]);
-		if(bytes[i]==255){
-			i++;
-		}
-		bits.push(byte);
-	}
-}	
-
-		
-function decompressRaw(metaData){
-	
-	var result = decompress(metaData);
-	bytes=result;
-	
-} 
 
 
 function setImage(data, x,y){
@@ -155,6 +137,17 @@ function setImage(data, x,y){
 	image.height=300*(y/x);
 	document.getElementById("image").innerHTML="";
 	document.getElementById("image").appendChild(image);
+}
+
+function getBits(data){
+	window.bits =[];
+	for(var i =0; i <data.length;i++){
+		var byte = byteToString(data[i]);
+		if(data[i]==255){
+			i++;
+		}
+		bits.push(byte);
+	}
 }
 
 

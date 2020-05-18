@@ -3,9 +3,6 @@ function downloadYCC(){
 	saveByteArray(downloadBytes,name);
 }
 
-
-
-
 function saveByteArray(data,name){
 	var a = document.createElement("a");
     document.body.appendChild(a);

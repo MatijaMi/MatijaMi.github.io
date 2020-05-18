@@ -1,6 +1,6 @@
-function decompressYCC(metaData,rgb,bytes){
-	
-	
+function decompressYCC(data){
+	var d = new Date();
+	console.log(d.getTime());
 	
 	var ht1 =metaData.get("HT1");
 	var ht2 =metaData.get("HT2");
@@ -13,7 +13,8 @@ function decompressYCC(metaData,rgb,bytes){
 	for(var k =0; k <numberOfLines;k++){
 		imageLines.push([]);
 	}
-	getBits(bytes);
+	getBits(data);
+	
 	window.bitPointer=0;
 	
 	
@@ -24,7 +25,6 @@ function decompressYCC(metaData,rgb,bytes){
 		var prevY=Math.pow(2,samplePrecision-1);
 		var prevCb=0;
 		var prevCr=0;
-		
 		if(j==sliceDimensions[0]){
 			numberOfSamples= sliceDimensions[2]/HSF;
 		}else{
@@ -32,10 +32,16 @@ function decompressYCC(metaData,rgb,bytes){
 		}
 		
 		var counter = numberOfSamples*numberOfLines;
+		console.log(counter);
 		var Y,Cb,Cr;
 		var i =0;
 		while(i<counter){
 			
+			if(i>0 && i%numberOfSamples==0){
+				prevY=imageLines[Math.floor(i/numberOfSamples)-1][0][0];
+				prevCb=imageLines[Math.floor(i/numberOfSamples)-1][0][1];
+				prevCr=imageLines[Math.floor(i/numberOfSamples)-1][0][2];
+			}
 			
 			sample=[];
 			
@@ -69,13 +75,12 @@ function decompressYCC(metaData,rgb,bytes){
 		}	
 		
 	}
-	if(rgb==false){
-		return imageLines;
+	var b = new Date();
+		console.log(b.getTime());
+		console.log(b.getTime()-d.getTime());
+		document.getElementById("dycc").style="display:block";
 		
-	}else{
-		return YCCtoRGB(interpolateYCC(imageLines));
-	}
-	
+		return imageLines;
 	
 }
 
@@ -137,33 +142,6 @@ function getDifferenceCode(differenceBits){
 	return number;
 }
 
-
-function applyDiffs(image){
-	var prevY=Math.pow(2,14);
-	var prevCr=0;
-	var prevCb=0;
-	
-	for(var i =0;i<image.length;i++){
-		for(var j =0; j<image[i].length;j+=2){
-			image[i][j][0]=limitY(prevY+image[i][j][0],15);
-			image[i][j][1]=limitC(prevCb+image[i][j][1],15);
-			image[i][j][2]=limitC(prevCr+image[i][j][2],15);
-			image[i][j+1][0]=limitY(image[i][j][0]+image[i][j+1][0],15);
-			
-			prevY=image[i][j+1][0];
-			prevCb=image[i][j][1];
-			prevCr=image[i][j][2];
-			
-		}
-		
-	}
-	
-	return image;
-	
-}
-
-
-
 function getNextBits(length){
 	var str="";
 	for(var i =0; i<length;i++){
@@ -190,8 +168,6 @@ function interpolateYCC(image){
 			}
 			j++;
 		}
-		
-		
 	}
 	return image;	
 }
@@ -203,9 +179,9 @@ function YCCtoRGB(image){
 			var Cb=image[i][j][1];
 			var Cr=image[i][j][2];
 			
-			var r =Y +Cr;
-			var g =Y - 0.19*Cb - 0.5*Cr;
-			var b =Y +Cb;
+			var r =Y +1.6*Cr;
+			var g =Y - 0.38*Cb - 0.8*Cr;
+			var b =Y +2*Cb;
 			image[i][j][0]=r;
 			image[i][j][1]=g;
 			image[i][j][2]=b;
@@ -238,15 +214,4 @@ function limitC(c,sp){
 		}
 	}
 	return c;
-}
-
-function decompressYCC2(rgb){
-	document.getElementById("decodeY").innerHTML="Decoding...";
-	
-	var w = new Worker('Scripts/worker.js');
-	w.postMessage([metaData,"YCC", false,bytes]);
-	w.onmessage=function(e){
-		downloadBytes=e.data[0];
-		document.getElementById("decodeY").innerHTML="<button onclick=\"downloadYCC()\"> Download YCbCr</button>";
-	}
 }
