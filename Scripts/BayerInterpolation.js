@@ -107,9 +107,9 @@ function interpolateLastLine(image){
 
 function interpolateLine(image, j){
 	if(j%2==0){
-		return interpolateEvenLine(image,j);
+		return  interpolateEvenLine(image,j);
 	}else{
-		return interpolateOddLine(image,j);
+		return  interpolateOddLine(image,j);
 	}	
 }
 
