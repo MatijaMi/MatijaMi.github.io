@@ -40,8 +40,6 @@
 				<div class="dropzone" id="dropzone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
 					<label id="label" for="fileInput">Upload a .CR2 file</label>
 				</div>
-				<button class="submit" onclick="startScan()"> Submit</button>
-				
 				
 				<div class="left" id="left">
 				<div id="info"></div>
@@ -51,32 +49,34 @@
 				<div class="right" id="right">
 					
 					<div class="image" id="image"></div>
+					<div class="buttons">
+					<button class="downloadButton" id="downloadBasic" onclick="downloadJpeg()"> Download as Jpeg</button>
+					<button class="downloadButton" id="downloadBasic" onclick="downloadRaw()"> Download Raw Bytes</button>
 					
-					<button class="download" onclick="downloadJpeg()"> Download as Jpeg</button>
-					<button class="download" onclick="downloadRaw()"> Download Raw Bytes</button>
+					<button class="downloadButton" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
+						
+						
+					<button class="downloadButton" id="decodeY" onclick="decodeYCC()"> Decode as YYCbCr</button>
+						
+					<button class="downloadButton" id="decodeR" onclick="decodeRGGB()"> Decode as RGGB</button>
 					
-					<div class="decodeY" id="decodeY">
-						<button onclick="decodeYCC(false)"> Decode as YYCbCr</button>
-						<button onclick="decodeYCC(true)"> Decode as RGB</button>
-					</div>
-					<div  class="decodeR" id="decodeR">
-						<button onclick="downloadJpeg()"> Decode as RGGB</button>
-						<button onclick="downloadJpeg()"> Decode as RGB</button>
-					</div>
-					<div  class="decodeYY" id="decodeYY">
-						<button onclick="downloadJpeg()"> Decode as YYYYCbCr</button>
-						<button onclick="downloadJpeg()"> Decode as RGB</button>
-					</div>
+					<button class="downloadButton" id="decodeYY" onclick="decodeYYYYCC()"> Decode as YYYYCbCr</button>
 					
-					<div class="progressBar" id="progressBar">
-						<div class="bar" id="bar">0%</div>
-					</div>
+					<button class="downloadButton" onclick="decodeRGB()"> Decode as RGB</button>
+						
+					<button class="downloadButton" id="dycc" onclick="downloadYCC()"> Download YCbCr Data</button>
 					
-					<button class="download2" id="dycc" onclick="downloadYCC()"> Download YCbCr</button>
-					<button class="download2" id="dyycc" onclick="downloadYYCC()"> Download YYYYCbCr</button>
-					<button class="download2" id="drggb" onclick="downloadRGGB()"> Download RGGB</button>
-					<button class="download2" id="drgb" onclick="downloadRGB()"> Download RGB</button>
+					<button class="downloadButton" id="dyycc" onclick="downloadYYCC()"> Download YYYYCbCr Data</button>
+					
+					<button class="downloadButton" id="drggb" onclick="downloadRGGB()"> Download RGGB Data</button>
+					
+					<button class="downloadButton" id="drgb" onclick="downloadRGB()"> Download RGB Data</button>
+					
 				</div>
+					<div class="progressBar" id="progressBar">
+						<div class="bar" id="bar">0.0%</div>
+					</div>
+			</div>
 		</div>
 		<div class="intro">
 			<h3>What is CR2 Decoder?</h3>
@@ -91,7 +91,6 @@
 		
 		
 		<script  type="text/javascript">
-			
 			const inputElement = document.getElementById("fileInput");
 			inputElement.addEventListener("change", handleFiles, false);
 			window.imageCount=0;
@@ -100,16 +99,6 @@
 					window.fileList = this.files; /* now you can work with the file list */
 				readFile(fileList[0]);
 				
-			}
-			
-			function download(){
-				saveByteArray([bytes], "example.jpg");
-			}
-			function downloadJpeg(){
-				var image0Offset = findIFDTagValue(16,17,1,false,false);
-				var image0Length = findIFDTagValue(16,23,1,false,false);
-				var data=bytes.slice(image0Offset,image0Offset+image0Length);
-				saveByteArray([data], "example.jpg");
 			}
 			
 			function dragOverHandler(ev) {
@@ -121,8 +110,6 @@
 
   				if (ev.dataTransfer.items) {
 					readFile(ev.dataTransfer.items[0].getAsFile());
-					
-
   				}
 			}
 		

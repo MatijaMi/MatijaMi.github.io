@@ -52,9 +52,8 @@ function collectMetaData(){
 	var sosOffset = sof3Offset +sof3Length+2;
 	var sosData = getSOSData(sosOffset);
 	var sosLength = getSOSLength(sosOffset);
-	console.log(sosLength);
+	
 	var imageDataOffset = sosOffset+sosLength+2;
-	console.log(imageDataOffset);
 	
 	metaData.set("MakerName", makerName);
 	metaData.set("modelName", modelName);
@@ -100,28 +99,32 @@ function showFile(){
 		var imageHeight = findIFDTagValue(16,1,1,false,false);
 		var JpegData=bytes.slice(image0Offset,image0Offset+image0Length);
 		var model = new String(metaData.get("modelName"));
-			
+		
 		if(model.includes("EOS-1Ds Mark II")&& !model.includes("EOS-1Ds Mark III")){
 			setImage(JpegData,imageWidth,imageHeight/5);
 		}else{
 			setImage(JpegData,imageWidth,imageHeight);
 		}
-			
+		
 		if(sof3.get("HSF")==1){
-			document.getElementById("decodeR").style="display:block";
+			document.getElementById("decodeR").style="display:";
 			document.getElementById("decodeY").style="display:none";
 			document.getElementById("decodeYY").style="display:none";
 		}else{
 			if(sof3.get("VSF")==1){
 				document.getElementById("decodeR").style="display:none";
-				document.getElementById("decodeY").style="display:block";
+				document.getElementById("decodeY").style="display:";
 				document.getElementById("decodeYY").style="display:none";
 			}else{
 				document.getElementById("decodeR").style="display:none";
 				document.getElementById("decodeY").style="display:none";
-				document.getElementById("decodeYY").style="display:block";
+				document.getElementById("decodeYY").style="display:";
 			}
 			}
+		document.getElementById("dycc").style="display:none";
+		document.getElementById("dyycc").style="display:none";
+		document.getElementById("drggb").style="display:none";
+		document.getElementById("drgb").style="display:none";
 			
 		document.getElementById("label").innerHTML="Upload a different file";
 		document.getElementById("left").style="display:block";
@@ -139,6 +142,7 @@ function setImage(data, x,y){
 	var image = new Image();
 	image.src = URL.createObjectURL(blob);
 	image.style.width="75%";
+	image.style.border="1px solid black"
 	document.getElementById("image").innerHTML="";
 	document.getElementById("image").appendChild(image);
 }

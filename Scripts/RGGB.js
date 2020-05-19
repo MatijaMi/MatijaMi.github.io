@@ -1,6 +1,8 @@
-function decompressRGGB(metaData){
+function decompressRGGB(data, mData){
 	
-	
+	getBits(data);
+
+	var metaData=mData;
 	var ht1 =metaData.get("HT1");
 	var ht2 =metaData.get("HT2");
 	var numberOfLines = metaData.get("SOF3").get("NumberOfLines");
@@ -9,40 +11,33 @@ function decompressRGGB(metaData){
 	var sliceDimensions = metaData.get("Slices");
 	var samplePrecision = metaData.get("SOF3").get("SamplePrecision");
 	var imageLines=[];
-	for(var i =0; i <numberOfLines;i++){
+	for(var k =0; k <numberOfLines;k++){
 		imageLines.push([]);
 	}
+	
 	window.bitPointer=0;
-	var prevC1=Math.pow(2,samplePrecision-1);
-	var prevC2=Math.pow(2,samplePrecision-1);
-	console.log("Start");
 	
 	for(var j =0; j< sliceDimensions[0]+1;j++){
 		console.log("Slice " +j);
 		
-		var res;
 		var numberOfSamples;
-		var sample =[];
+		var prevC1=Math.pow(2,samplePrecision-1);
+		var prevC2=Math.pow(2,samplePrecision-1);
 		
 		if(j==sliceDimensions[0]){
-			numberOfSamples= sliceDimensions[2]/2;
+			numberOfSamples= sliceDimensions[2]/HSF;
 		}else{
-			numberOfSamples= sliceDimensions[1]/2;
+			numberOfSamples= sliceDimensions[1]/HSF;
 		}
 				
 		var counter = numberOfSamples*numberOfLines;
 		console.log("Counter =" +counter);
-		var temp = [];
 		var i =0;
 		while(i<counter){
-		
-			sample=[];
 			if(i>0 && i%numberOfSamples==0){
 				prevC1=imageLines[Math.floor(i/numberOfSamples)-1][0];
 				prevC2=imageLines[Math.floor(i/numberOfSamples)-1][1];
 			}
-			
-			
 			prevC1 = findNextValueR(ht1, prevC1);
 			prevC1= limitComponent(prevC1,samplePrecision);
 			
@@ -51,12 +46,10 @@ function decompressRGGB(metaData){
 			
 			imageLines[Math.floor(i/numberOfSamples)].push(prevC1);
 			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
-			i++;
+			i+=2;
 		}	
 		
 	}
-	console.log(imageLines.length);
-	console.log(imageLines[0].length);
 	return imageLines;
 	
 }
@@ -93,8 +86,7 @@ function findNextValueR(huffTable, previousValue){
 	
 	bitPointer=bitPointer+dcL.length;
 	var x =huffTable.get(dcL);
-	
-	return previousValue+getDifferenceCode(getNextBits(x));
+	return previousValue+getDifferenceCodeR(getNextBitsR(x));
 }
 
 
@@ -113,7 +105,7 @@ function getDifferenceCodeR(differenceBits){
 	if (differenceBits.charAt(0)==0){
 			number = (1 - Math.pow(2,differenceBits.length))+addition;
 		}else{
-			number =parseInt(differenceBits);			
+			number = Math.pow(2,differenceBits.length-1)+addition;		
 		}
 	bitPointer=bitPointer+differenceBits.length;
 	return number;
