@@ -36,9 +36,9 @@
 			
 			<h1> CR2 Decoder</h1>
 			<div  id="inputBox" class="inputBox">
-				<input type="file" id="fileInput" name="files" />
+				<input type="file" id="fileInput" name="files">
 				<div class="dropzone" id="dropzone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-					<label id="label" for="fileInput">Choose a file</label>
+					<label id="label" for="fileInput">Upload a .CR2 file</label>
 				</div>
 				<button class="submit" onclick="startScan()"> Submit</button>
 				
@@ -77,12 +77,17 @@
 					<button class="download2" id="drggb" onclick="downloadRGGB()"> Download RGGB</button>
 					<button class="download2" id="drgb" onclick="downloadRGB()"> Download RGB</button>
 				</div>
-			</div>	
 		</div>
+		<div class="intro">
+			<h3>What is CR2 Decoder?</h3>
+			<p>CR2 Decoder is a project aimed at making working with Canon Raw 2 files easier by making the raw data that the camera collects, as well as the meta data used by the camera more accesible and easier to extract from the  .CR2 file. It also functions as a simple .CR2 to .JPEG converter for those who only need that function. Seeing as there is only so much knowledege about the .CR format that has been found out there are certain limitations as to what this tool can do and we cannot promise that it will work with every camera and every file that you choose. It is also still a work in progress so a lot of improvements are always on the way and in case you encounter any bugs or problems please do report them to our team so we can deal with them switfly and on time.
+			</p>
+			
+			</div>
 		
 		
-		
-		
+		</div>
+
 		
 		
 		<script  type="text/javascript">

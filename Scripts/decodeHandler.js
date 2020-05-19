@@ -1,6 +1,8 @@
 function decodeYCC(rgbOn){
 	document.getElementById("decodeY").style="display:none";
 	document.getElementById("progressBar").style="display:block";
+	document.getElementById("download").disable=true;
+	document.getElementById("label").disable=true;
 	var w = new Worker('Scripts/YCC_Worker.js');
 	var data = bytes.slice(metaData.get("RawBitOffset"));
 	w.postMessage([data,metaData,rgbOn]);

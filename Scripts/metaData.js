@@ -123,6 +123,7 @@ function showFile(){
 			}
 			}
 			
+		document.getElementById("label").innerHTML="Upload a different file";
 		document.getElementById("left").style="display:block";
 		document.getElementById("right").style="display:block";
 		document.getElementById("info").style="text-align:left";
@@ -137,7 +138,7 @@ function setImage(data, x,y){
 	// Use createObjectURL to make a URL for the blob
 	var image = new Image();
 	image.src = URL.createObjectURL(blob);
-	image.style.width="90%";
+	image.style.width="75%";
 	document.getElementById("image").innerHTML="";
 	document.getElementById("image").appendChild(image);
 }
