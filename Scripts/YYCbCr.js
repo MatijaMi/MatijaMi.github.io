@@ -181,9 +181,9 @@ function YCCtoRGB(image){
 			var r =Y +1.6*Cr;
 			var g =Y - 0.38*Cb - 0.8*Cr;
 			var b =Y +2*Cb;
-			image[i][j][0]=r;
-			image[i][j][1]=g;
-			image[i][j][2]=b;
+			image[i][j][0]=(r-512)*0.497;
+			image[i][j][1]=(g-512)*1.146;
+			image[i][j][2]=(b-512)*0.828;
 		}
 	}
 	return image;

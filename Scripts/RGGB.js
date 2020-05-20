@@ -124,10 +124,11 @@ function limitComponent(comp, sp){
 	var maxValue =Math.pow(2,sp)-1;
 	
 	if(comp>maxValue){
-		comp=2*maxValue-comp;
+		//comp=2*maxValue-comp;
+		comp=15600;
 	}else{
-		if(comp<0){
-			comp=Math.abs(comp);
+		if(comp<1024){
+			comp=1024;
 		}
 	}
 	return comp;
