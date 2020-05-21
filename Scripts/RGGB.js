@@ -10,46 +10,17 @@ function decompressRGGB(data, mData){
 	var HSF = metaData.get("SOF3").get("HSF");
 	var sliceDimensions = metaData.get("Slices");
 	var samplePrecision = metaData.get("SOF3").get("SamplePrecision");
-	var imageLines=[];
-	for(var k =0; k <numberOfLines;k++){
-		imageLines.push([]);
-	}
+	var numberOfComponents = metaData.get("SOF3").get("ImageComponents");
 	
+	console.log(numberOfComponents);
 	window.bitPointer=0;
-	
-	for(var j =0; j< sliceDimensions[0]+1;j++){
-		console.log("Slice " +j);
-		
-		var numberOfSamples;
-		var prevC1=Math.pow(2,samplePrecision-1);
-		var prevC2=Math.pow(2,samplePrecision-1);
-		
-		if(j==sliceDimensions[0]){
-			numberOfSamples= sliceDimensions[2]/HSF;
-		}else{
-			numberOfSamples= sliceDimensions[1]/HSF;
-		}
-				
-		var counter = numberOfSamples*numberOfLines;
-		console.log("Counter =" +counter);
-		var i =0;
-		while(i<counter){
-			if(i>0 && i%numberOfSamples==0){
-				prevC1=imageLines[Math.floor(i/numberOfSamples)-1][0];
-				prevC2=imageLines[Math.floor(i/numberOfSamples)-1][1];
-			}
-			prevC1 = findNextValueR(ht1, prevC1);
-			prevC1= limitComponent(prevC1,samplePrecision);
-			
-			prevC2 = findNextValueR(ht2, prevC2);
-			prevC2= limitComponent(prevC2,samplePrecision);
-			
-			imageLines[Math.floor(i/numberOfSamples)].push(prevC1);
-			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
-			i+=2;
-		}	
-		
+	if(numberOfComponents==2){
+		 var imageLines=decompress2V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2);
+	}else{
+		 var imageLines=decompress4V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2);
 	}
+	
+	
 	return imageLines;
 	
 }
@@ -134,3 +105,96 @@ function limitComponent(comp, sp){
 	return comp;
 }
 
+function decompress2V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2){
+	var imageLines=[];
+	for(var k =0; k <numberOfLines;k++){
+		imageLines.push([]);
+	}
+	for(var j =0; j< sliceDimensions[0]+1;j++){
+		console.log("Slice " +j);
+		
+		var numberOfSamples;
+		var prevC1=Math.pow(2,samplePrecision-1);
+		var prevC2=Math.pow(2,samplePrecision-1);
+		
+		if(j==sliceDimensions[0]){
+			numberOfSamples= sliceDimensions[2]/HSF;
+		}else{
+			numberOfSamples= sliceDimensions[1]/HSF;
+		}
+				
+		var counter = numberOfSamples*numberOfLines;
+		console.log("Counter =" +counter);
+		var i =0;
+		while(i<counter){
+			if(i>0 && i%numberOfSamples==0){
+				prevC1=imageLines[Math.floor(i/numberOfSamples)-1][0];
+				prevC2=imageLines[Math.floor(i/numberOfSamples)-1][1];
+			}
+			prevC1 = findNextValueR(ht1, prevC1);
+			prevC1= limitComponent(prevC1,samplePrecision);
+			
+			prevC2 = findNextValueR(ht2, prevC2);
+			prevC2= limitComponent(prevC2,samplePrecision);
+			
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC1);
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
+			i+=2;
+		}	
+		
+	}
+	return imageLines
+}
+
+function decompress4V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2){
+	var imageLines=[];
+	for(var k =0; k <numberOfLines;k++){
+		imageLines.push([]);
+	}
+	for(var j =0; j< sliceDimensions[0]+1;j++){
+		console.log("Slice " +j);
+		
+		var numberOfSamples;
+		var prevC1=Math.pow(2,samplePrecision-1);
+		var prevC2=Math.pow(2,samplePrecision-1);
+		var prevC3=Math.pow(2,samplePrecision-1);
+		var prevC4=Math.pow(2,samplePrecision-1);
+		
+		if(j==sliceDimensions[0]){
+			numberOfSamples= sliceDimensions[2]/HSF;
+		}else{
+			numberOfSamples= sliceDimensions[1]/HSF;
+		}
+				
+		var counter = numberOfSamples*numberOfLines;
+		console.log("Counter =" +counter);
+		var i =0;
+		while(i<counter){
+			if(i>0 && i%numberOfSamples==0){
+				prevC1=imageLines[Math.floor(i/numberOfSamples)-1][0];
+				prevC2=imageLines[Math.floor(i/numberOfSamples)-1][1];
+				prevC3=imageLines[Math.floor(i/numberOfSamples)-1][2];
+				prevC4=imageLines[Math.floor(i/numberOfSamples)-1][3];
+			}
+			prevC1 = findNextValueR(ht1, prevC1);
+			prevC1= limitComponent(prevC1,samplePrecision);
+			
+			prevC2 = findNextValueR(ht2, prevC2);
+			prevC2= limitComponent(prevC2,samplePrecision);
+			
+			prevC3 = findNextValueR(ht1, prevC3);
+			prevC3= limitComponent(prevC3,samplePrecision);
+			
+			prevC4 = findNextValueR(ht2, prevC4);
+			prevC4= limitComponent(prevC4,samplePrecision);
+			
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC1);
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC3);
+			imageLines[Math.floor(i/numberOfSamples)].push(prevC4);
+			i+=4;
+		}	
+		
+	}
+	return imageLines
+}

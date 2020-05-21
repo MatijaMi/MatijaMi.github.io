@@ -37,7 +37,11 @@ function saveByteArray(data,name){
 	var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
-    var blob = new Blob(data, {type: "octet/stream"}),
+	var d = new Date();
+	console.log(d.getTime());
+    var blob = new Blob(data, {type: "octet/stream"});
+	var b = new Date();
+	console.log(b.getTime()-d.getTime());
     url = window.URL.createObjectURL(blob);
     a.href = url;
     a.download = name;
