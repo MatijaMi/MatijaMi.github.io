@@ -15,6 +15,7 @@ function downloadRGGB(){
 function downloadRGB(){
 	var name =fileList[0].name +"RGB.txt";
 	saveByteArray(downloadBytes,name);
+	
 }
 function downloadJpeg(){
 	var image0Offset = findIFDTagValue(16,17,1,false,false);
@@ -41,6 +42,5 @@ function saveByteArray(data,name){
     a.href = url;
     a.download = name;
     a.click();
-    window.URL.revokeObjectURL(url);
-	
+    window.URL.revokeObjectURL(url);	
 }

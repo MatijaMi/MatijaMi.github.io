@@ -30,8 +30,14 @@ function collectMetaData(){
 	const makerNoteLength = transformTwoBytes(bytes[makerNoteOffset],bytes[makerNoteOffset+1]);
 	
 	//TODO IMPLEMENT METHODS FOR MAKERNOTE VALUES(TO BE SEEN)
+	
+	
 	//MakerNotes code
 	const imageType = findIFDTagValue(makerNoteOffset,16,0,false,false);
+	const wb = getWhiteBalance(makerNoteOffset);
+	
+	
+	
 	//IFD3 Code
 	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	const ifdThreeLength = transformTwoBytes(bytes[ifdThreeOffset],bytes[ifdThreeOffset+1]);
