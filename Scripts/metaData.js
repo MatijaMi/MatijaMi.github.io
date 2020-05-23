@@ -58,9 +58,11 @@ function collectMetaData(){
 	var sosOffset = sof3Offset +sof3Length+2;
 	var sosData = getSOSData(sosOffset);
 	var sosLength = getSOSLength(sosOffset);
-	
+	var image0Offset = findIFDTagValue(16,17,1,false,false);
+	var image0Length = findIFDTagValue(16,23,1,false,false);
+	window.jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	var imageDataOffset = sosOffset+sosLength+2;
-	
+	bytes=bytes.slice(imageDataOffset);
 	metaData.set("MakerName", makerName);
 	metaData.set("modelName", modelName);
 	metaData.set("ImageType", imageType);
@@ -103,13 +105,13 @@ function showFile(){
 		var image0Length = findIFDTagValue(16,23,1,false,false);	
 		var imageWidth = findIFDTagValue(16,0,1,false,false);
 		var imageHeight = findIFDTagValue(16,1,1,false,false);
-		var JpegData=bytes.slice(image0Offset,image0Offset+image0Length);
+		
 		var model = new String(metaData.get("modelName"));
 		
 		if(model.includes("EOS-1Ds Mark II")&& !model.includes("EOS-1Ds Mark III")){
-			setImage(JpegData,imageWidth,imageHeight/5);
+			setImage(jpeqBytes,imageWidth,imageHeight/5);
 		}else{
-			setImage(JpegData,imageWidth,imageHeight);
+			setImage(jpeqBytes,imageWidth,imageHeight);
 		}
 		
 		if(sof3.get("HSF")==1){

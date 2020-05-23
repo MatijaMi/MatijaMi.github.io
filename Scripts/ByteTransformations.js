@@ -21,16 +21,16 @@ function numberToBitString(number, bitCount){
 
 function byteToString(byte){
 	
-	return ("000000000" + byte.toString(2)).substr(-8)
+	return ("0000000" + byte.toString(2)).substr(-8)
 	
 }
 function getBits(data){
 	window.bits =[];
 	for(var i =0; i <data.length;i++){
 		var byte = byteToString(data[i]);
+		bits.push(byte);
 		if(data[i]==255){
 			i++;
 		}
-		bits.push(byte);
 	}
 }

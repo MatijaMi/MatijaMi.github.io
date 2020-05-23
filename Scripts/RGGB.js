@@ -1,7 +1,6 @@
 function decompressRGGB(data, mData){
-	
-	getBits(data);
 
+	getBits(data);
 	var metaData=mData;
 	var ht1 =metaData.get("HT1");
 	var ht2 =metaData.get("HT2");
@@ -12,15 +11,12 @@ function decompressRGGB(data, mData){
 	var samplePrecision = metaData.get("SOF3").get("SamplePrecision");
 	var numberOfComponents = metaData.get("SOF3").get("ImageComponents");
 	
-	console.log(numberOfComponents);
 	window.bitPointer=0;
 	if(numberOfComponents==2){
 		 var imageLines=decompress2V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2);
 	}else{
 		 var imageLines=decompress4V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2);
 	}
-	
-	
 	return imageLines;
 	
 }
@@ -96,10 +92,10 @@ function limitComponent(comp, sp){
 	
 	if(comp>maxValue){
 		//comp=2*maxValue-comp;
-		comp=15600;
+		comp=maxValue;
 	}else{
-		if(comp<1024){
-			comp=1024;
+		if(comp<0){
+			comp=0;
 		}
 	}
 	return comp;
@@ -112,6 +108,8 @@ function decompress2V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2)
 	}
 	for(var j =0; j< sliceDimensions[0]+1;j++){
 		console.log("Slice " +j);
+		
+		
 		
 		var numberOfSamples;
 		var prevC1=Math.pow(2,samplePrecision-1);
@@ -141,7 +139,6 @@ function decompress2V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2)
 			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
 			i+=2;
 		}	
-		
 	}
 	return imageLines
 }

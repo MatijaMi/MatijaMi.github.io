@@ -21,11 +21,9 @@ function decodeRGGB(rgbOn){
 
 	disableButtons(true);
 		
-	var w = new Worker('Scripts/RGGB_Worker.js');
-	var data = bytes.slice(metaData.get("RawBitOffset"));
+	var w = new Worker('Scripts/RGGB_Worker.js')
 	
-	
-	w.postMessage([data,metaData,rgbOn]);
+	w.postMessage([bytes,metaData,rgbOn]);
 	
 	w.onmessage=function(e){
 		if(e.data[0]=="RES"){
@@ -37,7 +35,7 @@ function decodeRGGB(rgbOn){
 				document.getElementById("drggb").style="display:";
 			}
 			var x = e.data[1];
-			downloadBytes=[x];
+			downloadBytes=x;
 			disableButtons(false);
 			w.terminate();
 		}else{
@@ -69,7 +67,7 @@ function decodeYCC(rgbOn){
 			}else{
 				document.getElementById("dycc").style="display:";
 			}
-			downloadBytes=[e.data[1]];
+			downloadBytes=e.data[1];
 			disableButtons(false);
 			w.terminate();
 		}else{

@@ -17,10 +17,8 @@ function getSOSData(sosOffset){
 		
 		if(bytes[sosOffset+6+2*i]==0){
 			sosData.set("DCAC" +i, 0);
-			console.log("Component " +i + " uses HT" +0);
 		}else{
 			sosData.set("DCAC" +i, 1);
-			console.log("Component " +i + " uses HT" +1);
 		}	
 	}
 	

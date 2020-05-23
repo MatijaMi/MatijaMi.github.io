@@ -18,10 +18,8 @@ function downloadRGB(){
 	
 }
 function downloadJpeg(){
-	var image0Offset = findIFDTagValue(16,17,1,false,false);
-	var image0Length = findIFDTagValue(16,23,1,false,false);
-	var data=bytes.slice(image0Offset,image0Offset+image0Length);
-	saveByteArray([data], "example.jpg");
+	var blob = new Blob([jpeqBytes], {type: "octet/stream"});
+	saveByteArray(blob, "example.jpg");
 }
 
 function downloadRaw(){
@@ -37,12 +35,7 @@ function saveByteArray(data,name){
 	var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
-	var d = new Date();
-	console.log(d.getTime());
-    var blob = new Blob(data, {type: "octet/stream"});
-	var b = new Date();
-	console.log(b.getTime()-d.getTime());
-    url = window.URL.createObjectURL(blob);
+    url = window.URL.createObjectURL(data);
     a.href = url;
     a.download = name;
     a.click();
