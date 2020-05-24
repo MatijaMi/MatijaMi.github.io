@@ -129,6 +129,7 @@ function showFile(){
 				document.getElementById("decodeYY").style="display:";
 			}
 			}
+		document.getElementById("loading").style="display:none"
 		document.getElementById("dycc").style="display:none";
 		document.getElementById("dyycc").style="display:none";
 		document.getElementById("drggb").style="display:none";

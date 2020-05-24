@@ -21,13 +21,14 @@ function decodeRGGB(rgbOn){
 
 	disableButtons(true);
 		
-	var w = new Worker('Scripts/RGGB_Worker.js')
-	
+	var w = new Worker('Scripts/Workers/RGGB_Worker.js')
+	document.getElementById("pbText").innerHTML="Transforming bytes";
 	w.postMessage([bytes,metaData,rgbOn]);
 	
 	w.onmessage=function(e){
 		if(e.data[0]=="RES"){
-			document.getElementById("progressBar").style="display:none";
+			document.getElementById("pbText").innerHTML="";
+			document.getElementById("loading").style="display:none"
 			
 			if(rgbOn){
 				document.getElementById("drgb").style="display:";
@@ -39,8 +40,15 @@ function decodeRGGB(rgbOn){
 			disableButtons(false);
 			w.terminate();
 		}else{
-			document.getElementById("bar").style.width=e.data[0]+"%";
-			document.getElementById("bar").innerHTML=e.data[0]+"%";
+			if(e.data[0]=="PB"){
+			document.getElementById("pbText").innerHTML="<b>"+e.data[2]+"</b>";
+			document.getElementById("bar").style.width=e.data[1]+"%";
+			document.getElementById("bar").innerHTML=e.data[1]+"%";
+			}else{
+				document.getElementById("pbText").innerHTML="<b> Preparing Download </b>";
+				document.getElementById("loading").style="display:"
+				document.getElementById("progressBar").style="display:none";
+			}
 		}
 	}
 }
@@ -54,13 +62,14 @@ function decodeYCC(rgbOn){
 
 	disableButtons(true);
 		
-	var w = new Worker('Scripts/YCC_Worker.js');
-	var data = bytes.slice(metaData.get("RawBitOffset"));
-	w.postMessage([data,metaData,rgbOn]);
+	var w = new Worker('Scripts/Workers/YCC_Worker.js');
+	w.postMessage([bytes,metaData,rgbOn]);
 	
 	w.onmessage=function(e){
 		if(e.data[0]=="RES"){
 			document.getElementById("progressBar").style="display:none";
+			document.getElementById("loading").style="display:none"
+			document.getElementById("pbText").innerHTML="";
 			
 			if(rgbOn){
 				document.getElementById("drgb").style="display:";
@@ -71,22 +80,30 @@ function decodeYCC(rgbOn){
 			disableButtons(false);
 			w.terminate();
 		}else{
-			document.getElementById("bar").style.width=e.data[0]+"%";
-			document.getElementById("bar").innerHTML=e.data[0]+"%";
+			if(e.data[0]=="PB"){
+			document.getElementById("pbText").innerHTML="<b>"+e.data[2]+"</b>";
+			document.getElementById("bar").style.width=e.data[1]+"%";
+			document.getElementById("bar").innerHTML=e.data[1]+"%";
+			}else{
+				document.getElementById("pbText").innerHTML="<b> Preparing Download </b>";
+				document.getElementById("loading").style="display:"
+				document.getElementById("progressBar").style="display:none";
+			}
 		}
 	}
 }
 
-
 function disableButtons(mode){
 	var elems = document.getElementsByClassName("downloadButton");
-	var color,cursor;
+	var color,cursor,textCol;
 	if(mode){
 		color="gray";
 		cursor="default";
+		textCol="lightgray";
 	}else{
 		color="blue";
-		cursor="pointer"
+		cursor="pointer";
+		textCol="white";
 	}
 	for(var i =0; i <elems.length;i++){
 		
@@ -94,5 +111,6 @@ function disableButtons(mode){
 		elems[i].style.backgroundColor=color;
 		elems[i].style.border="1px solid " +color;
 		elems[i].style.cursor=cursor;
+		elems[i].style.color=textCol;
 	}
-}
+}	

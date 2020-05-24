@@ -146,3 +146,12 @@ input{
 	width: 0.1px;
 	height: 0.1px;
 }
+
+.loading{
+	width 40px;
+	height: 40px;
+}
+
+.pbText{
+	margin:5px;
+}

@@ -7,20 +7,25 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CR2 Decoder</title>
         <link rel="stylesheet" href="style.css">
-        <script src="Scripts/metaData.js"></script>
-		<script src="Scripts/ByteTransformations.js"></script>
-    	<script src="Scripts/IFDFunctions.js"></script>
-		<script src="Scripts/debug.js"></script>
-		<script src="Scripts/MakerNoteFunctions.js"></script>
-		<script src="Scripts/DHTFunctions.js"></script>
-		<script src="Scripts/SOF3.js"> </script>
-		<script src="Scripts/SOS.js"></script>
-		<script src="Scripts/RGGB.js"></script>
-		<script src="Scripts/YYYYCbCr.js"></script>
-		<script src="Scripts/YYCbCr.js"></script>
-		<script src="Scripts/BayerInterpolation.js"></script>
 		<script src="Scripts/DownloadFunctions.js"></script>
 		<script src="Scripts/decodeHandler.js"></script>
+		
+        <script src="Scripts/MetaData/metaData.js"></script>
+    	<script src="Scripts/MetaData/IFDFunctions.js"></script>
+		<script src="Scripts/MetaData/MakerNoteFunctions.js"></script>
+		<script src="Scripts/MetaData/DHTFunctions.js"></script>
+		<script src="Scripts/MetaData/SOF3.js"> </script>
+		<script src="Scripts/MetaData/SOS.js"></script>
+		
+		<script src="Scripts/Decode/RGGB.js"></script>
+		<script src="Scripts/Decode/YYYYCbCr.js"></script>
+		<script src="Scripts/Decode/YYCbCr.js"></script>
+		<script src="Scripts/Decode/DecodeValues.js"></script>
+		
+		<script src="Scripts/Utils/ByteTransformations.js"></script>
+		<script src="Scripts/Utils/Interpolations.js"></script>
+		<script src="Scripts/Utils/debug.js"></script>
+		<script src="Scripts/Utils/DecodeUtils.js"></script>
     </head>
     
     <body>
@@ -73,9 +78,11 @@
 					<button class="downloadButton" id="drgb" onclick="downloadRGB()"> Download RGB Data</button>
 					
 				</div>
+					<div class="pbText" id="pbText"></div>
 					<div class="progressBar" id="progressBar">
 						<div class="bar" id="bar">0.0%</div>
 					</div>
+					<img class="loading" id="loading" src="stolen.gif" alt="Loading">
 			</div>
 		</div>
 		<div class="intro">
@@ -96,9 +103,8 @@
 			window.imageCount=0;
 			
 			function handleFiles() {
-					window.fileList = this.files; /* now you can work with the file list */
-				readFile(fileList[0]);
-				
+					window.fileList = this.files;
+				readFile(fileList[0]);	
 			}
 			
 			function dragOverHandler(ev) {

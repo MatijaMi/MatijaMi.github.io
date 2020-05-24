@@ -1,29 +1,30 @@
-
-function ruffBayer(image){
-	var newImg=[];
-	var pixel=[];
-	for(var i =0; i <image.length;i+=2){
-		for(var j=0; j<image[i].length;j+=2){
-			pixel=[];
-			var r = image[i][j];
-			var b = image[i+1][j+1];
-			var g = (image[i][j+1]+image[i+1][j])/2;
-			pixel.push(r);
-			pixel.push(g);
-			pixel.push(b);
-			
-			newImg.push(pixel);
-			
+function interpolateYCC(image){
+	for(var i = 0; i <image.length;i++){
+		for(var j =1; j<image[i].length;j++){
+			var prevCb = image[i][j-1][1];
+			var prevCr = image[i][j-1][2];
+			if(j==(image[i].length-1)){
+				image[i][j].push(prevCb);
+				image[i][j].push(prevCr);
+			}else{
+				
+				var nextCb= image[i][j+1][1];
+				var nextCr=	image[i][j+1][2];
+				image[i][j].push((prevCb+nextCb)/2);
+				image[i][j].push((prevCr+nextCr)/2);
+			}
+			j++;
 		}
 	}
-	
-	return newImg;
+	return image;	
 }
 
 function bayerInterpolation(image){
 	var newImg =[];
-	
 	for(var i =0; i<image.length;i++){
+		if(i%Math.floor(image.length/100)==0){
+			postMessage(["PB",i/Math.floor(image.length/100),"Interpolating Values"])
+		}
 			if(i==0){
 				newImg.push(interpolateFirstLine(image));
 				
