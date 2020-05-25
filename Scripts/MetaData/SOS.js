@@ -1,8 +1,5 @@
 //Functions to gather data from the SOS part
-
-
 function getSOSLength(sosOffset){
-	
 	return bytes[sosOffset+2]*256 + bytes[sosOffset+3];
 }
 

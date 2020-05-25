@@ -1,46 +1,42 @@
-function decompress2V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2,samplesPerLine){
+function decompressValues(mData){
+	
+	
+	window.bitPointer=0;
+	var metaData=mData;
+	var sof3 = metaData.get("SOF3");
+	var numberOfLines = sof3.get("NumberOfLines");
+	var samplesPerLine = sof3.get("SamplesPerLine");
+	var sliceDimensions = metaData.get("Slices");
+	var samplePrecision = sof3.get("SamplePrecision");
+	var nComponents = sof3.get("ImageComponents");
+	var HSF = sof3.get("HSF");
+	var VSF = sof3.get("VSF");
+	var sos = metaData.get("SOS");
+	var ht1 = metaData.get("HT1");
+	var ht2 = metaData.get("HT2");
+	
+	var compParts = setupComponentParts(HSF,VSF);
+	var hts = setupHTS(sos,ht1,ht2,nComponents);
+	var previousValues = setPreviousValues(nComponents,samplePrecision);
+	
 	var imageLines=[];
-	for(var k =0; k <numberOfLines;k++){
+	for(var i =0; i < numberOfLines;i++){
 		imageLines.push([]);
-	}
-	
-	var width = samplesPerLine;
-	console.log(width);
-	var height= numberOfLines;
-	var acWidth= width/HSF;
-	var prevC1=Math.pow(2,samplePrecision-1);
-	var prevC2=Math.pow(2,samplePrecision-1);
-	
-	for(var i =0; i < height;i++){
 		if(i>0){
-			prevC1=imageLines[i-1][0];
-			prevC2=imageLines[i-1][1];
+			for(var comp=0; comp<nComponents;comp++){
+				previousValues[comp]=imageLines[i-1][comp];
+			}
 		}
-		for(var j =0; j <width;j++){
-			prevC1 = findNextValue(ht1, prevC1);
-			prevC1= limitComponent(prevC1,samplePrecision);
-			
-			prevC2 = findNextValue(ht2, prevC2);
-			prevC2= limitComponent(prevC2,samplePrecision);
-			
-			imageLines[i].push(prevC1);
-			imageLines[i].push(prevC2);	
+		for(var j =0; j <samplesPerLine;j++){
+			for(var comps = 0; comps<nComponents;comps++){
+				for(var part=0; part<compParts[comps];part++){
+					previousValues[comps]=findNextValue(hts[comps],previousValues[comps]);
+					imageLines[i].push(previousValues[comps]);
+				}
+			}
 		}
 	}
-	console.log(imageLines.length);
-	console.log(imageLines[imageLines.length-1].length);
-	var image= unslice(imageLines, sliceDimensions,numberOfLines,samplesPerLine);
-	return image;
-}
-
-function cropBorders(image, top, left, bot , right){
-	var croppedImage =[];
-	for(var i=top;i<bot;i++){
-		
-		croppedImage.push(image[i].slice(left,right));
-	}
-	console.log("DONE");
-	return croppedImage;
+	return imageLines;
 }
 
 function unslice(image, slices, height,widthx){
@@ -70,135 +66,50 @@ function unslice(image, slices, height,widthx){
 	}
 	
 	return imageLines;
-	
-}
-function decompress3V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2){
-	var imageLines=[];
-	for(var k =0; k <numberOfLines;k++){
-		imageLines.push([]);
-	}
-	for(var j =0; j< sliceDimensions[0]+1;j++){
-		var numberOfSamples;
-		var sample =[];
-		
-		var pbPart=Math.floor(100/(sliceDimensions[0]+1));
-
-		if(j==sliceDimensions[0]){
-			numberOfSamples= sliceDimensions[2]/HSF;
-		}else{
-			numberOfSamples= sliceDimensions[1]/HSF;
-		}
-		
-		var counter = numberOfSamples*numberOfLines;
-		
-		var Y,Cb,Cr;
-		var i =0;
-		
-		var prevY=Math.pow(2,samplePrecision-1);
-		var prevCb=0;
-		var prevCr=0;
-		while(i<counter){
-			
-			if(i%(Math.floor(counter/pbPart))==0){
-				postMessage(["PB", (j*pbPart+(i/(Math.floor(counter/pbPart)))),"Extracting Values"]);
-			}
-		
-			if(i>0 && i%numberOfSamples==0){
-				prevY=imageLines[Math.floor(i/numberOfSamples)-1][0][0];
-				prevCb=imageLines[Math.floor(i/numberOfSamples)-1][0][1];
-				prevCr=imageLines[Math.floor(i/numberOfSamples)-1][0][2];
-			
-			}
-			
-			sample=[];
-			
-			Y = findNextValue(ht1, prevY);
-			Y=limitY(Y,samplePrecision);
-			
-			
-			sample.push(Y);
-			prevY=Y;
-			
-			Y = findNextValue(ht1, prevY);
-			Y=limitY(Y,samplePrecision);
-			prevY=Y;
-			
-			Cb = findNextValue(ht2, prevCb);
-			Cb= limitC(Cb,samplePrecision);
-			sample.push(Cb);
-			prevCb=Cb;
-			
-			Cr = findNextValue(ht2, prevCr);
-			Cr= limitC(Cr,samplePrecision);
-			sample.push(Cr);
-			prevCr=Cr;
-			
-			imageLines[Math.floor(i/numberOfSamples)].push(sample);
-			i++;
-			sample = [];
-			sample.push(Y);
-			imageLines[Math.floor(i/numberOfSamples)].push(sample);
-			i++;
-		}	
-	}
-	return imageLines;
 }
 
-function decompress4V(numberOfLines,HSF,sliceDimensions,samplePrecision,ht1,ht2){
-	var imageLines=[];
-	for(var k =0; k <numberOfLines;k++){
-		imageLines.push([]);
+
+function cropBorders(image, top, left, bot , right){
+	var croppedImage =[];
+	for(var i=top;i<bot;i++){
+		croppedImage.push(image[i].slice(left,right));
 	}
-	for(var j =0; j< sliceDimensions[0]+1;j++){
-		console.log("Slice " +j);
-		
-		var numberOfSamples;
-		var pbPart=Math.floor(100/(sliceDimensions[0]+1));
-		
-		if(j==sliceDimensions[0]){
-			numberOfSamples= sliceDimensions[2]/HSF;
+	return croppedImage;
+}
+
+function setupHTS(sos,ht1,ht2,numberOfComponents){
+	var hts=[];
+	for(var k =0; k <numberOfComponents;k++){
+		if(sos.get("DCAC"+k)==0){
+			hts.push(ht1);
 		}else{
-			numberOfSamples= sliceDimensions[1]/HSF;
+			hts.push(ht2);
 		}
-				
-		var counter = numberOfSamples*numberOfLines;
-		console.log("Counter =" +counter);
-		var i =0;
-		var prevC1=Math.pow(2,samplePrecision-1);
-		var prevC2=Math.pow(2,samplePrecision-1);
-		var prevC3=Math.pow(2,samplePrecision-1);
-		var prevC4=Math.pow(2,samplePrecision-1);
-		while(i<counter){
-			
-			if(i%(Math.floor(counter/pbPart))==0){
-				postMessage(["PB", (j*pbPart+(i/(Math.floor(counter/pbPart)))),"Extracting Values"]);
-			}
-			
-			if(i>0 && i%numberOfSamples==0){
-				prevC1=imageLines[Math.floor(i/numberOfSamples)-1][0];
-				prevC2=imageLines[Math.floor(i/numberOfSamples)-1][1];
-				prevC3=imageLines[Math.floor(i/numberOfSamples)-1][2];
-				prevC4=imageLines[Math.floor(i/numberOfSamples)-1][3];
-			}
-			prevC1 = findNextValueR(ht1, prevC1);
-			prevC1= limitComponent(prevC1,samplePrecision);
-			
-			prevC2 = findNextValueR(ht2, prevC2);
-			prevC2= limitComponent(prevC2,samplePrecision);
-			
-			prevC3 = findNextValueR(ht1, prevC3);
-			prevC3= limitComponent(prevC3,samplePrecision);
-			
-			prevC4 = findNextValueR(ht2, prevC4);
-			prevC4= limitComponent(prevC4,samplePrecision);
-			
-			imageLines[Math.floor(i/numberOfSamples)].push(prevC1);
-			imageLines[Math.floor(i/numberOfSamples)].push(prevC2);
-			imageLines[Math.floor(i/numberOfSamples)].push(prevC3);
-			imageLines[Math.floor(i/numberOfSamples)].push(prevC4);
-			i+=4;
-		}	
-		
 	}
-	return imageLines
+	return hts;
+}
+
+function setupComponentParts(HSF,VSF){
+	if(HSF==1){
+		var compParts=[1,1,1,1];
+	}else{
+		if(VSF==1){
+			var compParts=[2,1,1];
+		}else{
+			var compParts=[4,1,1];
+		}
+	}
+	return compParts;
+}
+
+function setPreviousValues(nComponents,samplePrecision){
+	var previousValues = [];
+	for(var k =0; k<nComponents;k++){
+		if(nComponents!=3 || k==0){
+			previousValues[k]=Math.pow(2,samplePrecision-1);
+		}else{
+			previousValues[k]=0;
+		}
+	}
+	return previousValues;
 }
