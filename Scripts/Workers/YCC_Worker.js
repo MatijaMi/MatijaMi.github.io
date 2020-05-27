@@ -12,9 +12,9 @@ onmessage=function(e){
 					sof3.get("NumberOfLines"),
 					image[0].length,
 					sof3.get("ImageComponents"));
-	
+	image =interpolateYCC(image);
 	if(e.data[2]==true){
-		image=YCCtoRGB(interpolateYCC(image));
+		image=YCCtoRGB(image);
 	}
 	postMessage(["DL"]);
 	var blob = new Blob([image], {type: "octet/stream"});
