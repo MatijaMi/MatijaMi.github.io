@@ -4,8 +4,14 @@ var window=self;
 
 onmessage=function(e){
 	getBits(e.data[0]);
-	var image =decompressValues(e.data[1]);
-	var unslicedImage = unslice(image, e.data[1].get("Slices"), e.data[1].get("SOF3").get("NumberOfLines"),e.data[1].get("SOF3").get("SamplesPerLine"));
+	var metaData = e.data[1];
+	var image =decompressValues(metaData);
+	var sof3= metaData.get("SOF3");
+	var unslicedImage = unsliceRGGB(image, 
+								metaData.get("Slices"), 
+								sof3.get("NumberOfLines"),
+								sof3.get("SamplesPerLine"),
+								sof3.get("ImageComponents"));
 	
 	if(e.data[2]==true){
 		image=bayerInterpolation(unslicedImage);

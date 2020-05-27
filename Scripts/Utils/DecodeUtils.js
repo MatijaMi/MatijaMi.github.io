@@ -62,3 +62,53 @@ function getNextBits(length){
 	}
 	return str;
 }
+
+function setupHTS(sos,ht1,ht2,numberOfComponents){
+	var hts=[];
+	for(var k =0; k <numberOfComponents;k++){
+		if(sos.get("DCAC"+k)==0){
+			hts.push(ht1);
+		}else{
+			hts.push(ht2);
+		}
+	}
+	return hts;
+}
+
+function setupComponentParts(HSF,VSF){
+	if(HSF==1){
+		var compParts=[1,1,1,1];
+	}else{
+		if(VSF==1){
+			var compParts=[2,1,1];
+		}else{
+			var compParts=[4,1,1];
+		}
+	}
+	return compParts;
+}
+
+function setPreviousValues(nComponents,samplePrecision){
+	var previousValues = [];
+	for(var k =0; k<nComponents;k++){
+		if(nComponents!=3 || k==0){
+			previousValues[k]=Math.pow(2,samplePrecision-1);
+		}else{
+			previousValues[k]=0;
+		}
+	}
+	return previousValues;
+}
+
+function getNumberOfEntries(nComponents,HSF,VSF){
+	if(HSF==1){
+		return nComponents;
+	}else{
+		if(VSF==1){
+			return 4;
+		}else{
+			return 6;
+		}
+	}
+}
+

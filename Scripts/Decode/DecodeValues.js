@@ -24,10 +24,15 @@ function decompressValues(mData){
 		imageLines.push([]);
 		if(i>0){
 			for(var comp=0; comp<nComponents;comp++){
-				previousValues[comp]=imageLines[i-1][comp];
+				if(nComponents==3 && comp>0){
+					previousValues[comp]=imageLines[i-1][comp+1];
+				}else{
+					previousValues[comp]=imageLines[i-1][comp];	
+				}
+				
 			}
 		}
-		for(var j =0; j <samplesPerLine;j++){
+		for(var j =0; j <samplesPerLine/HSF;j++){
 			for(var comps = 0; comps<nComponents;comps++){
 				for(var part=0; part<compParts[comps];part++){
 					previousValues[comps]=findNextValue(hts[comps],previousValues[comps]);
@@ -39,34 +44,86 @@ function decompressValues(mData){
 	return imageLines;
 }
 
-function unslice(image, slices, height,widthx){
+function unsliceRGGB(image, slices, height,width,nComponents){
 	var imageLines=[];
 	for(var k =0; k <height;k++){
 		imageLines.push([]);
 	}
-	var width=widthx*2;
-	var slice1=height*slices[1];
-	
+	var numberOfEntries=getNumberOfEntries(nComponents,HSF,VSF);
+	var trueWidth=width*numberOfEntries;
+	var samplePointer=0;
 	for(var j=0; j<slices[0]+1;j++){
+		
 		if(j==slices[0]){
 			numberOfSamples= slices[2];
 		}else{
 			numberOfSamples= slices[1];
 		}
 				
-		var counter = numberOfSamples*height;
-		console.log("COUNTER " +counter);
+		var counter = numberOfSamples*(height/VSF);
+		console.log(numberOfSamples);
+		console.log(numberOfEntries);
+		console.log(counter);
+		
 		for(var i =0; i<counter;i++){
-			var z=j*slice1+i;
-			var x = image[Math.floor(z/width)][z%width];
-			imageLines[Math.floor(i/numberOfSamples)].push(x);
+			var currentPointer=samplePointer+i;
+			var currentEntry = image[Math.floor(currentPointer/trueWidth)][currentPointer%trueWidth];
+			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
 		}
-		console.log("LENGTH " +imageLines[1].length);
-		console.log(j);
+		samplePointer+=counter;
 	}
-	
 	return imageLines;
 }
+
+function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
+	console.log(width);
+	console.log(numberOfLines);
+	var imageLines=[];
+	for(var k =0; k <numberOfLines;k++){
+		imageLines.push([]);
+	}
+	var numberOfEntries=4;
+	var tablePointer=0;
+	
+	for(var k =0; k <slices[0]+1;k++){
+		console.log("SLICE: " +k);
+		if(k==slices[0]){
+			var sliceWidth=slices[2]/2;
+		}else{
+			var sliceWidth=slices[1]/2;
+		}
+		
+		var numberOfEntriesPerSlice=numberOfLines*sliceWidth*2;
+		console.log(numberOfEntriesPerSlice);
+		for(var i =0; i <numberOfEntriesPerSlice;i+=4){
+			
+			var currentElement=i+tablePointer;
+			var row =Math.floor(currentElement/width);
+			var col =currentElement%width;
+			var y1 = image[row][col];
+			var y2 = image[row][col+1];
+			var cb = image[row][col+2];
+			var cr = image[row][col+3];
+			var currentLine=imageLines[Math.floor((i/2)/sliceWidth)];
+			
+			currentLine.push([]);
+			
+			currentLine[currentLine.length-1].push(y1);
+			currentLine[currentLine.length-1].push(cb);
+			currentLine[currentLine.length-1].push(cr);
+			
+			currentLine.push([]);
+			currentLine[currentLine.length-1].push(y2);
+		}
+		tablePointer+=numberOfEntriesPerSlice;
+	}
+	
+	
+	console.log(imageLines.length);
+	console.log(imageLines[imageLines.length-1].length);
+	return imageLines;
+}
+
 
 
 function cropBorders(image, top, left, bot , right){
@@ -77,39 +134,5 @@ function cropBorders(image, top, left, bot , right){
 	return croppedImage;
 }
 
-function setupHTS(sos,ht1,ht2,numberOfComponents){
-	var hts=[];
-	for(var k =0; k <numberOfComponents;k++){
-		if(sos.get("DCAC"+k)==0){
-			hts.push(ht1);
-		}else{
-			hts.push(ht2);
-		}
-	}
-	return hts;
-}
 
-function setupComponentParts(HSF,VSF){
-	if(HSF==1){
-		var compParts=[1,1,1,1];
-	}else{
-		if(VSF==1){
-			var compParts=[2,1,1];
-		}else{
-			var compParts=[4,1,1];
-		}
-	}
-	return compParts;
-}
 
-function setPreviousValues(nComponents,samplePrecision){
-	var previousValues = [];
-	for(var k =0; k<nComponents;k++){
-		if(nComponents!=3 || k==0){
-			previousValues[k]=Math.pow(2,samplePrecision-1);
-		}else{
-			previousValues[k]=0;
-		}
-	}
-	return previousValues;
-}
