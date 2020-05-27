@@ -112,3 +112,33 @@ function getNumberOfEntries(nComponents,HSF,VSF){
 	}
 }
 
+
+function cropBorders(image, top, left, bot, right){
+	var croppedImage =[];
+	for(var i=top;i<bot;i++){
+		croppedImage.push(image[i].slice(left,right));
+	}
+	return croppedImage;
+}
+
+function applyWhiteBalance(image, wbLevels){
+	console.log(wbLevels)
+	for(var i =0; i <image.length;i++){
+		for(var j=0; j<image[i].length;j++){
+			if(i%2==0){
+				if(j%2==0){
+					image[i][j]=image[i][j]*wbLevels[0];
+				}else{
+					image[i][j]=image[i][j]*wbLevels[1];
+				}
+			}else{
+				if(j%2==0){
+					image[i][j]=image[i][j]*wbLevels[2];
+				}else{
+					image[i][j]=image[i][j]*wbLevels[1];
+				}
+			}
+		}	
+	}
+	return image;
+}

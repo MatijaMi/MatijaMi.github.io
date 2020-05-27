@@ -44,8 +44,6 @@ function collectMetaData(){
 	const rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
 	const rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
 	//TO BE SEEN
-	//var colorBalanceOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
-	
 	var slices = findIFDTagValue(ifdThreeOffset,64,198,true,false);
 	var width = slices[0]*slices[1]+slices[2];
 	
@@ -74,6 +72,7 @@ function collectMetaData(){
 	metaData.set("SOF3", sof3Data);
 	metaData.set("SOS", sosData);
 	metaData.set("RawBitOffset", imageDataOffset);
+	metaData.set("WhiteBalance", wb);
 	
 	return metaData;
 }

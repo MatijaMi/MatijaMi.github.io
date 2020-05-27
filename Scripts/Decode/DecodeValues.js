@@ -32,7 +32,7 @@ function decompressValues(mData){
 				
 			}
 		}
-		for(var j =0; j <samplesPerLine/HSF;j++){
+		for(var j =0; j <(samplesPerLine/HSF);j++){
 			for(var comps = 0; comps<nComponents;comps++){
 				for(var part=0; part<compParts[comps];part++){
 					previousValues[comps]=findNextValue(hts[comps],previousValues[comps]);
@@ -41,16 +41,18 @@ function decompressValues(mData){
 			}
 		}
 	}
+	console.log(imageLines.length);
+	console.log(imageLines[imageLines.length-1].length);
 	return imageLines;
 }
 
-function unsliceRGGB(image, slices, height,width,nComponents){
+function unsliceRGGB(image, slices, height,width,nComponents,HSF,VSF){
 	var imageLines=[];
 	for(var k =0; k <height;k++){
 		imageLines.push([]);
 	}
 	var numberOfEntries=getNumberOfEntries(nComponents,HSF,VSF);
-	var trueWidth=width*numberOfEntries;
+	var trueWidth=width*2;
 	var samplePointer=0;
 	for(var j=0; j<slices[0]+1;j++){
 		
@@ -60,24 +62,19 @@ function unsliceRGGB(image, slices, height,width,nComponents){
 			numberOfSamples= slices[1];
 		}
 				
-		var counter = numberOfSamples*(height/VSF);
-		console.log(numberOfSamples);
-		console.log(numberOfEntries);
-		console.log(counter);
+		var counter = numberOfSamples*height;
 		
 		for(var i =0; i<counter;i++){
 			var currentPointer=samplePointer+i;
 			var currentEntry = image[Math.floor(currentPointer/trueWidth)][currentPointer%trueWidth];
 			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
 		}
-		samplePointer+=counter;
+		samplePointer=samplePointer+counter;
 	}
 	return imageLines;
 }
 
 function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
-	console.log(width);
-	console.log(numberOfLines);
 	var imageLines=[];
 	for(var k =0; k <numberOfLines;k++){
 		imageLines.push([]);
@@ -86,7 +83,7 @@ function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
 	var tablePointer=0;
 	
 	for(var k =0; k <slices[0]+1;k++){
-		console.log("SLICE: " +k);
+		
 		if(k==slices[0]){
 			var sliceWidth=slices[2]/2;
 		}else{
@@ -94,7 +91,6 @@ function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
 		}
 		
 		var numberOfEntriesPerSlice=numberOfLines*sliceWidth*2;
-		console.log(numberOfEntriesPerSlice);
 		for(var i =0; i <numberOfEntriesPerSlice;i+=4){
 			
 			var currentElement=i+tablePointer;
@@ -117,22 +113,7 @@ function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
 		}
 		tablePointer+=numberOfEntriesPerSlice;
 	}
-	
-	
-	console.log(imageLines.length);
-	console.log(imageLines[imageLines.length-1].length);
 	return imageLines;
 }
-
-
-
-function cropBorders(image, top, left, bot , right){
-	var croppedImage =[];
-	for(var i=top;i<bot;i++){
-		croppedImage.push(image[i].slice(left,right));
-	}
-	return croppedImage;
-}
-
 
 
