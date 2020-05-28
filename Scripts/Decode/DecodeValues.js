@@ -52,7 +52,7 @@ function unsliceRGGB(image, slices, height,width,nComponents,HSF,VSF){
 		imageLines.push([]);
 	}
 	var numberOfEntries=getNumberOfEntries(nComponents,HSF,VSF);
-	var trueWidth=width*2;
+	var trueWidth=width * nComponents;
 	var samplePointer=0;
 	for(var j=0; j<slices[0]+1;j++){
 		

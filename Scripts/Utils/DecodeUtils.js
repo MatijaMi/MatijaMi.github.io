@@ -121,22 +121,14 @@ function cropBorders(image, top, left, bot, right){
 	return croppedImage;
 }
 
-function applyWhiteBalance(image, wbLevels){
-	console.log(wbLevels)
+function applyGammaCorrection(image){
 	for(var i =0; i <image.length;i++){
 		for(var j=0; j<image[i].length;j++){
-			if(i%2==0){
-				if(j%2==0){
-					image[i][j]=image[i][j]*wbLevels[0];
-				}else{
-					image[i][j]=image[i][j]*wbLevels[1];
-				}
+			var x = image[i][j]/64;
+			if(x<0.00304 ){
+				image[i][j]= Number((x*12.92).toFixed(3));
 			}else{
-				if(j%2==0){
-					image[i][j]=image[i][j]*wbLevels[2];
-				}else{
-					image[i][j]=image[i][j]*wbLevels[1];
-				}
+				image[i][j]= Number((1.055* Math.pow(x,(1.0/2.4))-0.055).toFixed(3));
 			}
 		}	
 	}

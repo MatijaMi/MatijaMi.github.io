@@ -8,15 +8,13 @@ onmessage=function(e){
 	var image =decompressValues(metaData);
 	var sof3= metaData.get("SOF3");
 	
-	var unslicedImage = unsliceRGGB(image, 
-								metaData.get("Slices"), 
-								sof3.get("NumberOfLines"),
-								sof3.get("SamplesPerLine"),
-								sof3.get("ImageComponents"),
-								sof3.get("HSF"),
-								sof3.get("VSF"));
-	
-	//image = applyWhiteBalance(unslicedImage,metaData.get("WhiteBalance"));
+	image = unsliceRGGB(image, 
+						metaData.get("Slices"), 
+						sof3.get("NumberOfLines"),
+						sof3.get("SamplesPerLine"),
+						sof3.get("ImageComponents"),
+						sof3.get("HSF"),
+						sof3.get("VSF"));
 	if(e.data[2]==true){
 		image=bayerInterpolation(image);
 	}
