@@ -19,6 +19,61 @@ function interpolateYCC(image){
 	return image;	
 }
 
+function interpolateYYYYCbCr(image){
+	console.log("FIRST AND SECOND INTERPOLATION");
+	for(var i=0;i<image.length;i++){
+		
+		if(i%2==0){
+			for(var j=1; j<image[i].length;j+=2){
+				if(j==image[i].length-1){
+					var cb=image[i][j-1][1];
+					var cr=image[i][j-1][2];
+					image[i][j].push(cb);
+					image[i][j].push(cr);
+				}else{
+					var cb=(image[i][j-1][1]+image[i][j+1][1])/2;
+					var cr=(image[i][j-1][2]+image[i][j+1][2])/2;
+					image[i][j].push(cb);
+					image[i][j].push(cr);
+				}
+			}
+		}else{
+			for(var j=0; j<image[i].length-1;j+=2){
+				if(i==image.length-1){
+					var cb=image[i-1][j][1];
+					var cr=image[i-1][j][2];
+					image[i][j].push(cb);
+					image[i][j].push(cr);
+				}else{
+					var cb=(image[i-1][j][1]+image[i+1][j][1])/2;
+					var cr=(image[i-1][j][2]+image[i+1][j][2])/2;
+					image[i][j].push(cb);
+					image[i][j].push(cr);
+				}
+			}
+		}
+	}
+	console.log("THIRD");
+	for(var i =1; i<image.length;i+=2){
+		for(var j=1; j<image[i].length;j+=2){
+			if(j==image[i].length-1){
+					var cb=image[i][j-1][1];
+					var cr=image[i][j-1][2];
+					image[i][j].push(cb);
+					image[i][j].push(cr);
+				}else{
+				var cb=(image[i][j-1][1]+image[i][j+1][1])/2;
+				var cr=(image[i][j-1][2]+image[i][j+1][2])/2;
+				image[i][j].push(cb);
+				image[i][j].push(cr);
+			}	
+		}
+	}
+	return image;
+}
+
+
+
 function bayerInterpolation(image){
 	var newImg =[];
 	for(var i =0; i<image.length;i++){

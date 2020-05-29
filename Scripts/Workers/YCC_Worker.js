@@ -1,5 +1,5 @@
-self.importScripts('../Decode/YYCbCr.js','../Decode/DecodeValues.js','../Utils/DecodeUtils.js');
-self.importScripts('../Utils/ByteTransformations.js', '../Utils/Interpolations.js');
+self.importScripts('../Decode/YYCbCr.js','../Decode/Decompress.js','../Utils/DecodeUtils.js');
+self.importScripts('../Utils/ByteTransformations.js', '../Utils/Interpolations.js','../Decode/UnslicingFunctions.js');
 
 var window=self;
 onmessage=function(e){

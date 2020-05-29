@@ -1,51 +1,3 @@
-function decompressValues(mData){
-	
-	
-	window.bitPointer=0;
-	var metaData=mData;
-	var sof3 = metaData.get("SOF3");
-	var numberOfLines = sof3.get("NumberOfLines");
-	var samplesPerLine = sof3.get("SamplesPerLine");
-	var sliceDimensions = metaData.get("Slices");
-	var samplePrecision = sof3.get("SamplePrecision");
-	var nComponents = sof3.get("ImageComponents");
-	var HSF = sof3.get("HSF");
-	var VSF = sof3.get("VSF");
-	var sos = metaData.get("SOS");
-	var ht1 = metaData.get("HT1");
-	var ht2 = metaData.get("HT2");
-	
-	var compParts = setupComponentParts(HSF,VSF);
-	var hts = setupHTS(sos,ht1,ht2,nComponents);
-	var previousValues = setPreviousValues(nComponents,samplePrecision);
-	
-	var imageLines=[];
-	for(var i =0; i < numberOfLines;i++){
-		imageLines.push([]);
-		if(i>0){
-			for(var comp=0; comp<nComponents;comp++){
-				if(nComponents==3 && comp>0){
-					previousValues[comp]=imageLines[i-1][comp+1];
-				}else{
-					previousValues[comp]=imageLines[i-1][comp];	
-				}
-				
-			}
-		}
-		for(var j =0; j <(samplesPerLine/HSF);j++){
-			for(var comps = 0; comps<nComponents;comps++){
-				for(var part=0; part<compParts[comps];part++){
-					previousValues[comps]=findNextValue(hts[comps],previousValues[comps]);
-					imageLines[i].push(previousValues[comps]);
-				}
-			}
-		}
-	}
-	console.log(imageLines.length);
-	console.log(imageLines[imageLines.length-1].length);
-	return imageLines;
-}
-
 function unsliceRGGB(image, slices, height,width,nComponents,HSF,VSF){
 	var imageLines=[];
 	for(var k =0; k <height;k++){
@@ -113,6 +65,69 @@ function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
 		}
 		tablePointer+=numberOfEntriesPerSlice;
 	}
+	return imageLines;
+}
+
+function unsliceYYYYCbCr(image, slices, numberOfLines,width,nComponents){
+	var imageLines=[];
+	for(var k =0; k <numberOfLines;k++){
+		imageLines.push([]);
+	}
+	var numberOfEntries=6;
+	var tablePointer=0;
+	console.log(width);
+	console.log(numberOfLines);
+	for(var k =0; k <slices[0]+1;k++){
+		
+		if(k==slices[0]){
+			var sliceWidth=slices[2]/3;
+		}else{
+			var sliceWidth=slices[1]/3;
+		}
+		
+		var numberOfEntriesPerSlice=numberOfLines*sliceWidth*1.5;
+		console.log(numberOfEntriesPerSlice);
+		
+		for(var i =0; i <numberOfEntriesPerSlice;i+=6){
+			
+			var currentElement=i+tablePointer;
+			var row =Math.floor(currentElement/width);
+			var col =currentElement%width;
+			var y1 = image[row][col];
+			var y2 = image[row][col+1];
+			var y3 = image[row][col+2];
+			var y4 = image[row][col+3];
+			var cb = image[row][col+4];
+			var cr = image[row][col+5];
+			
+			
+			var currentLine=imageLines[Math.floor((i/3)/(sliceWidth))*2];
+			
+			currentLine.push([]);
+			
+			currentLine[currentLine.length-1].push(y1);
+			currentLine[currentLine.length-1].push(cb);
+			currentLine[currentLine.length-1].push(cr);
+			currentLine.push([]);
+			currentLine[currentLine.length-1].push(y2);
+			
+			currentLine=imageLines[Math.floor((i/3)/(sliceWidth))*2+1];
+			currentLine.push([]);
+			currentLine[currentLine.length-1].push(y3);
+			
+			currentLine.push([]);
+			currentLine[currentLine.length-1].push(y4);
+		}
+		tablePointer=tablePointer+numberOfEntriesPerSlice;
+		
+	}
+	
+	console.log(imageLines.length);
+	for(var i =0;i< imageLines.length;i++){
+		console.log(imageLines[i].length);
+	}
+	console.log(imageLines[0]);
+	console.log(imageLines[1]);
 	return imageLines;
 }
 
