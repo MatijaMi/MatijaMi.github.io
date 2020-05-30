@@ -19,6 +19,8 @@ onmessage=function(e){
 		image=bayerInterpolation(image);
 	}
 	
+	
+	
 	postMessage(["DL"]);
 	var blob = new Blob([image], {type: "octet/stream"});
 	postMessage(["RES",blob]);

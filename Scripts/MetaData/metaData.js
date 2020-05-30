@@ -24,9 +24,8 @@ function collectMetaData(){
 	
 	//MakerNotes code
 	
-	const whiteBalance = getWhiteBalance(makerNoteOffset);
-	const colorSpace=(findIFDTagValue(makerNoteOffset,180,0,false,false))==1? "sRGB":"AdoreRGB";
-	console.log(colorSpace);
+	const whiteBalance = getWhiteBalance(makerNoteOffset,modelName);
+	const colorSpace=(findIFDTagValue(makerNoteOffset,180,0,false,false))==1? "sRGB":"AdobeRGB";
 	
 	const sensorInfo = getSensorInfo(makerNoteOffset);
 	
@@ -61,7 +60,7 @@ function collectMetaData(){
 	metaData.set("fNumber", fNumber);
 	metaData.set("WhiteBalance", whiteBalance);
 	metaData.set("colorSpace", colorSpace);
-	metaData.set("WhiteBalance", whiteBalance);
+	metaData.set("SensorInfo", sensorInfo);
 	
 	//Removing the bytes of the file that are not part of the pure raw bytes
 	bytes=bytes.slice(imageDataOffset);
