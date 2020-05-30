@@ -18,9 +18,8 @@ onmessage=function(e){
 	if(e.data[2]==true){
 		image=bayerInterpolation(image);
 	}
-	
-	
-	
+	image = applyWhiteBalance(image,metaData);
+
 	postMessage(["DL"]);
 	var blob = new Blob([image], {type: "octet/stream"});
 	postMessage(["RES",blob]);
