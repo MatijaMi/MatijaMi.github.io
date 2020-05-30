@@ -1,27 +1,29 @@
 function decompressValues(mData){
 	window.bitPointer=0;
 	var metaData=mData;
+	var sliceDimensions = metaData.get("Slices");
+	var sos = metaData.get("SOS");
+	var ht1 = metaData.get("HT1");
+	var ht2 = metaData.get("HT2");
 	var sof3 = metaData.get("SOF3");
+	
 	var numberOfLines = sof3.get("NumberOfLines");
 	var samplesPerLine = sof3.get("SamplesPerLine");
-	var sliceDimensions = metaData.get("Slices");
 	var samplePrecision = sof3.get("SamplePrecision");
 	var nComponents = sof3.get("ImageComponents");
 	var HSF = sof3.get("HSF");
 	var VSF = sof3.get("VSF");
-	var sos = metaData.get("SOS");
-	var ht1 = metaData.get("HT1");
-	var ht2 = metaData.get("HT2");
+	
 	
 	var compParts = setupComponentParts(HSF,VSF);
 	var hts = setupHTS(sos,ht1,ht2,nComponents);
 	var previousValues = setPreviousValues(nComponents,samplePrecision);
-	console.log(compParts);
+	console.log(hts);
 	var imageLines=[];
 	for(var i =0; i < numberOfLines;i++){
 		imageLines.push([]);
+		
 		if(i>0){
-			
 			for(var comp=0; comp<nComponents;comp++){
 				if(compParts[0]==2 && comp>0){
 					previousValues[comp]=imageLines[i-1][comp+1];

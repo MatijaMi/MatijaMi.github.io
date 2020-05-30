@@ -6,9 +6,9 @@ function YYYYCbCrtoRGB(image){
 			var cb =image[i][j][1];
 			var cr =image[i][j][2];
 			
-			image[i][j][0]=y + 0.049*cb + 5.598*cr;
-			image[i][j][1]=y - 1.377 * cb - 2.869 * cr;
-			image[i][j][2]=y + 7.090 * cb - 0.025 * cr;
+			image[i][j][0]=Number((y + 0.049 * cb + 5.598 * cr).toFixed(2));
+			image[i][j][1]=Number((y - 1.377 * cb - 2.869 * cr).toFixed(2));
+			image[i][j][2]=Number((y + 7.090 * cb - 0.025 * cr).toFixed(2));
 		}
 	}
 	return image;

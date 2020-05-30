@@ -86,7 +86,7 @@ function unsliceYYYYCbCr(image, slices, numberOfLines,width,nComponents){
 		}
 		
 		var numberOfEntriesPerSlice=numberOfLines*sliceWidth*1.5;
-		console.log(numberOfEntriesPerSlice);
+		//console.log(numberOfEntriesPerSlice);
 		
 		for(var i =0; i <numberOfEntriesPerSlice;i+=6){
 			
