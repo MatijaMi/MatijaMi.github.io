@@ -1,3 +1,20 @@
+//Finds the value of an IFD given its tag and offset to the IFD, and what the value simbolizes
+function findIFDTagValue(ifdOffset,tagID1, tagID2, isOffsetToValue, isValueString){
+	var ifdLength = transformTwoBytes(bytes[ifdOffset],bytes[ifdOffset+1]);
+	
+	//IFDEntryFormat /2 Bytes Tag - 2 Bytes Type - 4 Bytes Length - 4 Bytes Value
+	var tag = findIFDEntry(ifdOffset, ifdLength,tagID1,tagID2);
+	var offsetValue = transformFourBytes.apply(null,tag.slice(8,12));
+	var valueLength = transformFourBytes.apply(null,tag.slice(4,8))
+	
+	if(isOffsetToValue){
+		return findValue(offsetValue,valueLength, isValueString);
+		
+	}else{
+		return  transformFourBytes.apply(null,tag.slice(8,12));
+	}
+}
+
 //Function to find an entry in an IFD if the IDF's offet and length are given
 //as well as the tag in a two byte format
 function findIFDEntry(ifdOffset, ifdLength, ID1, ID2){
@@ -18,6 +35,7 @@ function findIFDEntry(ifdOffset, ifdLength, ID1, ID2){
 	}
 	return [];
 }
+
 //Function to find the value of an IFD tag if the value in the 12 bytes is an offset
 function findValue(valueOffset, valueLength, isValueString){
 	//If the value is a string it just concatinates all the the chars
@@ -36,20 +54,4 @@ function findValue(valueOffset, valueLength, isValueString){
 	}	
 	}
 	return value;
-}
-
-//Finds the value of an IFD given its tag and offset to the IFD, and what the value simbolizes
-function findIFDTagValue(ifdOffset,tagID1, tagID2, isOffsetToValue, isValueString){
-	var ifdLength = transformTwoBytes(bytes[ifdOffset],bytes[ifdOffset+1]);
-	var tag = findIFDEntry(ifdOffset, ifdLength,tagID1,tagID2);
-	
-	if(isOffsetToValue){
-		//IFDEntryFormat /2 Bytes Tag - 2 Bytes Type - 4 Bytes Length - 4 Bytes Value;
-		var offsetValue = transformFourBytes.apply(null,tag.slice(8,12));
-		var valueLength = transformFourBytes.apply(null,tag.slice(4,8))
-		return findValue(offsetValue,valueLength, isValueString);
-		
-	}else{
-		return  transformFourBytes.apply(null,tag.slice(8,12));
-	}
 }

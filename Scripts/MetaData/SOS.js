@@ -5,13 +5,13 @@ function getSOSLength(sosOffset){
 
 
 function getSOSData(sosOffset){
-	
+	//Data is in constant positions relative to offset
 	var sosData = new Map();
 	var length = getSOSLength(sosOffset);
 	const numberOfComponents = bytes[sosOffset+4];
 	
 	for(var i =0; i< numberOfComponents; i++){
-		
+		//Setting which Huffman Tables will be used later
 		if(bytes[sosOffset+6+2*i]==0){
 			sosData.set("DCAC" +i, 0);
 		}else{

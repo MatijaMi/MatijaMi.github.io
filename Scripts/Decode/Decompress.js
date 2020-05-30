@@ -18,7 +18,6 @@ function decompressValues(mData){
 	var compParts = setupComponentParts(HSF,VSF);
 	var hts = setupHTS(sos,ht1,ht2,nComponents);
 	var previousValues = setPreviousValues(nComponents,samplePrecision);
-	console.log(hts);
 	var imageLines=[];
 	for(var i =0; i < numberOfLines;i++){
 		imageLines.push([]);

@@ -1,69 +1,54 @@
-function readFile(file) {
-		//Get the input files
-		
-			
-		var reader = new FileReader();
-		//Once the .cr2 file has been read it gets saved as a byte array(==Uint8Array)
-		reader.onload = function(){
-      		var arrayBuffer = reader.result;
-			var bits = [];
-			window.bytes = new Uint8Array(arrayBuffer);
-			window.metaData=collectMetaData();
-			showFile();
-		};
-			
-	  	reader.readAsArrayBuffer(file);
-};
-
-//Function that gets called when the file is submitted
 //Function to collect data from IFD#0,IFD#3, EXIF and MakerNote-SubIFD
 function collectMetaData(){
 	//Variables for working with IFDZero
+	
 	var metaData = new Map();
-	//The offset to IFD#0 is always 16
+	//The offset to IFD#0 is always 16 Bytes
+	
 	const ifdZeroOffset = 16;
 	const modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
 	const makerName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
+	
+	var image0Offset = findIFDTagValue(ifdZeroOffset,17,1,false,false);
+	var image0Length = findIFDTagValue(ifdZeroOffset,23,1,false,false);
+	
+	window.jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
+	
 	//Code for finding the EXIF Sub-IFD
+	
 	const exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
+	const exposureTime = findIFDTagValue(exifOffset,154,130,false,false);
+	const fNumber = findIFDTagValue(exifOffset,157,130,false,false);
 	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
 	const makerNoteLength = transformTwoBytes(bytes[makerNoteOffset],bytes[makerNoteOffset+1]);
 	
-	//TODO IMPLEMENT METHODS FOR MAKERNOTE VALUES(TO BE SEEN)
-	
-	
 	//MakerNotes code
-	const imageType = findIFDTagValue(makerNoteOffset,16,0,false,false);
-	const wb = getWhiteBalance(makerNoteOffset);
 	
+	const whiteBalance = getWhiteBalance(makerNoteOffset);
+	const colorSpace=(findIFDTagValue(makerNoteOffset,180,0,false,false))==1? "sRGB":"AdoreRGB";
+	console.log(colorSpace);
 	
+	const sensorInfo = getSensorInfo(makerNoteOffset);
 	
 	//IFD3 Code
+	
 	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	const ifdThreeLength = transformTwoBytes(bytes[ifdThreeOffset],bytes[ifdThreeOffset+1]);
 	const rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
 	const rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
-	//TO BE SEEN
 	var slices = findIFDTagValue(ifdThreeOffset,64,198,true,false);
-	var width = slices[0]*slices[1]+slices[2];
-	
 	var hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
 	var sof3Offset = rawOffset+getDHTLength(rawOffset) + 4;
 	var sof3Data = getSOF3Data(sof3Offset);
 	var sof3Length = getSOF3Length(sof3Offset);
 	
-	
 	var sosOffset = sof3Offset +sof3Length+2;
 	var sosData = getSOSData(sosOffset);
 	var sosLength = getSOSLength(sosOffset);
-	var image0Offset = findIFDTagValue(16,17,1,false,false);
-	var image0Length = findIFDTagValue(16,23,1,false,false);
-	window.jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
+	
 	var imageDataOffset = sosOffset+sosLength+2;
-	bytes=bytes.slice(imageDataOffset);
 	metaData.set("MakerName", makerName);
-	metaData.set("modelName", modelName);
-	metaData.set("ImageType", imageType);
+	metaData.set("ModelName", modelName);
 	metaData.set("IFD3Offset", ifdThreeOffset);
 	metaData.set("RawLength", rawLength);
 	metaData.set("Slices", slices);
@@ -72,7 +57,14 @@ function collectMetaData(){
 	metaData.set("SOF3", sof3Data);
 	metaData.set("SOS", sosData);
 	metaData.set("RawBitOffset", imageDataOffset);
-	metaData.set("WhiteBalance", wb);
+	metaData.set("ExposureTime", exposureTime);
+	metaData.set("fNumber", fNumber);
+	metaData.set("WhiteBalance", whiteBalance);
+	metaData.set("colorSpace", colorSpace);
+	metaData.set("WhiteBalance", whiteBalance);
+	
+	//Removing the bytes of the file that are not part of the pure raw bytes
+	bytes=bytes.slice(imageDataOffset);
 	
 	return metaData;
 }
@@ -81,7 +73,7 @@ function showFile(){
 		var sof3=metaData.get("SOF3");
 		var output =[];
 		output.push("<p>");
-		output.push("<b>Camera Model: </b>" + metaData.get("modelName"));
+		output.push("<b>Camera Model: </b>" + metaData.get("ModelName"));
 		output.push("<p>");
 		output.push("<b>Length of Raw: </b>" + metaData.get("RawLength") +" Bytes");
 		output.push("<p>");

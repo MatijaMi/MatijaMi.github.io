@@ -20,7 +20,7 @@ function interpolateYCC(image){
 }
 
 function interpolateYYYYCbCr(image){
-	console.log("FIRST AND SECOND INTERPOLATION");
+	console.log("FIRST");
 	for(var i=0;i<image.length;i++){
 		
 		if(i%2==0){
@@ -53,7 +53,7 @@ function interpolateYYYYCbCr(image){
 			}
 		}
 	}
-	console.log("THIRD");
+	console.log("SECOND");
 	for(var i =1; i<image.length;i+=2){
 		for(var j=1; j<image[i].length;j+=2){
 			if(j==image[i].length-1){
@@ -108,7 +108,7 @@ function interpolateFirstLine(image){
 			if(i==image[0].length-1){
 				r = image[0][image[0].length-2];
 				g = image[0][image[0].length-1];
-				b = image[1][image[0].length-1];
+				b = image[1][image[1].length-1];
 				
 			}else{
 				if(i%2==1){

@@ -9,12 +9,20 @@ function getWhiteBalance(mnOffset){
 	var g1=transformTwoBytes(bytes[colorBalanceOffset+128],bytes[colorBalanceOffset+129]);
 	var g2=transformTwoBytes(bytes[colorBalanceOffset+130],bytes[colorBalanceOffset+131]);
 	var b=transformTwoBytes(bytes[colorBalanceOffset+132],bytes[colorBalanceOffset+133]);
-	var min;
 	
 	colorBalance.push(r);
 	colorBalance.push(g1);
 	colorBalance.push(g2);
 	colorBalance.push(b);
 	return colorBalance;
+	
+}
+
+
+function getSensorInfo(mnOffset){
+	
+	var sensorInfoOffset = findIFDTagValue(mnOffset,224,0,false,false);
+	
+	
 	
 }

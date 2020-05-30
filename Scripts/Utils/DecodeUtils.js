@@ -97,7 +97,6 @@ function setPreviousValues(nComponents,samplePrecision){
 			previousValues[k]=0;
 		}
 	}
-	console.log(previousValues);
 	return previousValues;
 }
 

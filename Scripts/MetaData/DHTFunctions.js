@@ -60,7 +60,6 @@ function decodeHuffmanTree(frequencies, values){
 		
 	}
 	
-	
 	var huffmanTable = new Map();
 	//Mapping the values to the corresponding codes
 	for( var i =0; i < values.length; i++){
