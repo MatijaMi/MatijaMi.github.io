@@ -1,32 +1,23 @@
-function downloadYCC(){
-	var name =fileList[0].name +"YCC.txt";
-	saveByteArray(downloadBytes,name);
-}
-
-function downloadYYYYCC(){
-	var name =fileList[0].name +"YYYYCC.txt";
-	saveByteArray(downloadBytes,name);
-}
-function downloadRGGB(){
-	var name =fileList[0].name +"RGGB.txt";
-	saveByteArray(downloadBytes,name);
-}
-
-function downloadRGB(){
-	var name =fileList[0].name +"RGB.txt";
+//Function to download the decompressed and processed image, either already in RGB 
+//Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)
+function downloadProcessedImage(type){
+	var name =fileList[0].name + type+ ".txt";
 	saveByteArray(downloadBytes,name);
 	
 }
+//Function to download the jpeg saved in the first image file directory of the CR2 file
 function downloadJpeg(){
 	var name =fileList[0].name +".jpg";
 	var blob = new Blob([jpeqBytes], {type: "octet/stream"});
 	saveByteArray(blob, name);
 }
 
+//Function to download the raw bytes of the CR2 file
 function downloadRaw(){
 	
 }
 
+//Function to download meta data in a readable format
 function downloadMetaData(){
 	var name =fileList[0].name +"MetaData.txt";
 	var output="";
@@ -49,7 +40,7 @@ function downloadMetaData(){
 	saveByteArray(blob, name);
 }
 
-
+//Functions that actually saves the bytes and creates the download
 function saveByteArray(data,name){
 	var a = document.createElement("a");
     document.body.appendChild(a);

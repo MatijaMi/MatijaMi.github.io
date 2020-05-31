@@ -55,31 +55,27 @@
 					
 					<div class="image" id="image"></div>
 					<div class="buttons">
-					<button class="downloadButton" id="downloadBasic" onclick="downloadJpeg()"> Download as Jpeg</button>
-					<button class="downloadButton" id="downloadBasic" onclick="downloadRaw()"> Download Raw Bytes</button>
-					<button class="downloadButton" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
+						<button class="downloadButton" id="downloadBasic" onclick="downloadJpeg()"> Download as Jpeg</button>
+						<button class="downloadButton" id="downloadBasic" onclick="downloadRaw()"> Download Raw Bytes</button>
+						<button class="downloadButton" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
 						
-					<button class="downloadButton" id="decodeY" onclick="decodeYCC()"> Decode as YYCbCr</button>
+						<button class="downloadButton" id="decodeY" onclick="decodeYCC()"> Decode as YYCbCr</button>
+						<button class="downloadButton" id="decodeR" onclick="decodeRGGB()"> Decode as RGGB</button>
+						<button class="downloadButton" id="decodeYY" onclick="decodeYYYYCC()"> Decode as YYYYCbCr</button>
+						<button class="downloadButton" id="decodeRGB" onclick="decodeRGB()"> Decode as RGB</button>
 						
-					<button class="downloadButton" id="decodeR" onclick="decodeRGGB()"> Decode as RGGB</button>
+						<button class="downloadButton" id="dycc" onclick="downloadProcessedImage('YCC')"> Download YCbCr Data</button>
+						<button class="downloadButton" id="dyycc" onclick="downloadProcessedImage('YYYYCC')"> Download YYYYCbCr Data</button>
+						<button class="downloadButton" id="drggb" onclick="downloadProcessedImage('RGGB')"> Download RGGB Data</button>
+						<button class="downloadButton" id="drgb" onclick="downloadProcessedImage('RGB')"> Download RGB Data</button>
 					
-					<button class="downloadButton" id="decodeYY" onclick="decodeYYYYCC()"> Decode as YYYYCbCr</button>
-					
-					<button class="downloadButton" id="decodeRGB" onclick="decodeRGB()"> Decode as RGB</button>
-						
-					<button class="downloadButton" id="dycc" onclick="downloadYCC()"> Download YCbCr Data</button>
-					
-					<button class="downloadButton" id="dyycc" onclick="downloadYYCC()"> Download YYYYCbCr Data</button>
-					
-					<button class="downloadButton" id="drggb" onclick="downloadRGGB()"> Download RGGB Data</button>
-					
-					<button class="downloadButton" id="drgb" onclick="downloadRGB()"> Download RGB Data</button>
-					
-				</div>
+					</div>
 					<div class="pbText" id="pbText"></div>
+					
 					<div class="progressBar" id="progressBar">
 						<div class="bar" id="bar">0.0%</div>
 					</div>
+					
 					<img class="loading" id="loading" src="stolen.gif" alt="Loading">
 			</div>
 		</div>
@@ -89,17 +85,16 @@
 			</p>
 			
 			</div>
-		
-		
 		</div>
 
 		
 		
 		<script  type="text/javascript">
+			
 			const inputElement = document.getElementById("fileInput");
 			inputElement.addEventListener("change", handleFiles, false);
 			window.imageCount=0;
-			
+			//Functions used to handle file input and drag-and-drop
 			function handleFiles() {
 					window.fileList = this.files;
 				readFile(fileList[0]);	

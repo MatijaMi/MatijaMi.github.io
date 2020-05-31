@@ -5,6 +5,7 @@ function readFile(file) {
 		//Once the .cr2 file has been read it gets saved as a byte array(==Uint8Array)
 		reader.onload = function(){
 			window.bytes = new Uint8Array(reader.result);
+			//The meta data from the file gets read and the relevant parts get displayed in the website
 			window.metaData=collectMetaData();
 			showFile();
 		};	
