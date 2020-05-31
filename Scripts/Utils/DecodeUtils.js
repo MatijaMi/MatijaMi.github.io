@@ -137,9 +137,9 @@ function applyWhiteBalance(image,metaData){
 	
 	for( var i=0; i <image.length;i++){
 		for(var j =0; j<image[i].length;j+=3){
-			image[i][j]=image[i][j]*wbarr[0];
-			image[i][j+1]=image[i][j+1]*wbarr[1];
-			image[i][j+2]=image[i][j+2]*wbarr[2];
+			image[i][j]=Number((image[i][j]*wbarr[0]).toFixed(2));
+			image[i][j+1]=Number((image[i][j+1]*wbarr[1]).toFixed(2));
+			image[i][j+2]=Number((image[i][j+2]*wbarr[2]).toFixed(2));
 		}
 	}
 	return image;

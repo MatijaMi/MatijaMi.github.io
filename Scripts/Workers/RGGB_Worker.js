@@ -7,7 +7,6 @@ onmessage=function(e){
 	var metaData = e.data[1];
 	var image =decompressValues(metaData);
 	var sof3= metaData.get("SOF3");
-	
 	image = unsliceRGGB(image, 
 						metaData.get("Slices"), 
 						sof3.get("NumberOfLines"),
@@ -15,9 +14,11 @@ onmessage=function(e){
 						sof3.get("ImageComponents"),
 						sof3.get("HSF"),
 						sof3.get("VSF"));
+	
 	if(e.data[2]==true){
 		image=bayerInterpolation(image);
 	}
+	
 	image = applyWhiteBalance(image,metaData);
 
 	postMessage(["DL"]);
