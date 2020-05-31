@@ -18,8 +18,9 @@ function downloadRGB(){
 	
 }
 function downloadJpeg(){
+	var name =fileList[0].name +".jpg";
 	var blob = new Blob([jpeqBytes], {type: "octet/stream"});
-	saveByteArray(blob, "example.jpg");
+	saveByteArray(blob, name);
 }
 
 function downloadRaw(){
@@ -27,7 +28,25 @@ function downloadRaw(){
 }
 
 function downloadMetaData(){
-	
+	var name =fileList[0].name +"MetaData.txt";
+	var output="";
+	for(let[key,value] of metaData){
+		if(value instanceof Map){
+			var map ="";
+			for(let[key,invalue] of value){
+			map = map + "("+ key + " : " + invalue +") ";
+		}
+			output= output + "[" + key + " : " + map +"]\n";
+		}else{
+			if(typeof value=="string"){
+				output= output + "[" + key + " : " + value.replace(/\0/g, '') + "]\n";
+			}else{
+				output= output + "[" + key + " : " + value+"]\n";
+			}
+		}
+	}
+	var blob = new Blob([output], {type: "text/plain"});
+	saveByteArray(blob, name);
 }
 
 

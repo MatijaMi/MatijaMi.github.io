@@ -121,19 +121,6 @@ function cropBorders(image, top, left, bot, right){
 	return croppedImage;
 }
 
-function applyGammaCorrection(image){
-	for(var i =0; i <image.length;i++){
-		for(var j=0; j<image[i].length;j++){
-			var x = image[i][j]/64;
-			if(x<0.00304 ){
-				image[i][j]= Number((x*12.92).toFixed(3));
-			}else{
-				image[i][j]= Number((1.055* Math.pow(x,(1.0/2.4))-0.055).toFixed(3));
-			}
-		}	
-	}
-	return image;
-}
 
 function applyWhiteBalance(image,metaData){
 	var wb = metaData.get("WhiteBalance");

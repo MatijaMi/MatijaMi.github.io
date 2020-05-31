@@ -2,7 +2,6 @@
 //WhiteBalance is still needed but unclear how to find
 function getWhiteBalance(mnOffset, model){
 	var colorBalanceOffset = findIFDTagValue(mnOffset,1,64,false,false);
-	console.log(model);
 	var wbOffset;
 	if(model.includes("EOS M")|| model.includes("PowerShot")){
 		wbOffset=71;	
@@ -22,7 +21,6 @@ function getWhiteBalance(mnOffset, model){
 	for(var i =0; i <4; i++){
 		colorBalance.push(transformTwoBytes(bytes[colorBalanceOffset+(wbOffset+i)*2],bytes[colorBalanceOffset+(wbOffset+i)*2+1]));
 	}
-	console.log(colorBalance);
 	return colorBalance;
 }
 
