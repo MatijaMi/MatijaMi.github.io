@@ -124,16 +124,16 @@ function cropBorders(image, top, left, bot, right){
 
 function applyWhiteBalance(image,metaData){
 	var wb = metaData.get("WhiteBalance");
-	var min=wb[0];
+	var max=wb[0];
 	for(var k = 1; k<4;k++){
-		if(wb[k]<min){
-			min=wb[k];
+		if(wb[k]>max){
+			max=wb[k];
 		}
 	}
 	var wbarr=[];
-	wbarr.push(Number((wb[0]/min).toFixed(2)));
-	wbarr.push(Number((wb[1]/min).toFixed(2)));
-	wbarr.push(Number((wb[3]/min).toFixed(2)));
+	wbarr.push(Number((wb[0]/max).toFixed(2)));
+	wbarr.push(Number((wb[1]/max).toFixed(2)));
+	wbarr.push(Number((wb[3]/max).toFixed(2)));
 	
 	for( var i=0; i <image.length;i++){
 		for(var j =0; j<image[i].length;j+=3){
