@@ -8,7 +8,6 @@
         <title>CR2 Decoder</title>
         <link rel="stylesheet" href="style.css">
 		<script src="Scripts/DownloadFunctions.js"></script>
-		<script src="Scripts/decodeHandler.js"></script>
 		<script src="Scripts/Reader.js"></script>
 		
         <script src="Scripts/MetaData/metaData.js"></script>
@@ -18,14 +17,14 @@
 		<script src="Scripts/MetaData/SOF3.js"> </script>
 		<script src="Scripts/MetaData/SOS.js"></script>
 		
-		<script src="Scripts/Decode/YYYYCbCr.js"></script>
-		<script src="Scripts/Decode/YYCbCr.js"></script>
+		<script src="Scripts/Decode/decodeHandler.js"></script>
+		<script src="Scripts/Decode/colorConversion.js"></script>
 		<script src="Scripts/Decode/Decompress.js"></script>
+		<script src="Scripts/Decode/Interpolations.js"></script>
 		
 		<script src="Scripts/Utils/ByteTransformations.js"></script>
-		<script src="Scripts/Utils/Interpolations.js"></script>
-		<script src="Scripts/Utils/debug.js"></script>
 		<script src="Scripts/Utils/DecodeUtils.js"></script>
+		<script src="Scripts/Utils/debug.js"></script>
     </head>
     
     <body>
@@ -59,10 +58,10 @@
 						<button class="downloadButton" id="downloadBasic" onclick="downloadRaw()"> Download Raw Bytes</button>
 						<button class="downloadButton" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
 						
-						<button class="downloadButton" id="decodeY" onclick="decodeYCC()"> Decode as YYCbCr</button>
-						<button class="downloadButton" id="decodeR" onclick="decodeRGGB()"> Decode as RGGB</button>
-						<button class="downloadButton" id="decodeYY" onclick="decodeYYYYCC()"> Decode as YYYYCbCr</button>
-						<button class="downloadButton" id="decodeRGB" onclick="decodeRGB()"> Decode as RGB</button>
+						<button class="downloadButton" id="decodeY" onclick="decodeImage(false)"> Decode as YYCbCr</button>
+						<button class="downloadButton" id="decodeR" onclick="decodeImage(false)"> Decode as RGGB</button>
+						<button class="downloadButton" id="decodeYY" onclick="decodeImage(false)"> Decode as YYYYCbCr</button>
+						<button class="downloadButton" id="decodeRGB" onclick="decodeImage(true)"> Decode as RGB</button>
 						
 						<button class="downloadButton" id="dycc" onclick="downloadProcessedImage('YCC')"> Download YCbCr Data</button>
 						<button class="downloadButton" id="dyycc" onclick="downloadProcessedImage('YYYYCC')"> Download YYYYCbCr Data</button>

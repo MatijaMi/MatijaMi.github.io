@@ -1,5 +1,7 @@
-//Function to download the decompressed and processed image, either already in RGB 
-//Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)
+/*	
+	Function to download the decompressed and processed image, either already in RGB 
+	Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)
+*/
 function downloadProcessedImage(type){
 	var name =fileList[0].name + type+ ".txt";
 	saveByteArray(downloadBytes,name);
@@ -25,14 +27,14 @@ function downloadMetaData(){
 		if(value instanceof Map){
 			var map ="";
 			for(let[key,invalue] of value){
-			map = map + "("+ key + " : " + invalue +") ";
-		}
-			output= output + "[" + key + " : " + map +"]\n";
+				map = map+"("+key+":"+invalue+")";
+			}
+			output= output+"["+key+":"+map+"]\n";
 		}else{
 			if(typeof value=="string"){
-				output= output + "[" + key + " : " + value.replace(/\0/g, '') + "]\n";
+				output= output+"["+key+":"+value.replace(/\0/g, '')+"]\n";
 			}else{
-				output= output + "[" + key + " : " + value+"]\n";
+				output= output+"["+key+":"+value+"]\n";
 			}
 		}
 	}

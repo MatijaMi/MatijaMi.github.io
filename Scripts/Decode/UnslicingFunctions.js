@@ -1,4 +1,12 @@
-function unsliceRGGB(image, slices, height,width,nComponents,HSF,VSF){
+function unsliceRGGB(image, metaData){
+	var slices =metaData.get("Slices"); 
+	var sof3= metaData.get("SOF3");
+	var height=sof3.get("NumberOfLines");
+	var width=sof3.get("SamplesPerLine");
+	var nComponents=sof3.get("ImageComponents");
+	var HSF=sof3.get("HSF");
+	var VSF=sof3.get("VSF");
+	
 	var imageLines=[];
 	for(var k =0; k <height;k++){
 		imageLines.push([]);
@@ -26,8 +34,14 @@ function unsliceRGGB(image, slices, height,width,nComponents,HSF,VSF){
 	return imageLines;
 }
 
-function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
+function unsliceYCbCr(image, metaData){
+	var slices=metaData.get("Slices");
+	var sof3=metaData.get("SOF3");
+	var numberOfLines= sof3.get("NumberOfLines");
+	var width=image[0].length;
+	var nComponents=sof3.get("ImageComponents")
 	var imageLines=[];
+	
 	for(var k =0; k <numberOfLines;k++){
 		imageLines.push([]);
 	}
@@ -68,8 +82,14 @@ function unsliceYCbCr(image, slices, numberOfLines,width,nComponents){
 	return imageLines;
 }
 
-function unsliceYYYYCbCr(image, slices, numberOfLines,width,nComponents){
+function unsliceYYYYCbCr(image,metaData){
+	var slices=metaData.get("Slices"); 
+	var sof3 =metaData.get("SOF3");
+	var numberOfLines=	image.length;
+	var width=	image[0].length;
+	var nComponents=sof3.get("ImageComponents");
 	var imageLines=[];
+	
 	for(var k =0; k <numberOfLines;k++){
 		imageLines.push([]);
 	}
