@@ -116,8 +116,8 @@ function setPreviousValues(nComponents,samplePrecision){
 }
 
 /*	Returns the number of entries in one sequence of 
-	values before repeating(RGGB=2;YCC=4;YYYYCC=6) */
-function getNumberOfEntries(nComponents,HSF,VSF){
+	values before repeating(RGGB=2 or 4;YCC=4;YYYYCC=6) */
+function getNumberOfEntries(HSF,VSF){
 	if(HSF==1){
 		return nComponents;
 	}else{

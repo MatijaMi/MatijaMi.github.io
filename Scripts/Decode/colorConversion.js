@@ -1,3 +1,7 @@
+/*	Conversion from YCbCr to RGB
+	R = Y + Cr | G = Y - 0.19 * Cb - 0.5 * Cr | B = Y +Cb
+	Assuming the our Cb and Cr values are equal to 2*Cb and 1.6*Cr */
+
 function YCCtoRGB(image){
 	for(var i = 0; i <image.length;i++){
 		for(var j =0; j<image[i].length;j++){
@@ -19,6 +23,11 @@ function YCCtoRGB(image){
 	return image;
 }
 
+/*	Conversion from YCbCr to RGB
+	R = Y + 0.049 * Cb + 5.598 * Cr 
+	G = Y - 1.377 * Cb - 2.869 * Cr 
+	B = Y + 7.080 * Cb + 0.025 * Cr
+	Assuming the our Cb and Cr values are equal to 0.25*Cb and 0.25*Cr */
 function YYYYCbCrtoRGB(image){
 	
 	for(var i=0;i<image.length;i++){

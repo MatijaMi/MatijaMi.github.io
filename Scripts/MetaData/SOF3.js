@@ -5,8 +5,6 @@ function getSOF3Length(sof3Offset){
 	return bytes[sof3Offset+2]*256 + bytes[sof3Offset+3];
 }
 
-
-
 function getSOF3Data(sof3Offset){
 	//The values in the sof3 have constant positions relative to offset
 	var sof3 = new Map();

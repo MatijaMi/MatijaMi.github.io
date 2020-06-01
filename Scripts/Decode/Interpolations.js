@@ -1,3 +1,5 @@
+/*	Interpolates the missing Cb and Cr values for every second sample
+	by using the values from the previous and next sample */
 function interpolateYCC(image){
 	for(var i = 0; i <image.length;i++){
 		for(var j =1; j<image[i].length;j++){
@@ -19,6 +21,12 @@ function interpolateYCC(image){
 	return image;	
 }
 
+/* 	Interpolates the missing Cb and Cr to fill in the gaps,
+	for Y2 horizontally, for Y3 vertically and 
+	for Y4 horizontally from the interpolated values
+	|Y1 Cb Cr | Y2 | Y1 Cb Cr | Y2 |..
+	|	Y3    | Y4 | 	Y3 	  | Y4 |..
+	|Y1 Cb Cr | Y2 | Y1 Cb Cr | Y2 |.. */
 function interpolateYYYYCbCr(image){
 	console.log("FIRST");
 	for(var i=0;i<image.length;i++){
@@ -73,7 +81,12 @@ function interpolateYYYYCbCr(image){
 }
 
 
-
+/*	Just a simple linear bayer interpolation for the format:
+	|R|G|R|G|
+	|G|B|G|B|
+	|R|G|R|G|
+	|G|B|G|B|  */
+	
 function bayerInterpolation(image){
 	var newImg =[];
 	for(var i =0; i<image.length;i++){

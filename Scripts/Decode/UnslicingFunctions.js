@@ -1,4 +1,7 @@
+/*	Takes the values in their table form and returns them
+	in the properly sliced order */
 function unsliceRGGB(image, metaData){
+	//Values needed for unslicing
 	var slices =metaData.get("Slices"); 
 	var sof3= metaData.get("SOF3");
 	var height=sof3.get("NumberOfLines");
@@ -6,14 +9,16 @@ function unsliceRGGB(image, metaData){
 	var nComponents=sof3.get("ImageComponents");
 	var HSF=sof3.get("HSF");
 	var VSF=sof3.get("VSF");
+	var numberOfEntries=getNumberOfEntries(nComponents,HSF,VSF);
+	var trueWidth=width * nComponents;
+	var samplePointer=0;
 	
+	//Initialising
 	var imageLines=[];
 	for(var k =0; k <height;k++){
 		imageLines.push([]);
 	}
-	var numberOfEntries=getNumberOfEntries(nComponents,HSF,VSF);
-	var trueWidth=width * nComponents;
-	var samplePointer=0;
+	//Going through every slice
 	for(var j=0; j<slices[0]+1;j++){
 		
 		if(j==slices[0]){
@@ -22,18 +27,20 @@ function unsliceRGGB(image, metaData){
 			numberOfSamples= slices[1];
 		}
 				
-		var counter = numberOfSamples*height;
+		var numberOfValuesPerSample = numberOfSamples*height;
 		
-		for(var i =0; i<counter;i++){
+		for(var i =0; i<numberOfValuesPerSample;i++){
 			var currentPointer=samplePointer+i;
 			var currentEntry = image[Math.floor(currentPointer/trueWidth)][currentPointer%trueWidth];
 			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
 		}
-		samplePointer=samplePointer+counter;
+		//Sample pointer used to keep track of where we are in the input
+		samplePointer=samplePointer+numberOfValuesPerSample;
 	}
 	return imageLines;
 }
 
+//Same as above but for YYCC, might get merged into a single function once YYYYCbCr is done
 function unsliceYCbCr(image, metaData){
 	var slices=metaData.get("Slices");
 	var sof3=metaData.get("SOF3");
@@ -81,7 +88,7 @@ function unsliceYCbCr(image, metaData){
 	}
 	return imageLines;
 }
-
+//Same as above but for YYYYCC, might get merged into a single function once it is done
 function unsliceYYYYCbCr(image,metaData){
 	var slices=metaData.get("Slices"); 
 	var sof3 =metaData.get("SOF3");

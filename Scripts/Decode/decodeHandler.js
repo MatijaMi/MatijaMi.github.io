@@ -5,6 +5,7 @@ function decodeImage(rgb){
 	
 	var hsf=metaData.get("SOF3").get("HSF");
 	var vsf=metaData.get("SOF3").get("VSF");
+	
 	/*	Due to JavaScript being limited to one thread workers are used for
 		the heavier computations so that the website doesn't freeze up */	
 	var w = new Worker('Scripts/Workers/Decode_Worker.js');

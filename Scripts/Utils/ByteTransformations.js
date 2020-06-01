@@ -34,8 +34,9 @@ function getBits(data){
 		if(data[i]==255){
 			i++;
 		}
+		//Updates for the progress bar
 		if(i%(Math.floor(data.length/100))==0){
-			postMessage(["PB",i/(Math.floor(data.length/100)),"Transforming Bytes"]);
+			postMessage(["PB",Math.min(i/(Math.floor(data.length/100),100)),"Transforming Bytes"]);
 		}
 	}
 	postMessage(["PB",100,"Transforming Bytes"]);	   

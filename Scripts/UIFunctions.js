@@ -1,4 +1,4 @@
-//Function that disables the other buttons while the decoding going on
+/*	Function that disables the other buttons during decoding */
 function disableButtons(mode){
 	var elems = document.getElementsByClassName("downloadButton");
 	var color,cursor,textCol;
@@ -20,6 +20,7 @@ function disableButtons(mode){
 	}
 }	
 
+/* Starts the UI(progress bar) used to visualise decoding progress */
 function initialiseDecodeUI(){
 	document.getElementById("decodeR").style="display:none";
 	document.getElementById("progressBar").style="display:block";
@@ -28,24 +29,23 @@ function initialiseDecodeUI(){
 	disableButtons(true);
 	document.getElementById("pbText").innerHTML="Transforming bytes";
 }
-
+/*Shows the UI for a completed decode */
 function showDecodeEndUI(mode){
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
 		document.getElementById(mode).style="display:";
 		disableButtons(false);
 }
-
+/*Updating the progress bar with appropriate text and width */
 function updateProgressBar(progress, text){
 		document.getElementById("pbText").innerHTML="<b>"+text+"</b>";
 		document.getElementById("bar").style.width=progress+"%";
 		document.getElementById("bar").innerHTML=progress+"%";
 }
+
+/*	Due to the transformation into a blob being a built-in JS function
+	using a progress bar is not possible, therefore a loading gif is used*/
 function startLoadingAnimation(){
-	/*
-		Due to the transformation into a blob being a built-in JS function
-		using a progress bar is not possible, therefore a loading gif is used
-	*/
 		document.getElementById("pbText").innerHTML="<b> Preparing Download </b>";
 		document.getElementById("loading").style="display:"
 		document.getElementById("progressBar").style="display:none";
