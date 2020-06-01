@@ -1,69 +1,55 @@
 //Function to collect data from IFD#0,IFD#3, EXIF and MakerNote-SubIFD
 function collectMetaData(){
-	//Variables for working with IFDZero
-	
 	var metaData = new Map();
-	//The offset to IFD#0 is always 16 Bytes
 	
+	//The offset to IFD#0 is always 16 Bytes
 	const ifdZeroOffset = 16;
-	const modelName = findIFDTagValue(ifdZeroOffset, 16,1,true,true);
-	const makerName = findIFDTagValue(ifdZeroOffset,15,1,true,true);
+	metaData.set("ModelName", findIFDTagValue(ifdZeroOffset, 16,1,true,true));
+	metaData.set("MakerName", findIFDTagValue(ifdZeroOffset,15,1,true,true));
 	
 	var image0Offset = findIFDTagValue(ifdZeroOffset,17,1,false,false);
 	var image0Length = findIFDTagValue(ifdZeroOffset,23,1,false,false);
 	
 	window.jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
+	 
+	//Code for finding the EXIF Sub-IFD data
 	
-	//Code for finding the EXIF Sub-IFD
-	
-	const exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
-	const exposureTime = findIFDTagValue(exifOffset,154,130,false,false);
-	const fNumber = findIFDTagValue(exifOffset,157,130,false,false);
-	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
-	const makerNoteLength = transformTwoBytes(bytes[makerNoteOffset],bytes[makerNoteOffset+1]);
+	var exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
+	metaData.set("ExposureTime", findIFDTagValue(exifOffset,154,130,false,false));
+	metaData.set("fNumber", findIFDTagValue(exifOffset,157,130,false,false));
 	
 	//MakerNotes code
-	
-	const whiteBalance = getWhiteBalance(makerNoteOffset,modelName);
-	const colorSpace=(findIFDTagValue(makerNoteOffset,180,0,false,false))==1? "sRGB":"AdobeRGB";
-	
-	const sensorInfo = getSensorInfo(makerNoteOffset);
+	var makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
+	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
+	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
+	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 	
 	//IFD3 Code
 	
-	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
-	const ifdThreeLength = transformTwoBytes(bytes[ifdThreeOffset],bytes[ifdThreeOffset+1]);
-	const rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
-	const rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
-	var slices = findIFDTagValue(ifdThreeOffset,64,198,true,false);
-	var hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
-	var sof3Offset = rawOffset+getDHTLength(rawOffset) + 4;
-	var sof3Data = getSOF3Data(sof3Offset);
-	var sof3Length = getSOF3Length(sof3Offset);
 	
-	var sosOffset = sof3Offset +sof3Length+2;
-	var sosData = getSOSData(sosOffset);
-	var sosLength = getSOSLength(sosOffset);
-	
-	var imageDataOffset = sosOffset+sosLength+2;
-	metaData.set("MakerName", makerName);
-	metaData.set("ModelName", modelName);
+	var ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	metaData.set("IFD3Offset", ifdThreeOffset);
+	
+	var rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
+	var rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
 	metaData.set("RawLength", rawLength);
-	metaData.set("Slices", slices);
+	
+	metaData.set("Slices", findIFDTagValue(ifdThreeOffset,64,198,true,false));
+	
+	var hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
 	metaData.set("HT1", hts[0]);
 	metaData.set("HT2", hts[1]);
-	metaData.set("SOF3", sof3Data);
-	metaData.set("SOS", sosData);
-	metaData.set("RawBitOffset", imageDataOffset);
-	metaData.set("ExposureTime", exposureTime);
-	metaData.set("fNumber", fNumber);
-	metaData.set("WhiteBalance", whiteBalance);
-	metaData.set("colorSpace", colorSpace);
-	metaData.set("SensorInfo", sensorInfo);
 	
+	var sof3Offset = rawOffset+getDHTLength(rawOffset) + 4;
+	metaData.set("SOF3", getSOF3Data(sof3Offset));
+	
+	var sosOffset = sof3Offset +getSOF3Length(sof3Offset)+2;
+
+	metaData.set("SOS", getSOSData(sosOffset));
+	metaData.set("RawBitOffset", sosOffset+getSOSLength(sosOffset)+2);
+		
 	//Removing the bytes of the file that are not part of the pure raw bytes
-	bytes=bytes.slice(imageDataOffset);
+	bytes=bytes.slice(metaData.get("RawBitOffset"));
 	
 	return metaData;
 }
@@ -132,19 +118,4 @@ function showFile(){
 		document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
 		window.downloadBytes=[];
 }
-
-
-
-function setImage(data, x,y){
-	var blob = new Blob([data], {type: 'image/jpeg'});
-	// Use createObjectURL to make a URL for the blob
-	var image = new Image();
-	image.src = URL.createObjectURL(blob);
-	image.style.width="75%";
-	image.style.border="1px solid black"
-	document.getElementById("image").innerHTML="";
-	document.getElementById("image").appendChild(image);
-}
-
-
 

@@ -91,7 +91,7 @@ function bayerInterpolation(image){
 	var newImg =[];
 	for(var i =0; i<image.length;i++){
 		if(i%Math.floor(image.length/100)==0){
-			postMessage(["PB",i/Math.floor(image.length/100),"Interpolating Values"])
+			postMessage(["PB",Math.min((i/Math.floor(image.length/100)),100),"Interpolating Values"])
 		}
 			if(i==0){
 				newImg.push(interpolateFirstLine(image));

@@ -50,3 +50,14 @@ function startLoadingAnimation(){
 		document.getElementById("loading").style="display:"
 		document.getElementById("progressBar").style="display:none";
 }
+
+function setImage(data, x,y){
+	var blob = new Blob([data], {type: 'image/jpeg'});
+	// Use createObjectURL to make a URL for the blob
+	var image = new Image();
+	image.src = URL.createObjectURL(blob);
+	image.style.width="75%";
+	image.style.border="1px solid black"
+	document.getElementById("image").innerHTML="";
+	document.getElementById("image").appendChild(image);
+}
