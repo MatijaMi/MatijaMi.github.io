@@ -3,12 +3,13 @@ self.importScripts('../Utils/ByteTransformations.js','../Decode/Interpolations.j
 var window=self;
 
 onmessage=function(e){
-	getBits(e.data[0]);
+	
+	getBits(e.data[0]);//Transforming the bytes into bits
 	var metaData = e.data[1];
-	var mode =e.data[3];
-	
+	var mode =e.data[3];//Either rggb, yycc or yyyycc
+	//The values need to be decompressed first
 	var image =decompressValues(metaData);
-	
+	//Applying the correct unslicing and post processing functions on the image
 	switch(mode){
 		case "rggb":
 			image = unsliceRGGB(image,metaData);
@@ -37,8 +38,6 @@ onmessage=function(e){
 			}
 			break;	
 	}
-	
-
 	postMessage(["DL"]);
 	var blob = new Blob([image], {type: "octet/stream"});
 	postMessage(["RES",blob,mode]);
