@@ -9,6 +9,8 @@ function collectMetaData(){
 	
 	var image0Offset = findIFDTagValue(ifdZeroOffset,17,1,false,false);
 	var image0Length = findIFDTagValue(ifdZeroOffset,23,1,false,false);
+	metaData.set("JpegHeight",findIFDTagValue(16,0,1,false,false));
+	metaData.set("JpegWidth",findIFDTagValue(16,1,1,false,false));
 	
 	window.jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	 
@@ -53,69 +55,3 @@ function collectMetaData(){
 	
 	return metaData;
 }
-
-function showFile(){
-		var sof3=metaData.get("SOF3");
-		var output =[];
-		output.push("<p>");
-		output.push("<b>Camera Model: </b>" + metaData.get("ModelName"));
-		output.push("<p>");
-		output.push("<b>Length of Raw: </b>" + metaData.get("RawLength") +" Bytes");
-		output.push("<p>");
-		output.push("<b>Slices:</b> " + metaData.get("Slices"));
-		output.push("<p>");
-		output.push("<b>Sample Precision: </b>" + sof3.get("SamplePrecision"));
-		output.push("<p>");
-		output.push("<b>Image Components: </b>" + sof3.get("ImageComponents"));
-		output.push("<p>");
-		output.push("<b>Number of Lines: </b>" + sof3.get("NumberOfLines"));
-		output.push("<p>");
-		output.push("<b>Samples per Line: </b>" + sof3.get("SamplesPerLine"));
-		output.push("<p>");
-		output.push("<b>Horizontal Sampling Factor: </b>" + sof3.get("HSF"));
-		output.push("<p>");
-		output.push("<b>Vertical Sampling Factor: </b>" + sof3.get("VSF"));
-		output.push("<p>");
-		
-		var image0Offset = findIFDTagValue(16,17,1,false,false);
-		var image0Length = findIFDTagValue(16,23,1,false,false);	
-		var imageWidth = findIFDTagValue(16,0,1,false,false);
-		var imageHeight = findIFDTagValue(16,1,1,false,false);
-		
-		var model = new String(metaData.get("modelName"));
-		
-		if(model.includes("EOS-1Ds Mark II")&& !model.includes("EOS-1Ds Mark III")){
-			setImage(jpeqBytes,imageWidth,imageHeight/5);
-		}else{
-			setImage(jpeqBytes,imageWidth,imageHeight);
-		}
-		
-		if(sof3.get("HSF")==1){
-			document.getElementById("decodeR").style="display:";
-			document.getElementById("decodeY").style="display:none";
-			document.getElementById("decodeYY").style="display:none";
-		}else{
-			if(sof3.get("VSF")==1){
-				document.getElementById("decodeR").style="display:none";
-				document.getElementById("decodeY").style="display:";
-				document.getElementById("decodeYY").style="display:none";
-			}else{
-				document.getElementById("decodeR").style="display:none";
-				document.getElementById("decodeY").style="display:none";
-				document.getElementById("decodeYY").style="display:";
-			}
-			}
-		document.getElementById("loading").style="display:none"
-		document.getElementById("dycc").style="display:none";
-		document.getElementById("dyycc").style="display:none";
-		document.getElementById("drggb").style="display:none";
-		document.getElementById("drgb").style="display:none";
-			
-		document.getElementById("label").innerHTML="Upload a different file";
-		document.getElementById("left").style="display:block";
-		document.getElementById("right").style="display:block";
-		document.getElementById("info").style="text-align:left";
-		document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
-		window.downloadBytes=[];
-}
-

@@ -51,7 +51,7 @@ function startLoadingAnimation(){
 		document.getElementById("progressBar").style="display:none";
 }
 
-function setImage(data, x,y){
+function setImage(data){
 	var blob = new Blob([data], {type: 'image/jpeg'});
 	// Use createObjectURL to make a URL for the blob
 	var image = new Image();
@@ -60,4 +60,55 @@ function setImage(data, x,y){
 	image.style.border="1px solid black"
 	document.getElementById("image").innerHTML="";
 	document.getElementById("image").appendChild(image);
+}
+
+/* Showing the most user relevant parts of the meta data to the user */
+function showFileInformation(){
+		var sof3=metaData.get("SOF3");
+		var output =[];
+		output.push("<p><b>Camera Model: </b>" + metaData.get("ModelName"));
+		output.push("<p><b>Length of Raw: </b>" + metaData.get("RawLength") +" Bytes");
+		output.push("<p><b>Slices:</b> " + metaData.get("Slices"));
+		output.push("<p><b>Sample Precision: </b>" + sof3.get("SamplePrecision"));
+		output.push("<p><b>Image Components: </b>" + sof3.get("ImageComponents"));
+		output.push("<p><b>Number of Lines: </b>" + sof3.get("NumberOfLines"));
+		output.push("<p><b>Samples per Line: </b>" + sof3.get("SamplesPerLine"));
+		output.push("<p><b>Horizontal Sampling Factor: </b>" + sof3.get("HSF"));
+		output.push("<p><b>Vertical Sampling Factor: </b>" + sof3.get("VSF"));
+		
+		
+		//Showing needed elements
+		document.getElementById("label").innerHTML="Upload a different file";
+		document.getElementById("left").style="display:block";
+		document.getElementById("right").style="display:block";
+		document.getElementById("info").style="text-align:left";
+		document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
+		//Hiding buttons that aren't needed
+		document.getElementById("decodeR").style="display:none";
+		document.getElementById("decodeY").style="display:none";
+		document.getElementById("decodeYY").style="display:none";
+		document.getElementById("loading").style="display:none"
+		document.getElementById("dycc").style="display:none";
+		document.getElementById("dyycc").style="display:none";
+		document.getElementById("drggb").style="display:none";
+		document.getElementById("drgb").style="display:none";
+		
+		switch(sof3.get("HSF")+sof3.get("VSF")){
+			case 3:
+				var shownButton= "Y";
+				break;
+			case 4:
+				var shownButton= "YY";
+				break;
+			default:
+				var shownButton= "R";
+		}
+		//Show fitting button
+		document.getElementById("decode"+shownButton).style="display:";
+		
+		
+		window.downloadBytes=[];//Initialise an array to save bytes to be downloaded
+		
+		//Shows the jpeg image as a thumbnail
+		setImage(jpeqBytes);
 }
