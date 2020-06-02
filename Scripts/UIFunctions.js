@@ -7,7 +7,7 @@ function disableButtons(mode){
 		cursor="default";
 		textCol="lightgray";
 	}else{
-		color="blue";
+		color="black";
 		cursor="pointer";
 		textCol="white";
 	}
@@ -76,7 +76,8 @@ function showFileInformation(){
 		output.push("<p><b>Horizontal Sampling Factor: </b>" + sof3.get("HSF"));
 		output.push("<p><b>Vertical Sampling Factor: </b>" + sof3.get("VSF"));
 		
-		
+		document.getElementById("inputBox").style="padding-top:15px; padding-bottom:5px";
+		document.getElementById("dropzone").style="margin-bottom:40px";
 		//Showing needed elements
 		document.getElementById("label").innerHTML="Upload a different file";
 		document.getElementById("left").style="display:block";

@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="12.040608mm"
-   height="8.0873613mm"
-   viewBox="0 0 12.040608 8.0873613"
+   width="42.173138mm"
+   height="8.1183672mm"
+   viewBox="0 0 42.173138 8.1183672"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="icon.svg">
+   sodipodi:docname="drawing.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.0143859"
-     inkscape:cx="194.70145"
-     inkscape:cy="-22.85716"
+     inkscape:zoom="0.35"
+     inkscape:cx="251.8443"
+     inkscape:cy="-128.45421"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -52,17 +52,28 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-54.318574,-134.69834)">
+     transform="translate(-39.199529,-106.72812)">
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Agency FB';-inkscape-font-specification:'Agency FB';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="53.672619"
-       y="142.78571"
+       x="38.553574"
+       y="114.81548"
        id="text12"><tspan
          sodipodi:role="line"
          id="tspan10"
-         x="53.672619"
-         y="142.78571"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Agency FB';-inkscape-font-specification:'Agency FB';stroke-width:0.26458332">CR2</tspan></text>
-  </g>
+         x="38.553574"
+         y="114.81548"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Agency FB';-inkscape-font-specification:'Agency FB';stroke-width:0.26458332">CR2 Decoder</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot14"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="scale(0.26458333)"><flowRegion
+         id="flowRegion16"><rect
+           id="rect18"
+           width="374.28571"
+           height="648.57141"
+           x="94.285713"
+           y="265.37683" /></flowRegion><flowPara
+         id="flowPara20"></flowPara></flowRoot>  </g>
 </svg>
