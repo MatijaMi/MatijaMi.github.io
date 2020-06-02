@@ -2,16 +2,22 @@
 	by checking if the sequence of the next bits is in the Huffman Table, 
 	if it isn't it adds the next bit and checks again */
 function findNextValue(huffTable, previousValue){
-	
+	/*
 	var byte = Math.floor(bitPointer/8);
 	var bit = bitPointer%8;
+	*/
 	var i =0;
-	
+	var bitString= getNext16Bits(bitPointer);
 	/* Seeing as  the code can be in multiple bytes, we have 
 		to beware where to search, worst case we search in 3 bytes */
 	var currentCode;
 	while(i<16){
 		i++;
+		currentCode=bitString.substring(0,i);
+		if(typeof huffTable.get(currentCode) !== "undefined"){
+				break;
+		}	
+		/*
 		if(bit+i<=8){
 			currentCode=bits[byte].substring(bit,bit+i);
 			if(typeof huffTable.get(currentCode) !== "undefined"){
@@ -30,6 +36,7 @@ function findNextValue(huffTable, previousValue){
 				}	
 			}
 		}
+		*/
 	}
 
 	bitPointer=bitPointer+i;
@@ -63,14 +70,46 @@ function getDifferenceValue(differenceBits){
 	bitPointer=bitPointer+differenceBits.length;
 	return number;
 }
-
+function getNext16Bits(bitPointer){
+	var first =0;
+	var second =1;
+	var third =2;
+	var skippedBytes=0;
+	if((bytes[Math.floor(bitPointer/8)-1])==255){
+		first++;
+		second++;
+		third++;
+		skippedBytes++;
+	}
+	
+	if((bytes[Math.floor(bitPointer/8)+first])==255){
+		second++;
+		third++;
+		skippedBytes++;
+	}
+	
+	if((bytes[Math.floor(bitPointer/8)+second])==255){
+		third++;
+		skippedBytes++;
+	}
+	
+	var bit1= byteToString(bytes[Math.floor(bitPointer/8)+first]).substr(bitPointer%8);
+	var bit2= byteToString(bytes[Math.floor(bitPointer/8)+second]);
+	var bit3= byteToString(bytes[Math.floor(bitPointer/8)+third]);
+	bitPointer=bitPointer+skippedBytes*8;
+	return bit1+bit2+bit3;
+	
+}
 //Returns the next n bits
 function getNextBits(n){
+	/*
 	var str="";
 	for(var i =0; i<n;i++){
 		str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+i)%8);	
 	}
-	return str;
+	*/
+	
+	return getNext16Bits(bitPointer).substr(0,n);
 }
 
 /*	Depending on the number of components, returns an array with
