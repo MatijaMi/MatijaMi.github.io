@@ -3,40 +3,31 @@
 	if it isn't it adds the next bit and checks again */
 function findNextValue(huffTable, previousValue){
 	
-	var byte = Math.floor(bitPointer/8);
-	var bit = bitPointer%8;
-	
-	var i =0;
-	/* Seeing as  the code can be in multiple bytes, we have 
-		to beware where to search, worst case we search in 3 bytes */
-	var currentCode;
-	while(i<16){
-		i++;
-				
-		if(bit+i<=8){
-			currentCode=bits[byte].substring(bit,bit+i);
-			if(typeof huffTable.get(currentCode) !== "undefined"){
+	var currentCode="";	
+	for(var i =0; i <16; i++){
+		currentCode=currentCode+getNextBit(bitPointer+i);
+		
+		if(typeof huffTable.get(currentCode) !== "undefined"){
 				break;
-			}		
-		}else{
-			if(bit+i<=16){
-				currentCode=bits[byte].substring(bit)+bits[byte+1].substring(0,bit+i-8);
-				if(typeof huffTable.get(currentCode) !== "undefined"){
-					break;
-				}
-			}else{
-				currentCode=bits[byte].substring(bit)+bits[byte+1]+ bits[byte+2].substring(0,bit+i-16);
-				if(typeof huffTable.get(currentCode) !== "undefined"){
-					break;
-				}	
 			}
-		}
 	}
 
-	bitPointer=bitPointer+i;
+	bitPointer=bitPointer+currentCode.length;
 	var differenceCodeLength =huffTable.get(currentCode);
 	//The next value is equal to the previous value + the difference value
 	return previousValue+getDifferenceValue(getNextBits(differenceCodeLength));
+}
+
+function getNextBit(bitPointer){
+	var byte= bits[Math.floor(bitPointer/8)];
+	var bit = bitPointer%8;
+	var rest = 8-byte.length;
+	if(bit<(rest)){
+		return "0";
+	}else{
+		return byte.charAt(bit-rest);
+	}
+	
 }
 
 /*	Given a sequence of bits, calculates their value based
@@ -64,46 +55,17 @@ function getDifferenceValue(differenceBits){
 	bitPointer=bitPointer+differenceBits.length;
 	return number;
 }
-function getNext16Bits(bitPointer){
-	var first =0;
-	var second =1;
-	var third =2;
-	var skippedBytes=0;
-	if((bytes[Math.floor(bitPointer/8)-1])==255){
-		first++;
-		second++;
-		third++;
-		skippedBytes++;
-	}
-	
-	if((bytes[Math.floor(bitPointer/8)+first])==255){
-		second++;
-		third++;
-		skippedBytes++;
-	}
-	
-	if((bytes[Math.floor(bitPointer/8)+second])==255){
-		third++;
-		skippedBytes++;
-	}
-	
-	var bit1= byteToString(bytes[Math.floor(bitPointer/8)+first]).substr(bitPointer%8);
-	var bit2= byteToString(bytes[Math.floor(bitPointer/8)+second]);
-	var bit3= byteToString(bytes[Math.floor(bitPointer/8)+third]);
-	bitPointer=bitPointer+skippedBytes*8;
-	return bit1+bit2+bit3;
-	
-}
+
 //Returns the next n bits
 function getNextBits(n){
 	
 	var str="";
 	for(var i =0; i<n;i++){
-		str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+i)%8);	
+		//str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+i)%8);	
+		str=str+getNextBit(bitPointer+i);
 	}
 	
 	return str;
-	//return getNext16Bits(bitPointer).substr(0,n);
 }
 
 /*	Depending on the number of components, returns an array with

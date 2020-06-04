@@ -1,5 +1,5 @@
-self.importScripts('../Decode/Decompress.js','../Utils/DecodeUtils.js','../Decode/UnslicingFunctions.js');
-self.importScripts('../Utils/ByteTransformations.js','../Decode/Interpolations.js','../Decode/colorConversion.js');
+self.importScripts('../Decode/decompress.js','../Decode/decodeUtils.js','../Decode/unslicing.js');
+self.importScripts('../byteTransformations.js','../Decode/interpolations.js','../Decode/colorConversion.js');
 var window=self;
 
 onmessage=function(e){
@@ -26,7 +26,7 @@ onmessage=function(e){
 				image=bayerInterpolation(image);
 				mode="drgb";
 			}
-			//image = applyWhiteBalance(image,metaData);
+			image = applyWhiteBalance(image,metaData);
 			break;
 			
 		case "yycc":

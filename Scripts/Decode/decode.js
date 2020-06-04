@@ -8,7 +8,7 @@ function decodeImage(rgb){
 	
 	/*	Due to JavaScript being limited to one thread workers are used for
 		the heavier computations so that the website doesn't freeze up */	
-	var w = new Worker('Scripts/Workers/Decode_Worker.js');
+	var w = new Worker('Scripts/Workers/decode_Worker.js');
 	switch(hsf+vsf){
 		case 3:
 			var mode ="yycc";
@@ -21,7 +21,6 @@ function decodeImage(rgb){
 	}
 	initialiseDecodeUI();
 	
-	//Telling the worker to start working
 	w.postMessage([bytes,metaData,rgb,mode]);
 	
 	w.onmessage=function(e){

@@ -29,7 +29,7 @@ function byteToString(byte){
 function getBits(data){
 	window.bits =[];
 	for(var i =0; i <data.length;i++){
-		var byte = byteToString(data[i]);
+		var byte =data[i].toString(2);
 		bits.push(byte);
 		if(data[i]==255){
 			i++;
