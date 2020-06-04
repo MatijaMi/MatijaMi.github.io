@@ -2,6 +2,9 @@
 	by using the values from the previous and next sample */
 function interpolateYCC(image){
 	for(var i = 0; i <image.length;i++){
+		if(i%(Math.floor(image.length/100))==0){
+			postMessage(["PB",i/(Math.floor(image.length/100)),"Interpolating YCbCr"]);
+		}
 		for(var j =1; j<image[i].length;j++){
 			var prevCb = image[i][j-1][1];
 			var prevCr = image[i][j-1][2];

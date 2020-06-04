@@ -12,7 +12,7 @@ function unsliceRGGB(image, metaData){
 	var numberOfEntries=getNumberOfEntries(nComponents,HSF,VSF);
 	var trueWidth=width * nComponents;
 	var samplePointer=0;
-	
+	var totalNofEntries = trueWidth*height;
 	//Initialising
 	var imageLines=[];
 	for(var k =0; k <height;k++){
@@ -30,7 +30,11 @@ function unsliceRGGB(image, metaData){
 		var numberOfValuesPerSample = numberOfSamples*height;
 		
 		for(var i =0; i<numberOfValuesPerSample;i++){
+			
 			var currentPointer=samplePointer+i;
+			if(currentPointer%(Math.floor(totalNofEntries/100))==0){
+				postMessage(["PB",currentPointer/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
+			}
 			var currentEntry = image[Math.floor(currentPointer/trueWidth)][currentPointer%trueWidth];
 			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
 		}
@@ -48,7 +52,7 @@ function unsliceYCbCr(image, metaData){
 	var width=image[0].length;
 	var nComponents=sof3.get("ImageComponents")
 	var imageLines=[];
-	
+	var totalNofEntries = width*numberOfLines;
 	for(var k =0; k <numberOfLines;k++){
 		imageLines.push([]);
 	}
@@ -67,6 +71,9 @@ function unsliceYCbCr(image, metaData){
 		for(var i =0; i <numberOfEntriesPerSlice;i+=4){
 			
 			var currentElement=i+tablePointer;
+			if(currentElement%(Math.floor(totalNofEntries/100))==0){
+				postMessage(["PB",currentElement/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
+			}
 			var row =Math.floor(currentElement/width);
 			var col =currentElement%width;
 			var y1 = image[row][col];

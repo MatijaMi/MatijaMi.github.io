@@ -20,6 +20,9 @@ function decompressValues(mData){
 	//Initialising the bit pointer
 	window.bitPointer=0;
 	for(var i =0; i < numberOfLines;i++){
+		if(i%(Math.floor(numberOfLines/100))==0){
+			postMessage(["PB",i/(Math.floor(numberOfLines/100)),"Decompressing Data"]);
+		}
 		imageLines.push([]);//newLine
 		/*On all lines except the first, the previous value is taken
 		from the previous line, from the first occurence of the component*/

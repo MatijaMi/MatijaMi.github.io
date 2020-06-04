@@ -2,22 +2,17 @@
 	by checking if the sequence of the next bits is in the Huffman Table, 
 	if it isn't it adds the next bit and checks again */
 function findNextValue(huffTable, previousValue){
-	/*
+	
 	var byte = Math.floor(bitPointer/8);
 	var bit = bitPointer%8;
-	*/
+	
 	var i =0;
-	var bitString= getNext16Bits(bitPointer);
 	/* Seeing as  the code can be in multiple bytes, we have 
 		to beware where to search, worst case we search in 3 bytes */
 	var currentCode;
 	while(i<16){
 		i++;
-		currentCode=bitString.substring(0,i);
-		if(typeof huffTable.get(currentCode) !== "undefined"){
-				break;
-		}	
-		/*
+				
 		if(bit+i<=8){
 			currentCode=bits[byte].substring(bit,bit+i);
 			if(typeof huffTable.get(currentCode) !== "undefined"){
@@ -36,7 +31,6 @@ function findNextValue(huffTable, previousValue){
 				}	
 			}
 		}
-		*/
 	}
 
 	bitPointer=bitPointer+i;
@@ -102,14 +96,14 @@ function getNext16Bits(bitPointer){
 }
 //Returns the next n bits
 function getNextBits(n){
-	/*
+	
 	var str="";
 	for(var i =0; i<n;i++){
 		str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+i)%8);	
 	}
-	*/
 	
-	return getNext16Bits(bitPointer).substr(0,n);
+	return str;
+	//return getNext16Bits(bitPointer).substr(0,n);
 }
 
 /*	Depending on the number of components, returns an array with
@@ -196,6 +190,9 @@ function applyWhiteBalance(image,metaData){
 	wbarr.push(Number((wb[3]/max).toFixed(2)));
 	
 	for( var i=0; i <image.length;i++){
+		if(i%(Math.floor(image.length/100))==0){
+			postMessage(["PB",i/(Math.floor(image.length/100)),"Applying White Balance"]);
+		}
 		for(var j =0; j<image[i].length;j+=3){
 			image[i][j]=Number((image[i][j]*wbarr[0]).toFixed(2));
 			image[i][j+1]=Number((image[i][j+1]*wbarr[1]).toFixed(2));

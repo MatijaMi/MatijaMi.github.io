@@ -10,10 +10,10 @@ function decodeImage(rgb){
 		the heavier computations so that the website doesn't freeze up */	
 	var w = new Worker('Scripts/Workers/Decode_Worker.js');
 	switch(hsf+vsf){
-		case "3":
+		case 3:
 			var mode ="yycc";
 			break;
-		case "4":
+		case 4:
 			var mode="yyyycc";
 			break;
 		default:

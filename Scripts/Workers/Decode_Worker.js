@@ -4,9 +4,8 @@ var window=self;
 
 onmessage=function(e){
 	var bitTime = new Date();
-	//getBits(e.data[0]);//Transforming the bytes into bits
+	getBits(e.data[0]);//Transforming the bytes into bits
 	var finTime = new Date();
-	self.bytes=e.data[0];
 	console.log("BIT TIME " + (finTime.getTime()-bitTime.getTime()));
 	var metaData = e.data[1];
 	var mode =e.data[3];//Either rggb, yycc or yyyycc
