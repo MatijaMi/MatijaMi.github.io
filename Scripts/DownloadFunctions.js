@@ -52,4 +52,5 @@ function saveByteArray(data,name){
     a.download = name;
     a.click();
     window.URL.revokeObjectURL(url);	
+	a.parentElement.removeChild(a);
 }

@@ -39,8 +39,8 @@ function showDecodeEndUI(mode){
 /*Updating the progress bar with appropriate text and width */
 function updateProgressBar(progress, text){
 		document.getElementById("pbText").innerHTML="<b>"+text+"</b>";
-		document.getElementById("bar").style.width=progress+"%";
-		document.getElementById("bar").innerHTML=progress+"%";
+		document.getElementById("bar").style.width=Math.min(progress,100)+"%";
+		document.getElementById("bar").innerHTML=Math.min(progress,100)+"%";
 }
 
 /*	Due to the transformation into a blob being a built-in JS function

@@ -122,7 +122,7 @@ function setupHTS(sos,ht1,ht2,numberOfComponents){
 //Returns how the components and  how many of their parts are saved in the bits
 function setupComponentParts(HSF,VSF){
 	if(HSF==1){
-		var compParts=[1,1];
+		var compParts=[1,1,1,1];
 	}else{
 		if(VSF==1){
 			var compParts=[2,1,1];
@@ -150,7 +150,7 @@ function setPreviousValues(nComponents,samplePrecision){
 
 /*	Returns the number of entries in one sequence of 
 	values before repeating(RGGB=2 or 4;YCC=4;YYYYCC=6) */
-function getNumberOfEntries(HSF,VSF){
+function getNumberOfEntries(nComponents,HSF,VSF){
 	if(HSF==1){
 		return nComponents;
 	}else{
