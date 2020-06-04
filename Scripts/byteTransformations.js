@@ -38,6 +38,5 @@ function getBits(data){
 		if(i%(Math.floor(data.length/100))==0){
 			postMessage(["PB",i/(Math.floor(data.length/100)),"Transforming Bytes"]);
 		}
-	}
-	postMessage(["PB",100,"Transforming Bytes"]);	   
+	}   
 }

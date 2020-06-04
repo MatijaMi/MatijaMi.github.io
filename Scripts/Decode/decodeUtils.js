@@ -50,7 +50,7 @@ function getDifferenceValue(differenceBits){
 	if (differenceBits.charAt(0)==0){//Sign
 			number = (1 - Math.pow(2,differenceBits.length))+restBits;
 		}else{
-			number = Math.pow(2,differenceBits.length-1)+restBits;			
+			number = Math.pow(2,differenceBits.length-1)+restBits;				
 		}
 	bitPointer=bitPointer+differenceBits.length;
 	return number;
@@ -58,13 +58,10 @@ function getDifferenceValue(differenceBits){
 
 //Returns the next n bits
 function getNextBits(n){
-	
 	var str="";
 	for(var i =0; i<n;i++){
-		//str=str+bits[Math.floor((bitPointer+i)/8)].charAt((bitPointer+i)%8);	
 		str=str+getNextBit(bitPointer+i);
 	}
-	
 	return str;
 }
 
