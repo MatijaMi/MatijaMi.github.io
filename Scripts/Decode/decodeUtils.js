@@ -19,7 +19,7 @@ function findNextValue(huffTable, previousValue){
 }
 
 function getNextBit(bitPointer){
-	var byte= bits[Math.floor(bitPointer/8)];
+	var byte= bytes[Math.floor(bitPointer/8)];
 	var bit = bitPointer%8;
 	var rest = 8-byte.length;
 	if(bit<(rest)){

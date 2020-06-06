@@ -4,7 +4,7 @@ var window=self;
 
 onmessage=function(e){
 	var bitTime = new Date();
-	getBits(e.data[0]);//Transforming the bytes into bits
+	transformBytesToBits(e.data[0]);//Transforming the bytes into bits
 	var finTime = new Date();
 	console.log("BIT TIME " + (finTime.getTime()-bitTime.getTime()));
 	var metaData = e.data[1];

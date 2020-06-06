@@ -121,6 +121,8 @@ label{
 	left: 10%;
 	width: 80%;
 	height: 14px;
+	padding-top:1px;
+	padding-bottom:1px;
 	display: none;
 	background-color: gray;
 	border-radius: 4px;
@@ -130,7 +132,7 @@ label{
 	color: white;
 	width:0.1%;
 	height: 100%;
-	padding-top:1px;
+	padding-top: 1px;
 	font-size: 12px;
 	background-color: black;
 	text-align: center;

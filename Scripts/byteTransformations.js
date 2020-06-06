@@ -16,18 +16,13 @@ function numberToBitString(number, bitCount){
 	return ("00000000" +number.toString(2)).substr(-bitCount);
 }
 
-//Transformation of a byte into exactly 8 bits, used in getBits()
-function byteToString(byte){
-	return ("0000000" + byte.toString(2)).substr(-8);
-}
-
 /*	
 	Transforming all of the bytes into an array of bytes represented in bits
 	for easier decoding, changes to this function are possible, maybe even completely deleting it
 	if a better solution is found
 */
-function getBits(data){
-	window.bits =[];
+function transformBytesToBits(data){
+	var bits =[];
 	for(var i =0; i <data.length;i++){
 		var byte =data[i].toString(2);
 		bits.push(byte);
@@ -38,5 +33,6 @@ function getBits(data){
 		if(i%(Math.floor(data.length/100))==0){
 			postMessage(["PB",i/(Math.floor(data.length/100)),"Transforming Bytes"]);
 		}
-	}   
+	} 
+	bytes=bits;
 }
