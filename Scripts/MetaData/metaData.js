@@ -24,6 +24,7 @@ function collectMetaData(){
 	var makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
 	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
 	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
+	console.log(metaData.get("colorSpace"));
 	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 	
 	//IFD3 Code

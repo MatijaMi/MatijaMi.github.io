@@ -131,32 +131,3 @@ function cropBorders(image, top, left, bot, right){
 	}
 	return croppedImage;
 }
-
-/*	Based on the White Balance values from the MakerNote,
-	calculates the ratios between the colors by using the biggest element
-	to decrease file size */
-function applyWhiteBalance(image,metaData){
-	var wb = metaData.get("WhiteBalance");
-	var max=wb[0];
-	for(var k = 1; k<4;k++){
-		if(wb[k]>max){
-			max=wb[k];
-		}
-	}
-	var wbarr=[];
-	wbarr.push(Number((wb[0]/max).toFixed(2)));
-	wbarr.push(Number((wb[1]/max).toFixed(2)));
-	wbarr.push(Number((wb[3]/max).toFixed(2)));
-	
-	for( var i=0; i <image.length;i++){
-		if(i%(Math.floor(image.length/100))==0){
-			postMessage(["PB",i/(Math.floor(image.length/100)),"Applying White Balance"]);
-		}
-		for(var j =0; j<image[i].length;j+=3){
-			image[i][j]=Number((image[i][j]*wbarr[0]).toFixed(2));
-			image[i][j+1]=Number((image[i][j+1]*wbarr[1]).toFixed(2));
-			image[i][j+2]=Number((image[i][j+2]*wbarr[2]).toFixed(2));
-		}
-	}
-	return image;
-}

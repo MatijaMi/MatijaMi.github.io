@@ -26,7 +26,6 @@ onmessage=function(e){
 				image=bayerInterpolation(image);
 				mode="drgb";
 			}
-			//image = applyWhiteBalance(image,metaData);
 			break;
 			
 		case "yycc":

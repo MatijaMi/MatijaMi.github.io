@@ -21,6 +21,7 @@ function getWhiteBalance(mnOffset, model){
 	for(var i =0; i <4; i++){
 		colorBalance.push(transformTwoBytes(bytes[colorBalanceOffset+(wbOffset+i)*2],bytes[colorBalanceOffset+(wbOffset+i)*2+1]));
 	}
+	console.log(colorBalance);
 	return colorBalance;
 }
 
