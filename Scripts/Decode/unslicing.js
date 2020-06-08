@@ -99,18 +99,16 @@ function unsliceYCbCr(image, metaData){
 function unsliceYYYYCbCr(image,metaData){
 	var slices=metaData.get("Slices"); 
 	var sof3 =metaData.get("SOF3");
-	var numberOfLines=	image.length;
+	var numberOfLines= sof3.get("NumberOfLines");
 	var width=	image[0].length;
 	var nComponents=sof3.get("ImageComponents");
 	var imageLines=[];
 	
-	for(var k =0; k <numberOfLines;k++){
+	for(var m =0; m <numberOfLines;m++){
 		imageLines.push([]);
 	}
 	var numberOfEntries=6;
 	var tablePointer=0;
-	console.log(width);
-	console.log(numberOfLines);
 	for(var k =0; k <slices[0]+1;k++){
 		
 		if(k==slices[0]){
@@ -120,13 +118,11 @@ function unsliceYYYYCbCr(image,metaData){
 		}
 		
 		var numberOfEntriesPerSlice=numberOfLines*sliceWidth*1.5;
-		//console.log(numberOfEntriesPerSlice);
-		
 		for(var i =0; i <numberOfEntriesPerSlice;i+=6){
 			
 			var currentElement=i+tablePointer;
-			var row =Math.floor(currentElement/width);
-			var col =currentElement%width;
+			var row = Math.floor(currentElement/width);
+			var col = currentElement%width;
 			var y1 = image[row][col];
 			var y2 = image[row][col+1];
 			var y3 = image[row][col+2];
@@ -138,30 +134,22 @@ function unsliceYYYYCbCr(image,metaData){
 			var currentLine=imageLines[Math.floor((i/3)/(sliceWidth))*2];
 			
 			currentLine.push([]);
-			
-			currentLine[currentLine.length-1].push(y1);
-			currentLine[currentLine.length-1].push(cb);
-			currentLine[currentLine.length-1].push(cr);
 			currentLine.push([]);
+			currentLine[currentLine.length-2].push(y1);
+			currentLine[currentLine.length-2].push(cb);
+			currentLine[currentLine.length-2].push(cr);
 			currentLine[currentLine.length-1].push(y2);
 			
-			currentLine=imageLines[Math.floor((i/3)/(sliceWidth))*2+1];
+			currentLine=imageLines[(Math.floor((i/3)/(sliceWidth))*2)+1];
 			currentLine.push([]);
-			currentLine[currentLine.length-1].push(y3);
-			
 			currentLine.push([]);
+			currentLine[currentLine.length-2].push(y3);
 			currentLine[currentLine.length-1].push(y4);
 		}
-		tablePointer=tablePointer+numberOfEntriesPerSlice;
+		
+		tablePointer+=numberOfEntriesPerSlice;
 		
 	}
-	
-	console.log(imageLines.length);
-	for(var i =0;i< imageLines.length;i++){
-		console.log(imageLines[i].length);
-	}
-	console.log(imageLines[0]);
-	console.log(imageLines[1]);
 	return imageLines;
 }
 

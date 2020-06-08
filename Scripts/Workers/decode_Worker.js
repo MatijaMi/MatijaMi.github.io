@@ -3,20 +3,20 @@ self.importScripts('../byteTransformations.js','../Decode/interpolations.js','..
 var window=self;
 
 onmessage=function(e){
-	var bitTime = new Date();
+	//var bitTime = new Date();
 	transformBytesToBits(e.data[0]);//Transforming the bytes into bits
-	var finTime = new Date();
-	console.log("BIT TIME " + (finTime.getTime()-bitTime.getTime()));
+	//var finTime = new Date();
+	//console.log("BIT TIME " + (finTime.getTime()-bitTime.getTime()));
 	var metaData = e.data[1];
-	var mode =e.data[3];//Either rggb, yycc or yyyycc
+	var mode ="d"+e.data[3];//Either rggb, yycc or yyyycc
 	//The values need to be decompressed first
-	var a = new Date();
+	//var a = new Date();
 	var image =decompressValues(metaData);
-	var c = new Date();
-	console.log("DECOMPRESS TIME " +(c.getTime()-a.getTime()));
+	//var c = new Date();
+	//console.log("DECOMPRESS TIME " +(c.getTime()-a.getTime()));
 	//Applying the correct unslicing and post processing functions on the image
 	switch(mode){
-		case "rggb":
+		case "drggb":
 			var d = new Date();			
 			image = unsliceRGGB(image,metaData);
 			
@@ -28,7 +28,8 @@ onmessage=function(e){
 			}
 			break;
 			
-		case "yycc":
+		case "dyycc":
+			
 			image = unsliceYCbCr(image, metaData);
 			image =interpolateYCC(image);
 			if(e.data[2]==true){
@@ -37,9 +38,10 @@ onmessage=function(e){
 			}
 			break;
 		
-		case "yyyycc":
+		case "dyyyycc":
+			
 			image = unsliceYYYYCbCr(image,metaData);
-			image=interpolateYYYYCbCr(image);
+			image = interpolateYYYYCbCr(image);
 			if(e.data[2]==true){
 				image=YYYYCbCrtoRGB(image);
 				mode="drgb";
@@ -47,6 +49,6 @@ onmessage=function(e){
 			break;	
 	}
 	postMessage(["DL"]);
-	var blob = new Blob([image], {type: "octet/stream"});
+	var blob = new Blob( [image], {type: "octet/stream"});
 	postMessage(["RES",blob,mode]);
 }
