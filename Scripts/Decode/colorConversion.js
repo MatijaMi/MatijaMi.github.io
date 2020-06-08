@@ -40,6 +40,10 @@ function YYYYCbCrtoRGB(image){
 			image[i][j][1]=Number((y - 1.377 * cb - 2.869 * cr).toFixed(2));
 			image[i][j][2]=Number((y + 7.090 * cb - 0.025 * cr).toFixed(2));
 		}
+		
+		if(i%(Math.floor(image.length/100))==0){
+				postMessage(["PB",i/(Math.floor(image.length/100)),"Interpolating Image"]);
+			}
 	}
 	return image;
 }

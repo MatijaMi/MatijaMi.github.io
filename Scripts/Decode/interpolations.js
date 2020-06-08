@@ -31,10 +31,10 @@ function interpolateYCC(image){
 	|	Y3    | Y4 | 	Y3 	  | Y4 |..
 	|Y1 Cb Cr | Y2 | Y1 Cb Cr | Y2 |.. */
 function interpolateYYYYCbCr(image){
-	console.log("FIRST");
+	
 	for(var i=0;i<image.length;i++){
-		
 		if(i%2==0){
+			//Interpolation for even rows
 			for(var j=1; j<image[i].length;j+=2){
 				if(j==(image[i].length-1)){
 					image[i][j][1]=image[i][j-1][1];
@@ -45,29 +45,33 @@ function interpolateYYYYCbCr(image){
 				}
 			}
 		}else{
-			for(var j=0; j<image[i].length-1;j+=2){
+			//Interpolation for odd rows, y3 and y4 cells at the same time, to save time
+			for(var j=0; j<image[i].length;j+=2){
+				//y3
 				if(i==(image.length-1)){
 					image[i][j][1]=image[i-1][j][1];
 					image[i][j][2]=image[i-1][j][2];
-				}else{
-					image[i][j][1]=(image[i-1][j][1]+image[i+1][j][1])/2;
-					image[i][j][2]=(image[i-1][j][2]+image[i+1][j][2])/2;
+						
+					}else{
+						image[i][j][1]=(image[i-1][j][1]+image[i+1][j][1])/2;
+						image[i][j][2]=(image[i-1][j][2]+image[i+1][j][2])/2;
+					}
+				//y4
+				if(j>0){
+					image[i][j-1][1]=(image[i][j-2][1]+image[i][j][1])/2;
+					image[i][j-1][2]=(image[i][j-2][2]+image[i][j][2])/2;	
+				}
+				if(j==image[i].length-2){
+					image[i][j+1][1]=image[i][j][1];
+					image[i][j+1][2]=image[i][j][2];	
 				}
 			}
 		}
 	}
-	console.log("SECOND");
-	for(var i =1; i<image.length;i+=2){
-		for(var j=1; j<image[i].length;j+=2){
-			if(j==image[i].length-1){
-					image[i][j][1]=image[i][j-1][1];
-					image[i][j][2]=image[i][j-1][2];
-				}else{
-				image[i][j][1]=(image[i][j-1][1]+image[i][j+1][1])/2;
-				image[i][j][2]=(image[i][j-1][2]+image[i][j+1][2])/2;
-			}	
-		}
-	}
+		
+		if(i%(Math.floor(image.length/100))==0){
+				postMessage(["PB",i/(Math.floor(image.length/100)),"Interpolating Image"]);
+			}
 	return image;
 }
 

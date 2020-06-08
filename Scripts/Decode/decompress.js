@@ -30,7 +30,7 @@ function decompressValues(mData){
 		if(i>0){
 			for(var comp=0; comp<nComponents;comp++){		
 				if(compParts[0]==4){
-					if(i%2==0){
+					if(i%2==0){ //In YYYYCbCr the previous values get reset every 2 lines
 						if(comp==0){
 							previousValues[comp]=imageLines[i-2][comp];//Adjusting for additional Ys
 						}else{

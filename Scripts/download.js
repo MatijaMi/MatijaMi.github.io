@@ -14,11 +14,6 @@ function downloadJpeg(){
 	saveByteArray(blob, name);
 }
 
-//Function to download the raw bytes of the CR2 file
-function downloadRaw(){
-	
-}
-
 //Function to download meta data in a readable format
 function downloadMetaData(){
 	var name =fileList[0].name +"MetaData.txt";

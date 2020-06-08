@@ -84,9 +84,7 @@ function unsliceYCbCr(image, metaData){
 			
 			currentLine.push([]);
 			
-			currentLine[currentLine.length-1].push(y1);
-			currentLine[currentLine.length-1].push(cb);
-			currentLine[currentLine.length-1].push(cr);
+			currentLine[currentLine.length-1].push(y1,cb,cr);
 			
 			currentLine.push([]);
 			currentLine[currentLine.length-1].push(y2);
@@ -103,6 +101,7 @@ function unsliceYYYYCbCr(image,metaData){
 	var width=	image[0].length;
 	var nComponents=sof3.get("ImageComponents");
 	var imageLines=[];
+	var totalNofEntries= width*numberOfLines;
 	
 	for(var m =0; m <numberOfLines;m++){
 		imageLines.push([]);
@@ -132,12 +131,9 @@ function unsliceYYYYCbCr(image,metaData){
 			
 			
 			var currentLine=imageLines[Math.floor((i/3)/(sliceWidth))*2];
-			
 			currentLine.push([]);
 			currentLine.push([]);
-			currentLine[currentLine.length-2].push(y1);
-			currentLine[currentLine.length-2].push(cb);
-			currentLine[currentLine.length-2].push(cr);
+			currentLine[currentLine.length-2].push(y1,cb,cr);
 			currentLine[currentLine.length-1].push(y2);
 			
 			currentLine=imageLines[(Math.floor((i/3)/(sliceWidth))*2)+1];
@@ -145,6 +141,10 @@ function unsliceYYYYCbCr(image,metaData){
 			currentLine.push([]);
 			currentLine[currentLine.length-2].push(y3);
 			currentLine[currentLine.length-1].push(y4);
+			
+			if(currentElement%(Math.floor(totalNofEntries/100))==0){
+				postMessage(["PB",currentElement/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
+			}
 		}
 		
 		tablePointer+=numberOfEntriesPerSlice;

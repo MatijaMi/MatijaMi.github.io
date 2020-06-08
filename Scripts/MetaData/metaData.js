@@ -15,7 +15,6 @@ function collectMetaData(){
 	window.jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	 
 	//Code for finding the EXIF Sub-IFD data
-	
 	var exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
 	metaData.set("ExposureTime", findIFDTagValue(exifOffset,154,130,false,false));
 	metaData.set("fNumber", findIFDTagValue(exifOffset,157,130,false,false));
@@ -24,12 +23,9 @@ function collectMetaData(){
 	var makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
 	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
 	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
-	console.log(metaData.get("colorSpace"));
 	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 	
 	//IFD3 Code
-	
-	
 	var ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	metaData.set("IFD3Offset", ifdThreeOffset);
 	
