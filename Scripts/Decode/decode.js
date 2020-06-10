@@ -20,7 +20,6 @@ function decodeImage(rgb){
 			var mode ="rggb";
 	}
 	initialiseDecodeUI();
-	
 	w.postMessage([bytes,metaData,rgb,mode]);
 	
 	w.onmessage=function(e){

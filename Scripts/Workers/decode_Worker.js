@@ -3,10 +3,10 @@ self.importScripts('../byteTransformations.js','../Decode/interpolations.js','..
 var window=self;
 
 onmessage=function(e){
-	//var bitTime = new Date();
+	var bitTime = new Date();
 	transformBytesToBits(e.data[0]);//Transforming the bytes into bits
-	//var finTime = new Date();
-	//console.log("BIT TIME " + (finTime.getTime()-bitTime.getTime()));
+	var finTime = new Date();
+	console.log("BIT TIME " + (finTime.getTime()-bitTime.getTime()));
 	var metaData = e.data[1];
 	var mode ="d"+e.data[3];//Either rggb, yycc or yyyycc
 	//The values need to be decompressed first

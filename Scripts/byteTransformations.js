@@ -24,8 +24,9 @@ function numberToBitString(number, bitCount){
 function transformBytesToBits(data){
 	var bits =[];
 	for(var i =0; i <data.length;i++){
-		var byte =data[i].toString(2);
-		bits.push(byte);
+		var byte =data[i];
+		//bits.push(byte.toString(2));
+		bits.push(myBin(byte));
 		if(data[i]==255){
 			i++;
 		}
@@ -35,4 +36,19 @@ function transformBytesToBits(data){
 		}
 	} 
 	bytes=bits;
+}
+
+function myBin(num){
+	var bin = "";
+	var x;
+	while(num>=1){
+		if(num%2==1){
+			x="1";
+		}else{
+			x="0";
+		}
+		bin=x+bin;
+		num=num>>>1;
+	}
+	return bin;
 }
