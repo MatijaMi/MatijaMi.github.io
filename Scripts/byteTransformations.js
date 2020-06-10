@@ -26,7 +26,7 @@ function transformBytesToBits(data){
 	for(var i =0; i <data.length;i++){
 		var byte =data[i];
 		//bits.push(byte.toString(2));
-		bits.push(myBin(byte));
+		bits.push(decToBin(byte));
 		if(data[i]==255){
 			i++;
 		}
@@ -38,16 +38,18 @@ function transformBytesToBits(data){
 	bytes=bits;
 }
 
-function myBin(num){
+/*	Function to transform a number to its binary form
+ 	faster than the built in toString(2) function */
+function decToBin(num){
 	var bin = "";
-	var x;
+	var bit;
 	while(num>=1){
 		if(num%2==1){
-			x="1";
+			bit="1";
 		}else{
-			x="0";
+			bit="0";
 		}
-		bin=x+bin;
+		bin=bit+bin;
 		num=num>>>1;
 	}
 	return bin;
