@@ -1,5 +1,5 @@
 /* Given the meta data decompressed the raw bytes to the actual values*/
-function decompressValues(mData){
+function decompressValues(bits,mData){
 	//Needed data
 	var metaData=mData;
 	var sliceDimensions = metaData.get("Slices");
@@ -19,7 +19,7 @@ function decompressValues(mData){
 	var imageLines=[];
 	
 	//Initialising the bit pointer
-	window.bitPointer=0;
+	self.bitPointer=0;
 	for(var i =0; i < numberOfLines;i++){
 		if(i%(Math.floor(numberOfLines/100))==0){
 			postMessage(["PB",i/(Math.floor(numberOfLines/100)),"Decompressing Data"]);
@@ -50,7 +50,7 @@ function decompressValues(mData){
 		for(var j =0; j <(samplesPerLine/(HSF*VSF));j++){//For every line
 			for(var comps = 0; comps<nComponents;comps++){//For every component
 				for(var part=0; part<compParts[comps];part++){//For every repetition of the component
-					previousValues[comps]=findNextValue(hts[comps],previousValues[comps]);//Find the next value
+					previousValues[comps]=findNextValue(hts[comps],previousValues[comps],bits);//Find the next value
 					imageLines[i].push(previousValues[comps]);//And save it
 				}
 			}

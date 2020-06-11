@@ -1,11 +1,11 @@
 /*	Given a position in the bit array finds the next value
 	by checking if the sequence of the next bits is in the Huffman Table, 
 	if it isn't it adds the next bit and checks again */
-function findNextValue(huffTable, previousValue){
+function findNextValue(huffTable, previousValue,bits){
 	
 	var currentCode="";	
 	for(var i =0; i <16; i++){
-		currentCode=currentCode+getNextBit(bitPointer+i);
+		currentCode=currentCode+getNextBit(bitPointer+i,bits);
 		
 		if(typeof huffTable.get(currentCode) !== "undefined"){
 				break;
@@ -15,11 +15,11 @@ function findNextValue(huffTable, previousValue){
 	bitPointer=bitPointer+currentCode.length;
 	var differenceCodeLength =huffTable.get(currentCode);
 	//The next value is equal to the previous value + the difference value
-	return previousValue+getDifferenceValue(getNextBits(differenceCodeLength));
+	return previousValue+getDifferenceValue(getNextBits(differenceCodeLength,bits));
 }
 
-function getNextBit(bitPointer){
-	var byte= bytes[Math.floor(bitPointer/8)];
+function getNextBit(bitPointer,bits){
+	var byte= bits[Math.floor(bitPointer/8)];
 	var bit = bitPointer%8;
 	var rest = 8-byte.length;
 	if(bit<(rest)){
@@ -57,10 +57,10 @@ function getDifferenceValue(differenceBits){
 }
 
 //Returns the next n bits
-function getNextBits(n){
+function getNextBits(n,bits){
 	var str="";
 	for(var i =0; i<n;i++){
-		str=str+getNextBit(bitPointer+i);
+		str=str+getNextBit(bitPointer+i,bits);
 	}
 	return str;
 }

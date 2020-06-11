@@ -35,7 +35,7 @@ function transformBytesToBits(data){
 			postMessage(["PB",i/(Math.floor(data.length/100)),"Transforming Bytes"]);
 		}
 	} 
-	bytes=bits;
+	return bits;
 }
 
 /*	Function to transform a number to its binary form

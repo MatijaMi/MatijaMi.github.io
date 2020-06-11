@@ -82,12 +82,8 @@ function unsliceYCbCr(image, metaData){
 			var cr = image[row][col+3];
 			var currentLine=imageLines[Math.floor((i/2)/sliceWidth)];
 			
-			currentLine.push([]);
-			
-			currentLine[currentLine.length-1].push(y1,cb,cr);
-			
-			currentLine.push([]);
-			currentLine[currentLine.length-1].push(y2);
+			currentLine.push([y1,cb,cr]);
+			currentLine.push([y2]);
 		}
 		tablePointer+=numberOfEntriesPerSlice;
 	}
@@ -131,16 +127,12 @@ function unsliceYYYYCbCr(image,metaData){
 			
 			
 			var currentLine=imageLines[Math.floor((i/3)/(sliceWidth))*2];
-			currentLine.push([]);
-			currentLine.push([]);
-			currentLine[currentLine.length-2].push(y1,cb,cr);
-			currentLine[currentLine.length-1].push(y2);
+			currentLine.push([y1,cb,cr]);
+			currentLine.push([y2]);
 			
 			currentLine=imageLines[(Math.floor((i/3)/(sliceWidth))*2)+1];
-			currentLine.push([]);
-			currentLine.push([]);
-			currentLine[currentLine.length-2].push(y3);
-			currentLine[currentLine.length-1].push(y4);
+			currentLine.push([y3]);
+			currentLine.push([y4]);
 			
 			if(currentElement%(Math.floor(totalNofEntries/100))==0){
 				postMessage(["PB",currentElement/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
