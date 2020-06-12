@@ -3,7 +3,7 @@
 	Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)
 */
 function downloadProcessedImage(type){
-	var name =fileList[0].name + type+ ".txt";
+	var name =fileList[0].name + type+ ".json";
 	saveByteArray(downloadBytes,name);
 	
 }
@@ -47,5 +47,5 @@ function saveByteArray(data,name){
     a.download = name;
     a.click();
     window.URL.revokeObjectURL(url);
-	document.body.removeChild(a);
+	downloadBytes=[];
 }

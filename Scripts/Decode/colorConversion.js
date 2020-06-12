@@ -4,17 +4,15 @@
 
 function YCCtoRGB(image){ 
 	var newImg=[];
-	for(var i = 0; i <image.length;i++){
-		for(var j =0; j<image[i].length;j++){
-			var Y=image[i][j][0];
-			var Cb=image[i][j][1];
-			var Cr=image[i][j][2];
+	for(var i = 0; i <image.length;i+=3){
+			var Y=image[i];
+			var Cb=image[i+1];
+			var Cr=image[i+2];
 			
 			var r =Y +Cr;
 			var g =Y - 0.19*Cb - 0.5*Cr;
 			var b =Y +Cb;	
 			newImg.push(r,g,b);
-		}
 		if(i%(Math.floor(image.length/100))==0){
 				postMessage(["PB",Math.floor(i/(Math.floor(image.length/100))),"Converting to RGB"]);
 			}

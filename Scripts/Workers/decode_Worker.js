@@ -47,7 +47,7 @@ onmessage=function(e){
 			break;	
 	}
 	postMessage(["DL"]);
-	var blob = new Blob( [image], {type: "octet/stream"});
+	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
 	postMessage(["RES",blob,mode]);
 	self.close();
 }

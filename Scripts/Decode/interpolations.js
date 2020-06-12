@@ -1,27 +1,37 @@
 /*	Interpolates the missing Cb and Cr values for every second sample
 	by using the values from the previous and next sample */
 function interpolateYCC(image){
+	var newImg = [];
+	var y, cb, cr;
 	for(var i = 0; i <image.length;i++){
+		
+		for(var j =0; j<image[i].length;j++){
+			if(j%2==0){
+				y = image[i][j][0];
+				cb = image[i][j][1];
+				cr = image[i][j][2];
+			}else{
+				y = image[i][j-1][0];
+				var prevCb = image[i][j-1][1];
+				var prevCr = image[i][j-1][2];
+				if(j==(image[i].length-1)){
+					cb=prevCb;
+					cr=prevCr;
+				}else{
+					var nextCb= image[i][j+1][1];
+					var nextCr=	image[i][j+1][2];
+					cb=(prevCb+nextCb)/2;
+					cr=(prevCr+nextCr)/2;
+				}
+			}
+			newImg.push(y,cb,cr);
+		}
+		
 		if(i%(Math.floor(image.length/100))==0){
 			postMessage(["PB",i/(Math.floor(image.length/100)),"Interpolating YCbCr"]);
 		}
-		for(var j =1; j<image[i].length;j++){
-			var prevCb = image[i][j-1][1];
-			var prevCr = image[i][j-1][2];
-			if(j==(image[i].length-1)){
-				image[i][j].push(prevCb);
-				image[i][j].push(prevCr);
-			}else{
-				
-				var nextCb= image[i][j+1][1];
-				var nextCr=	image[i][j+1][2];
-				image[i][j].push((prevCb+nextCb)/2);
-				image[i][j].push((prevCr+nextCr)/2);
-			}
-			j++;
-		}
 	}
-	return image;	
+	return newImg;	
 }
 
 /* 	Interpolates the missing Cb and Cr to fill in the gaps,
@@ -121,7 +131,7 @@ function bayerInterpolation(image){
 			postMessage(["PB",Math.min((i/Math.floor(image.length/100)),100),"Interpolating Values"])
 		}
 		}
-	return newImg;
+	return [].concat.apply([], newImg);
 	}
 
 
