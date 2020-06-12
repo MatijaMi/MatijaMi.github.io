@@ -120,14 +120,24 @@ function getNumberOfEntries(nComponents,HSF,VSF){
 		}
 	}
 }
-
-/* 	Due to the borders of the camera's sensors not always
-	being exactly on the edge of the image, removes black stripes
-	 on the edges where there were no sensors from the image */
-function cropBorders(image, top, left, bot, right){
-	var croppedImage =[];
-	for(var i=top;i<bot;i++){
-		croppedImage.push(image[i].slice(left,right));
-	}
-	return croppedImage;
+function adjustPreviousValues(imageLines,i,nComponents,nOfFirst){
+	var previousValues=[];
+		for(var comp=0; comp<nComponents;comp++){		
+			if(nOfFirst==4){
+				if(i%2==0){ //In YYYYCbCr the previous values get reset every 2 lines
+					if(comp==0){
+						previousValues[comp]=imageLines[i-2][comp];//Adjusting for additional Ys
+					}else{
+						previousValues[comp]=imageLines[i-2][comp+3];//Adjusting for additional Ys
+					}
+				}	
+			}else{
+				if(nOfFirst==2 && comp>0){
+					previousValues[comp]=imageLines[i-1][comp+1];//Adjusting for additional Ys
+				}else{
+					previousValues[comp]=imageLines[i-1][comp];	
+				}
+			}
+		}
+ 		return previousValues;
 }

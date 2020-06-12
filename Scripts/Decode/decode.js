@@ -28,7 +28,6 @@ function decodeImage(rgb){
 			case "RES"://RES = Result
 				showDecodeEndUI(e.data[2]);
 				downloadBytes= e.data[1];
-				w.terminate();
 				break;
 			case "PB"://PB = Progress Bar
 				updateProgressBar(e.data[1],e.data[2]);

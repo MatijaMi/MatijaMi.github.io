@@ -30,13 +30,14 @@ function unsliceRGGB(image, metaData){
 		var numberOfValuesPerSample = numberOfSamples*height;
 		
 		for(var i =0; i<numberOfValuesPerSample;i++){
-			
 			var currentPointer=samplePointer+i;
+			var currentEntry = image[Math.floor(currentPointer/trueWidth)][currentPointer%trueWidth];
+			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
+			
+			//Progress bar update
 			if(currentPointer%(Math.floor(totalNofEntries/100))==0){
 				postMessage(["PB",currentPointer/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
 			}
-			var currentEntry = image[Math.floor(currentPointer/trueWidth)][currentPointer%trueWidth];
-			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
 		}
 		//Sample pointer used to keep track of where we are in the input
 		samplePointer=samplePointer+numberOfValuesPerSample;
@@ -71,9 +72,6 @@ function unsliceYCbCr(image, metaData){
 		for(var i =0; i <numberOfEntriesPerSlice;i+=4){
 			
 			var currentElement=i+tablePointer;
-			if(currentElement%(Math.floor(totalNofEntries/100))==0){
-				postMessage(["PB",currentElement/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
-			}
 			var row =Math.floor(currentElement/width);
 			var col =currentElement%width;
 			var y1 = image[row][col];
@@ -84,7 +82,13 @@ function unsliceYCbCr(image, metaData){
 			
 			currentLine.push([y1,cb,cr]);
 			currentLine.push([y2]);
+			
+			//Progress bar update
+			if(currentElement%(Math.floor(totalNofEntries/100))==0){
+				postMessage(["PB",currentElement/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
+			}
 		}
+		
 		tablePointer+=numberOfEntriesPerSlice;
 	}
 	return imageLines;
@@ -134,8 +138,9 @@ function unsliceYYYYCbCr(image,metaData){
 			currentLine.push([y3]);
 			currentLine.push([y4]);
 			
-			if(currentElement%(Math.floor(totalNofEntries/100))==0){
-				postMessage(["PB",currentElement/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
+			//Progress bar update
+			if((currentElement/6)%(Math.floor(totalNofEntries/600))==0){
+				postMessage(["PB",(currentElement/6)/(Math.floor(totalNofEntries/600)),"Unslicing Image"]);
 			}
 		}
 		

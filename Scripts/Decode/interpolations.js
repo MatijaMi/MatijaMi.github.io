@@ -97,6 +97,7 @@ function interpolateYYYYCbCr(image){
 				
 			}
 		}
+		//Progress bar update
 		if(i%(Math.floor(image.length/100))==0){
 				postMessage(["PB",i/(Math.floor(image.length/100)),"Interpolating Image"]);
 			}
@@ -116,23 +117,24 @@ function interpolateYYYYCbCr(image){
 function bayerInterpolation(image){
 	self.newImg =[];
 	for(var i =0; i<image.length;i++){
-			switch(i){
-				case 0:
-					interpolateFirstLine(image);
-					break;
-				case image.length-1:
-					interpolateLastLine(image);
-					break;
-				default:
-					interpolateLine(image,i);
-					break;			
-			}
+		switch(i){
+			case 0:
+				interpolateFirstLine(image);
+				break;
+			case image.length-1:
+				interpolateLastLine(image);
+				break;
+			default:
+				interpolateLine(image,i);
+				break;			
+		}
+		//Progress bar update
 		if(i%Math.floor(image.length/100)==0){
 			postMessage(["PB",Math.min((i/Math.floor(image.length/100)),100),"Interpolating Values"])
 		}
-		}
-	return [].concat.apply([], newImg);
 	}
+	return [].concat.apply([], newImg);
+}
 
 
 function interpolateFirstLine(image){

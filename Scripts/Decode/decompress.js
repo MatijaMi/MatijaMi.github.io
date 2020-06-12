@@ -21,30 +21,11 @@ function decompressValues(bits,mData){
 	//Initialising the bit pointer
 	self.bitPointer=0;
 	for(var i =0; i < numberOfLines;i++){
-		if(i%(Math.floor(numberOfLines/100))==0){
-			postMessage(["PB",i/(Math.floor(numberOfLines/100)),"Decompressing Data"]);
-		}
 		imageLines.push([]);//newLine
 		/*On all lines except the first, the previous value is taken
 		from the previous line, from the first occurence of the component*/
 		if(i>0){
-			for(var comp=0; comp<nComponents;comp++){		
-				if(compParts[0]==4){
-					if(i%2==0){ //In YYYYCbCr the previous values get reset every 2 lines
-						if(comp==0){
-							previousValues[comp]=imageLines[i-2][comp];//Adjusting for additional Ys
-						}else{
-							previousValues[comp]=imageLines[i-2][comp+3];//Adjusting for additional Ys
-						}
-					}	
-				}else{
-					if(compParts[0]==2 && comp>0){
-						previousValues[comp]=imageLines[i-1][comp+1];//Adjusting for additional Ys
-					}else{
-						previousValues[comp]=imageLines[i-1][comp];	
-					}
-				}
-			}	
+			previousValues=adjustPreviousValues(imageLines,i,nComponents,compParts[0]);
 		}
 		
 		for(var j =0; j <(samplesPerLine/(HSF*VSF));j++){//For every line
@@ -54,6 +35,10 @@ function decompressValues(bits,mData){
 					imageLines[i].push(previousValues[comps]);//And save it
 				}
 			}
+		}
+		//Progress bar update
+		if(i%(Math.floor(numberOfLines/100))==0){
+			postMessage(["PB",i/(Math.floor(numberOfLines/100)),"Decompressing Data"]);
 		}
 	}
 	return imageLines;
