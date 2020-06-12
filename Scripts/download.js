@@ -46,5 +46,6 @@ function saveByteArray(data,name){
     a.href = url;
     a.download = name;
     a.click();
-    window.URL.revokeObjectURL(url);	
+    window.URL.revokeObjectURL(url);
+	downloadBytes=0;
 }

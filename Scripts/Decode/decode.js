@@ -21,7 +21,7 @@ function decodeImage(rgb){
 	}
 	initialiseDecodeUI();
 	w.postMessage([bytes,metaData,rgb,mode]);
-	bytes.length=0;
+	bytes=[];// Small garbage collection
 	
 	w.onmessage=function(e){
 		switch(e.data[0]){

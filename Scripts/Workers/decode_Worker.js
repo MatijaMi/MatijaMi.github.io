@@ -12,6 +12,7 @@ onmessage=function(e){
 	//The values need to be decompressed first
 	var a = new Date();
 	var image =decompressValues(bits,metaData);
+	bits=[];
 	var c = new Date();
 	console.log("DECOMPRESS TIME " +(c.getTime()-a.getTime()));
 	//Applying the correct unslicing and post processing functions on the image
@@ -19,8 +20,6 @@ onmessage=function(e){
 		case "drggb":
 						
 			image = unsliceRGGB(image,metaData);
-			
-		
 			if(e.data[2]==true){			
 				image=bayerInterpolation(image);
 				mode="drgb";
@@ -50,4 +49,5 @@ onmessage=function(e){
 	postMessage(["DL"]);
 	var blob = new Blob( [image], {type: "octet/stream"});
 	postMessage(["RES",blob,mode]);
+	self.close();
 }

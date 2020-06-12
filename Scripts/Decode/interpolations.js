@@ -104,21 +104,19 @@ function interpolateYYYYCbCr(image){
 	|G|B|G|B|  */
 	
 function bayerInterpolation(image){
-	var newImg =[];
+	self.newImg =[];
 	for(var i =0; i<image.length;i++){
-		
-			if(i==0){
-				interpolateFirstLine(image,newImg);
-				
-			}else{
-				if(i==image.length-1){
-					interpolateLastLine(image,newImg);
-				}else{
-					interpolateLine(image,i,newImg);
-				}
+			switch(i){
+				case 0:
+					interpolateFirstLine(image);
+					break;
+				case image.length-1:
+					interpolateLastLine(image);
+					break;
+				default:
+					interpolateLine(image,i);
+					break;			
 			}
-		
-		
 		if(i%Math.floor(image.length/100)==0){
 			postMessage(["PB",Math.min((i/Math.floor(image.length/100)),100),"Interpolating Values"])
 		}
@@ -127,10 +125,10 @@ function bayerInterpolation(image){
 	}
 
 
-function interpolateFirstLine(image,newImg){
-	
+function interpolateFirstLine(image){
+	var r,g,b;
+	var line = [];
 	for(var i=0; i<image[0].length;i++){
-		var r,g,b;
 		if(i==0){
 			r =image[0][0];
 			g = (image[0][1]+image[1][0])/2;
@@ -154,15 +152,17 @@ function interpolateFirstLine(image,newImg){
 				}
 			}
 		}
-		newImg.push(r,g,b);
+		line.push(r,g,b);
 	}
+	newImg.push(line);
 	return newImg;
 }
 		
-function interpolateLastLine(image,newImg){
+function interpolateLastLine(image){
 	var l= image.length-1;
+	var r,g,b;
+	var line =[];
 	for(var i=0; i<image[l].length;i++){
-		var r,g,b;
 		if(i==0){
 			r =image[l-1][0];
 			g =image[l][0];
@@ -186,23 +186,24 @@ function interpolateLastLine(image,newImg){
 				}
 			}
 		}
-		
-		newImg.push(r,g,b);
+		line.push(r,g,b);
 	}
+	newImg.push(line);
 	return newImg;
 }
 
-function interpolateLine(image, j,newImg){
+function interpolateLine(image, j){
 	if(j%2==0){
-		return  interpolateEvenLine(image,j,newImg);
+		return  interpolateEvenLine(image,j);
 	}else{
-		return  interpolateOddLine(image,j,newImg);
+		return  interpolateOddLine(image,j);
 	}	
 }
 
-function interpolateOddLine(image, j,newImg){
+function interpolateOddLine(image, j){
+	var r,g,b;
+	var line = [];
 	for(var i=0; i<image[j].length;i++){
-		var r,g,b;
 		if(i==0){
 			r = (image[j-1][0]+image[j+1][0])/2;
 			g = image[j][0];
@@ -226,14 +227,17 @@ function interpolateOddLine(image, j,newImg){
 				}
 			}
 		}
-		newImg.push(r,g,b);
+		line.push(r,g,b);
+		
 	}
+	newImg.push(line);
 	return newImg;	
 }
 
-function interpolateEvenLine(image, j,newImg){
+function interpolateEvenLine(image, j){
+	var r,g,b;
+	var line =[];
 	for(var i=0; i<image[j].length;i++){
-		var r,g,b;
 		if(i==0){
 			r= image[j][i];
 			g= (image[j-1][i]+image[j+1][i]+image[j][i+1])/3;
@@ -257,7 +261,9 @@ function interpolateEvenLine(image, j,newImg){
 				}
 			}
 		}
-		newImg.push(r,g,b);
+		line.push(r,g,b);
+		
 	}
+	newImg.push(line)
 	return newImg;	
 }
