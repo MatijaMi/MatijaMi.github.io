@@ -6,9 +6,6 @@ function decodeImage(rgb){
 	var hsf=metaData.get("SOF3").get("HSF");
 	var vsf=metaData.get("SOF3").get("VSF");
 	
-	/*	Due to JavaScript being limited to one thread workers are used for
-		the heavier computations so that the website doesn't freeze up */	
-	var w = new Worker('Scripts/Workers/decode_Worker.js');
 	switch(hsf+vsf){
 		case 3:
 			var mode ="yycc";
@@ -20,13 +17,15 @@ function decodeImage(rgb){
 			var mode ="rggb";
 	}
 	initialiseDecodeUI();
+	/*	Due to JavaScript being limited to one thread workers are used for
+		the heavier computations so that the website doesn't freeze up
+		Worker is already initialised with the site to allow termination at any point */	
 	w.postMessage([bytes,metaData,rgb,mode]);
-	bytes=[];// Small garbage collection
 	
 	w.onmessage=function(e){
 		switch(e.data[0]){
 			case "RES"://RES = Result
-				showDecodeEndUI(e.data[2]);
+				showDecodeEndUI(e.data[2],e.data[3]);
 				downloadBytes= e.data[1];
 				break;
 			case "PB"://PB = Progress Bar

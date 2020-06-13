@@ -48,6 +48,6 @@ onmessage=function(e){
 	}
 	postMessage(["DL"]);
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
-	postMessage(["RES",blob,mode]);
+	postMessage(["RES",blob,mode,e.data[2]]);
 	self.close();
 }

@@ -22,7 +22,6 @@ function disableButtons(mode){
 
 /* Starts the UI(progress bar) used to visualise decoding progress */
 function initialiseDecodeUI(){
-	document.getElementById("decodeR").style="display:none";
 	document.getElementById("progressBar").style="display:block";
 	document.getElementById("bar").style="width:0.1%";
 	document.getElementById("bar").innerHTML="0.0%"
@@ -30,7 +29,12 @@ function initialiseDecodeUI(){
 	document.getElementById("pbText").innerHTML="Transforming bytes";
 }
 /*Shows the UI for a completed decode */
-function showDecodeEndUI(mode){
+function showDecodeEndUI(mode,rgb){
+		if(rgb){
+			document.getElementById("decodeRGB").style="display:none";
+		}else{
+			document.getElementById("decodeFormat").style="display:none";
+		}
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
 		document.getElementById(mode).style="display:";
@@ -63,7 +67,8 @@ function setImage(data){
 }
 
 /* Showing the most user relevant parts of the meta data to the user */
-function showFileInformation(){
+function initialiseSiteUI(){
+			
 		var sof3=metaData.get("SOF3");
 		var output =[];
 		output.push("<p><b>Camera Model: </b>" + metaData.get("ModelName"));
@@ -84,32 +89,38 @@ function showFileInformation(){
 		document.getElementById("right").style="display:block";
 		document.getElementById("info").style="text-align:left";
 		document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
+		document.getElementById("decodeFormat").style="display:";
+		document.getElementById("decodeRGB").style="display:";
+
 		//Hiding buttons that aren't needed
-		document.getElementById("decodeR").style="display:none";
-		document.getElementById("decodeY").style="display:none";
-		document.getElementById("decodeYY").style="display:none";
 		document.getElementById("loading").style="display:none"
 		document.getElementById("dyycc").style="display:none";
 		document.getElementById("dyyyycc").style="display:none";
 		document.getElementById("drggb").style="display:none";
 		document.getElementById("drgb").style="display:none";
-		
-		switch(sof3.get("HSF")+sof3.get("VSF")){
-			case 3:
-				var shownButton= "Y";
-				break;
-			case 4:
-				var shownButton= "YY";
-				break;
-			default:
-				var shownButton= "R";
-		}
-		//Show fitting button
-		document.getElementById("decode"+shownButton).style="display:";
-		
-		
-		window.downloadBytes=[];//Initialise an array to save bytes to be downloaded
-		
+		document.getElementById("progressBar").style="display:none";
+		document.getElementById("pbText").innerHTML="";
 		//Shows the jpeg image as a thumbnail
 		setImage(jpeqBytes);
+		switch(sof3.get("HSF")+sof3.get("VSF")){
+			case 3:
+				var format= "YYCbCr";
+				break;
+			case 4:
+				var format= "YYYYCbCr";
+				break;
+			default:
+				var format= "RGGB";
+		}
+		//Show fitting button
+		document.getElementById("decodeFormat").innerHTML = "Decode as " +format;
+		disableButtons(false);
+	
+		/*	Starting up the worker needed for later and 
+			stopping an old one if it is still running */
+		if(typeof w !== "undefined"){
+			w.terminate();
+		}
+		window.w = new Worker('Scripts/Workers/decode_Worker.js');
+		window.downloadBytes=[];//Initialise an array to save bytes to be downloaded	
 }

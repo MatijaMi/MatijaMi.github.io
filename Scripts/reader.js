@@ -7,7 +7,7 @@ function readFile(file) {
 			window.bytes = new Uint8Array(reader.result);
 			//The meta data from the file gets read and the relevant parts get displayed in the website
 			window.metaData=collectMetaData();
-			showFileInformation();
+			initialiseSiteUI();
 		};	
 	  	reader.readAsArrayBuffer(file);
 };
