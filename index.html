@@ -7,7 +7,8 @@
     	<link rel="icon" href="icon.svg">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CR2 Decoder</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="baseStyle.css">
+        <link rel="stylesheet" href="decoderStyle.css">
 		<script src="Scripts/download.js"></script>
 		<script src="Scripts/reader.js"></script>
 		<script src="Scripts/UI.js"></script>
@@ -30,11 +31,20 @@
     
     <body>
 		
-		<div class="header"> 
+	<div class="header"> 
 			<a href="index.html">Home</a>
-			<a>CR2</a>
-			<a>FAQ</a>
-			<a>About</a>
+			<div class="dropdown">
+				<a href="Websites/cr2.html">CR2</a>
+				<div class="dropdownContent">
+					<a href="Websites/cr2.html">Intro</a>
+    				<a href="Websites/idf0.html">IFD #0</a>
+    				<a href="Websites/ifdthree.html">IFD #3</a>
+    				<a href="Websites/rawdata.html">Raw Data</a>
+				</div>
+			</div>
+			<a href="Websites/tutorial.html">Tutorial</a>
+			<a href="Websites/About.html">About</a>
+		
 		</div>
 		
 		<div class="content"> 

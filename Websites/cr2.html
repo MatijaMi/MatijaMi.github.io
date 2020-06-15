@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="en" style="height: 100%">
+    
+    <head>
+		<meta charset="UTF-8">
+    	<link rel="icon" href="icon.svg">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CR2 Decoder</title>
+        <link rel="stylesheet" href="../baseStyle.css">
+    </head>
+    
+    <body>
+		
+		<div class="header"> 
+			<a href="../index.html">Home</a>
+			<div class="dropdown">
+				<a href="cr2.html">CR2</a>
+				<div class="dropdownContent">
+					<a href="cr2.html">Intro</a>
+    				<a href="idf0.html">IFD #0</a>
+    				<a href="ifdthree.html">IFD #3</a>
+    				<a href="rawdata.html">Raw Data</a>
+				</div>
+			</div>
+			<a href="tutorial.html">Tutorial</a>
+			<a href="About.html">About</a>
+		</div>
+		
+		<div class="textContent"> 
+			<h1> Canon Raw 2</h1>
+			<h3><u>Basics</u></h3>
+			<p> The .CR2 (Canon Raw 2) file format is a TIFF file format used by some Canon digital cameras in order to save the raw sensor data captured by the camera with almost no processing. The RAW data does not contain an image that we can directly see, unlike a JPEG file, but offers way higher quality and precision of image data (12 or 15 bits per color) compared to JPEG (8 bits per color). That increase in quality especially becomes important for post-processing and further work on the image where having just a normal JPEG image can cause problems and lower quality. In order to manage the size of the data a lossless compression is used, whereas JPEG which uses lossy compression. </p>
+			<h3><u>Structure</u></h3>
+			<p>The basic structure of a CR2 file can de defined as follows: a TIFF header, a CR2 header and 4 pairs of Image File Directories and their respective images:
+			<br><img class="textImage" src="../Images/CR2Structure.svg" style="width: 30%">
+			<br> So CR2 contains a TIFF header at the very start of the file and following that it has its own CR2 header, each having a constant size of 8 bytes. The most important information in these headers can be found in the first 2 bytes in the TIFF header, which either have the value 0x4949 or 0x4d4d which respectively mean that the file is using either little endian or a big endian byte order. The other important information can be found in the last four bytes of the CR2 header that contain the offset from the beginning of the file to the start of IFD#3 in bytes. </p>
+			<br>
+		</div>
+    </body>
+</html>
