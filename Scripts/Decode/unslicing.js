@@ -35,9 +35,7 @@ function unsliceRGGB(image, metaData){
 			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
 			
 			//Progress bar update
-			if(currentPointer%(Math.floor(totalNofEntries/100))==0){
-				postMessage(["PB",currentPointer/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
-			}
+			progressBarUpdate(currentPointer,Math.floor(totalNofEntries/100),"Unslicing Image");
 		}
 		//Sample pointer used to keep track of where we are in the input
 		samplePointer=samplePointer+numberOfValuesPerSample;
@@ -84,9 +82,7 @@ function unsliceYCbCr(image, metaData){
 			currentLine.push([y2]);
 			
 			//Progress bar update
-			if(currentElement%(Math.floor(totalNofEntries/100))==0){
-				postMessage(["PB",currentElement/(Math.floor(totalNofEntries/100)),"Unslicing Image"]);
-			}
+			progressBarUpdate(currentElement,Math.floor(totalNofEntries/100),"Unslicing Image");
 		}
 		
 		tablePointer+=numberOfEntriesPerSlice;
@@ -139,9 +135,7 @@ function unsliceYYYYCbCr(image,metaData){
 			currentLine.push([y4]);
 			
 			//Progress bar update
-			if((currentElement/6)%(Math.floor(totalNofEntries/600))==0){
-				postMessage(["PB",(currentElement/6)/(Math.floor(totalNofEntries/600)),"Unslicing Image"]);
-			}
+			progressBarUpdate((currentElement/6),Math.floor(totalNofEntries/600),"Unslicing Image");
 		}
 		
 		tablePointer+=numberOfEntriesPerSlice;

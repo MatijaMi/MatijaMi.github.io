@@ -15,9 +15,7 @@ function YCCtoRGB(image){
 			newImg.push(r,g,b);
 		
 		//Progress bar update
-		if(i/3%(Math.floor(image.length/300))==0){
-				postMessage(["PB",Math.floor(i/3/(Math.floor(image.length/300))),"Converting to RGB"]);
-			}
+		progressBarUpdate(i/3,Math.floor(image.length/300),"Converting to RGB");
 	}
 	return newImg;
 }
@@ -39,9 +37,7 @@ function YYYYCbCrtoRGB(image){
 			var b=Number((y + 7.090 * cb - 0.025 * cr).toFixed(2));
 			newImg.push(r,g,b);
 		
-		if(i/3%(Math.floor(image.length/300))==0){
-				postMessage(["PB",i/3/(Math.floor(image.length/300)),"Converting to RGB"]);
-			}
+			progressBarUpdate(i/3,Math.floor(image.length/300),"Converting to RGB");
 	}
 	return newImg;
 }

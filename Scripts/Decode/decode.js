@@ -29,7 +29,7 @@ function decodeImage(rgb){
 				downloadBytes= e.data[1];
 				break;
 			case "PB"://PB = Progress Bar
-				updateProgressBar(e.data[1],e.data[2]);
+				updateProgressBar(e.data[1],e.data[2],e.data[3]);
 				break;
 			case "DL"://Preparing the file can take a bit
 				startLoadingAnimation();

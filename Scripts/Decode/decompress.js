@@ -36,10 +36,9 @@ function decompressValues(bits,mData){
 				}
 			}
 		}
+		
 		//Progress bar update
-		if(i%(Math.floor(numberOfLines/100))==0){
-			postMessage(["PB",i/(Math.floor(numberOfLines/100)),"Decompressing Data"]);
-		}
+		progressBarUpdate(i,Math.floor(numberOfLines/100),"Decompressing Values");
 	}
 	return imageLines;
 }

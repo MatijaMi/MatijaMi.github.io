@@ -49,5 +49,7 @@ onmessage=function(e){
 	postMessage(["DL"]);
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
 	postMessage(["RES",blob,mode,e.data[2]]);
+	var end = new Date();
+	console.log("TOTAL TIME: " + (end.getTime()-bitTime.getTime()));
 	self.close();
 }

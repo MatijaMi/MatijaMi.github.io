@@ -29,9 +29,7 @@ function transformBytesToBits(data){
 			i++;
 		}
 		//Updates for the progress bar
-		if(i%(Math.floor(data.length/100))==0){
-			postMessage(["PB",i/(Math.floor(data.length/100)),"Transforming Bytes"]);
-		}
+		progressBarUpdate(i,Math.floor(data.length/100),"Transforming Bytes");
 	} 
 	return bits;
 }

@@ -141,3 +141,10 @@ function adjustPreviousValues(imageLines,i,nComponents,nOfFirst){
 		}
  		return previousValues;
 }
+
+//Function that sends a message to update the progress bar to the main thread
+function progressBarUpdate(progress,total,message){
+	if(progress%total==0){
+			postMessage(["PB",progress,total,message]);
+		}
+}

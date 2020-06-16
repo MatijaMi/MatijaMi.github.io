@@ -27,9 +27,7 @@ function interpolateYCC(image){
 			newImg.push(y,cb,cr);
 		}
 		
-		if(i%(Math.floor(image.length/100))==0){
-			postMessage(["PB",i/(Math.floor(image.length/100)),"Interpolating YCbCr"]);
-		}
+		progressBarUpdate(i,Math.floor(image.length/100),"Interpolating YCbCr");
 	}
 	return newImg;	
 }
@@ -98,9 +96,7 @@ function interpolateYYYYCbCr(image){
 			}
 		}
 		//Progress bar update
-		if(i%(Math.floor(image.length/100))==0){
-				postMessage(["PB",i/(Math.floor(image.length/100)),"Interpolating Image"]);
-			}
+		progressBarUpdate(i,Math.floor(image.length/100),"Interpolating Image");
 	}
 		
 		
@@ -129,9 +125,7 @@ function bayerInterpolation(image){
 				break;			
 		}
 		//Progress bar update
-		if(i%Math.floor(image.length/100)==0){
-			postMessage(["PB",Math.min((i/Math.floor(image.length/100)),100),"Interpolating Values"])
-		}
+		progressBarUpdate(i,Math.floor(image.length/100),"Interpolating Values");
 	}
 	return [].concat.apply([], newImg);
 }

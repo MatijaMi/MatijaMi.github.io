@@ -41,7 +41,8 @@ function showDecodeEndUI(mode,rgb){
 		disableButtons(false);
 }
 /*Updating the progress bar with appropriate text and width */
-function updateProgressBar(progress, text){
+function updateProgressBar(progress,percent, text){
+		progress=progress/percent;
 		document.getElementById("pbText").innerHTML="<b>"+text+"</b>";
 		document.getElementById("bar").style.width=Math.min(progress,100)+"%";
 		document.getElementById("bar").innerHTML=Math.min(progress,100)+"%";

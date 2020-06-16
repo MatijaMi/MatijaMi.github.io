@@ -53,6 +53,13 @@ body{
 .dropdown:hover .dropdownContent {
   display: block;
 }
+.content{
+	position: relative;
+	background: #eee;
+	width:60%;
+	left:20%;
+	padding-top: 30px;
+}
 
 .textContent{
 	position: relative;
