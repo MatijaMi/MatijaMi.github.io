@@ -4,16 +4,19 @@
 
 function YCCtoRGB(image){ 
 	var newImg=[];
-	for(var i = 0; i <image.length;i+=3){
-			var Y=image[i];
-			var Cb=image[i+1];
-			var Cr=image[i+2];
+	for(var i = 0; i <image.length;i++){
+		var line =[];
+		for(var j =0; j <image[i].length;j+=3){
+			var Y=image[i][j];
+			var Cb=image[i][j+1];
+			var Cr=image[i][j+2];
 			
 			var r =Y +Cr;
 			var g =Y - 0.19*Cb - 0.5*Cr;
-			var b =Y +Cb;	
-			newImg.push(r,g,b);
-		
+			var b =Y +Cb;
+			line.push(r,g,b);
+			}
+		newImg.push(line);
 		//Progress bar update
 		progressBarUpdate(i/3,Math.floor(image.length/300),"Converting to RGB");
 	}
@@ -27,17 +30,20 @@ function YCCtoRGB(image){
 	Assuming the our Cb and Cr values are equal to 0.25*Cb and 0.25*Cr */
 function YYYYCbCrtoRGB(image){
 	var newImg=[];
-	for(var i=0;i<image.length;i+=3){
-			var y =image[i];
-			var cb =image[i+1];
-			var cr =image[i+2];
+	for(var i=0;i<image.length;i++){
+		var line=[];
+		for(var j =0; j <image[i].length;j+=3){
+			var y =image[i][j];
+			var cb =image[i][j+1];
+			var cr =image[i][j+2];
 			
-			var r=Number((y + 0.049 * cb + 5.598 * cr).toFixed(2));
-			var g=Number((y - 1.377 * cb - 2.869 * cr).toFixed(2));
-			var b=Number((y + 7.090 * cb - 0.025 * cr).toFixed(2));
-			newImg.push(r,g,b);
-		
-			progressBarUpdate(i/3,Math.floor(image.length/300),"Converting to RGB");
+			var r=y + 0.049 * cb + 5.598 * cr;
+			var g=y - 1.377 * cb - 2.869 * cr;
+			var b=y + 7.090 * cb - 0.025 * cr;
+			line.push(r,g,b);
+		}
+		newImg.push(line);
+		progressBarUpdate(i/3,Math.floor(image.length/300),"Converting to RGB");
 	}
 	return newImg;
 }
