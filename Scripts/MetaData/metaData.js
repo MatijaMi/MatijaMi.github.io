@@ -31,10 +31,9 @@ function collectMetaData(){
 	
 	var rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
 	var rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
+	
 	metaData.set("RawLength", rawLength);
-	
 	metaData.set("Slices", findIFDTagValue(ifdThreeOffset,64,198,true,false));
-	
 	var hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
 	metaData.set("HT1", hts[0]);
 	metaData.set("HT2", hts[1]);
