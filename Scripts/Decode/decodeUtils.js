@@ -120,7 +120,7 @@ function getNumberOfEntries(nComponents,HSF,VSF){
 		}
 	}
 }
-function adjustPreviousValues(imageLines,i,nComponents,nOfFirst){
+function adjustPreviousValues(imageLines,i,nComponents,nOfFirst,oldPreviousValues){
 	var previousValues=[];
 		for(var comp=0; comp<nComponents;comp++){		
 			if(nOfFirst==4){
@@ -130,6 +130,8 @@ function adjustPreviousValues(imageLines,i,nComponents,nOfFirst){
 					}else{
 						previousValues[comp]=imageLines[i-2][comp+3];//Adjusting for additional Ys
 					}
+				}else{
+					previousValues=oldPreviousValues;
 				}	
 			}else{
 				if(nOfFirst==2 && comp>0){

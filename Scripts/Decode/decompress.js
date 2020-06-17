@@ -25,9 +25,8 @@ function decompressValues(bits,mData){
 		/*On all lines except the first, the previous value is taken
 		from the previous line, from the first occurence of the component*/
 		if(i>0){
-			previousValues=adjustPreviousValues(imageLines,i,nComponents,compParts[0]);
+			previousValues=adjustPreviousValues(imageLines,i,nComponents,compParts[0],previousValues);
 		}
-		
 		for(var j =0; j <(samplesPerLine/(HSF*VSF));j++){//For every line
 			for(var comps = 0; comps<nComponents;comps++){//For every component
 				for(var part=0; part<compParts[comps];part++){//For every repetition of the component

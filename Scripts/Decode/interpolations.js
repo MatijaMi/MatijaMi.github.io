@@ -39,7 +39,7 @@ function interpolateYCC(image){
 	|	Y3    | Y4 | 	Y3 	  | Y4 |..
 	|Y1 Cb Cr | Y2 | Y1 Cb Cr | Y2 |.. */
 function interpolateYYYYCbCr(image){
-	var newImg =[];
+	var newImg=[];
 	for(var i=0;i<image.length;i++){
 		var line =[];
 		if(i%2==0){
@@ -92,16 +92,13 @@ function interpolateYYYYCbCr(image){
 				if(j==image[i].length-2){
 					y4=image[i][j+1][0];	
 					line.push(y4,cb3,cr3);
-				}
-				
+				}				
 			}
 		}
 		newImg.push(line);
 		//Progress bar update
 		progressBarUpdate(i,Math.floor(image.length/100),"Interpolating Image");
 	}
-		
-		
 	return newImg;
 }
 
