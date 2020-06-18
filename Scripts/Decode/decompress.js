@@ -19,7 +19,7 @@ function decompressValues(bits,mData){
 	var imageLines=[];
 	
 	//Initialising the bit pointer
-	self.bitPointer=0;
+	bitPointer=0;
 	for(var i =0; i < numberOfLines;i++){
 		imageLines.push([]);//newLine
 		/*On all lines except the first, the previous value is taken
@@ -35,8 +35,6 @@ function decompressValues(bits,mData){
 				}
 			}
 		}
-		
-		//Progress bar update
 		progressBarUpdate(i,Math.floor(numberOfLines/100),"Decompressing Values");
 	}
 	return imageLines;

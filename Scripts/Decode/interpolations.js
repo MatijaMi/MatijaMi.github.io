@@ -3,9 +3,9 @@
 function interpolateYCC(image){
 	var newImg = [];
 	var y, cb, cr;
-	for(var i = 0; i <image.length;i++){
+	for(var i=0; i <image.length;i++){
 		var line=[];
-		for(var j =0; j<image[i].length;j++){
+		for(var j=0; j<image[i].length;j++){
 			if(j%2==0){
 				y = image[i][j][0];
 				cb = image[i][j][1];
@@ -18,10 +18,10 @@ function interpolateYCC(image){
 					cb=prevCb;
 					cr=prevCr;
 				}else{
-					var nextCb= image[i][j+1][1];
-					var nextCr=	image[i][j+1][2];
-					cb=(prevCb+nextCb)/2;
-					cr=(prevCr+nextCr)/2;
+					var nextCb = image[i][j+1][1];
+					var nextCr = image[i][j+1][2];
+					cb = (prevCb+nextCb)/2;
+					cr = (prevCr+nextCr)/2;
 				}
 			}
 			line.push(y,cb,cr);

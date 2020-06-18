@@ -1,7 +1,6 @@
 self.importScripts('../Decode/decompress.js','../Decode/decodeUtils.js','../Decode/unslicing.js');
 self.importScripts('../byteTransformations.js','../Decode/interpolations.js','../Decode/colorConversion.js');
 
-
 onmessage=function(e){
 	var bitTime = new Date();
 	var bits=transformBytesToBits(e.data[0]);//Transforming the bytes into bits
@@ -17,8 +16,7 @@ onmessage=function(e){
 	console.log("DECOMPRESS TIME " +(c.getTime()-a.getTime()));
 	//Applying the correct unslicing and post processing functions on the image
 	switch(mode){
-		case "drggb":
-						
+		case "drggb":		
 			image = unsliceRGGB(image,metaData);
 			if(e.data[2]==true){			
 				image=bayerInterpolation(image);
@@ -27,21 +25,17 @@ onmessage=function(e){
 			break;
 			
 		case "dyycc":
-			
-			image = unsliceYCbCr(image, metaData);
-			image = interpolateYCC(image);
+			image = interpolateYCC(unsliceYCbCr(image, metaData));
 			if(e.data[2]==true){
-				image=YCCtoRGB(image);			
+				image=convertToRGB(image,"YYCC");			
 				mode="drgb";
 			}
 			break;
 		
 		case "dyyyycc":
-			
-			image = unsliceYYYYCbCr(image,metaData);
-			image = interpolateYYYYCbCr(image);
+			image = interpolateYYYYCbCr(unsliceYYYYCbCr(image,metaData));
 			if(e.data[2]==true){
-				image=YYYYCbCrtoRGB(image);
+				image=convertToRGB(image,"YYYYCC");
 				mode="drgb";
 			}
 			break;	

@@ -10,7 +10,7 @@ function readFile(file) {
 				metaData=collectMetaData();
 				initialiseSiteUI();
 			}else{
-				alert("Not a valid file");
+				alert("Please upload a .CR2 file");
 				}
 		};	
 	  	reader.readAsArrayBuffer(file);

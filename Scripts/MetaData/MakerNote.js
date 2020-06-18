@@ -27,7 +27,6 @@ function getWhiteBalance(mnOffset, model){
 //Function to get some of the relevant sensor information in the MakerNote section
 //In this case the dimensions of the sensor area
 function getSensorInfo(mnOffset){
-	
 	var sensorInfoOffset = findIFDTagValue(mnOffset,224,0,false,false);
 	var sensorWidth= transformTwoBytes(bytes[sensorInfoOffset+2],bytes[sensorInfoOffset+3]);
 	var sensorHeight= transformTwoBytes(bytes[sensorInfoOffset+4],bytes[sensorInfoOffset+5]);

@@ -16,11 +16,9 @@ function numberToBitString(number, bitCount){
 	return ("00000000" +number.toString(2)).substr(-bitCount);
 }
 
-/*	
-	Transforming all of the bytes into an array of bytes represented in bits
+/*	Transforming all of the bytes into an array of bytes represented in bits
 	for easier decoding, changes to this function are possible, maybe even completely deleting it
-	if a better solution is found
-*/
+	if a better solution is found */
 function transformBytesToBits(data){
 	var bits =[];
 	for(var i =0; i <data.length;i++){

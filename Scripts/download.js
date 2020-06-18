@@ -39,7 +39,6 @@ function downloadMetaData(){
 
 //Functions that actually saves the bytes and creates the download
 function saveByteArray(data,name){
-	var start = new Date();
 	var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
@@ -49,7 +48,4 @@ function saveByteArray(data,name){
     a.click();
 	a.href=null;
     window.URL.revokeObjectURL(url);
-	console.log(a);
-	var b = new Date();
-	console.log(b.getTime()-start.getTime());
 }
