@@ -17,8 +17,10 @@ onmessage=function(e){
 	//Applying the correct unslicing and post processing functions on the image
 	switch(mode){
 		case "drggb":		
-			image = unsliceRGGB(image,metaData);
-			if(e.data[2]==true){			
+			if(metaData.get("Slices")[0]>0){
+				image = unsliceRGGB(image,metaData);
+			}
+			if(e.data[2]==true){	
 				image=bayerInterpolation(image);
 				mode="drgb";
 			}
