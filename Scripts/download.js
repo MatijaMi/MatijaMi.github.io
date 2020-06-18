@@ -3,20 +3,20 @@
 	Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)
 */
 function downloadProcessedImage(type){
-	var name =fileList[0].name + type+ ".json";
+	var name = fileName+type+ ".json";
 	saveByteArray(downloadBytes,name);
-	
+	downloadBytes=[];
 }
 //Function to download the jpeg saved in the first image file directory of the CR2 file
 function downloadJpeg(){
-	var name =fileList[0].name +".jpg";
+	var name =fileName +".jpg";
 	var blob = new Blob([jpeqBytes], {type: "octet/stream"});
 	saveByteArray(blob, name);
 }
 
 //Function to download meta data in a readable format
 function downloadMetaData(){
-	var name =fileList[0].name +"MetaData.txt";
+	var name = fileName +"MetaData.txt";
 	var output="";
 	for(let[key,value] of metaData){
 		if(value instanceof Map){
@@ -39,6 +39,7 @@ function downloadMetaData(){
 
 //Functions that actually saves the bytes and creates the download
 function saveByteArray(data,name){
+	var start = new Date();
 	var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
@@ -46,6 +47,9 @@ function saveByteArray(data,name){
     a.href = url;
     a.download = name;
     a.click();
+	a.href=null;
     window.URL.revokeObjectURL(url);
-	downloadBytes=[];
+	console.log(a);
+	var b = new Date();
+	console.log(b.getTime()-start.getTime());
 }

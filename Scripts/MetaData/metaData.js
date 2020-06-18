@@ -12,7 +12,7 @@ function collectMetaData(){
 	metaData.set("JpegHeight",findIFDTagValue(16,0,1,false,false));
 	metaData.set("JpegWidth",findIFDTagValue(16,1,1,false,false));
 	
-	window.jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
+	jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	 
 	//Code for finding the EXIF Sub-IFD data
 	var exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);

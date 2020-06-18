@@ -122,6 +122,5 @@ function initialiseSiteUI(){
 		if(typeof w !== "undefined"){
 			w.terminate();
 		}
-		window.w = new Worker('Scripts/Workers/decode_Worker.js');
-		window.downloadBytes=[];//Initialise an array to save bytes to be downloaded	
+		w = new Worker('Scripts/Workers/decode_Worker.js');
 }

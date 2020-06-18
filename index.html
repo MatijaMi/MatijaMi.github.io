@@ -69,11 +69,11 @@
 						<button class="downloadButton" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
 						
 						<button class="downloadButton" id="decodeFormat" onclick="decodeImage(false)"> Decode as </button>
-						<button class="downloadButton" id="decodeRGB" onclick="decodeImage(true)"> Decode as RGB</button>
-						
 						<button class="downloadButton" id="dyycc" onclick="downloadProcessedImage('YCC')"> Download YCbCr Data</button>
 						<button class="downloadButton" id="dyyyycc" onclick="downloadProcessedImage('YYYYCC')"> Download YYYYCbCr Data</button>
 						<button class="downloadButton" id="drggb" onclick="downloadProcessedImage('RGGB')"> Download RGGB Data</button>
+						
+						<button class="downloadButton" id="decodeRGB" onclick="decodeImage(true)"> Decode as RGB</button>
 						<button class="downloadButton" id="drgb" onclick="downloadProcessedImage('RGB')"> Download RGB Data</button>
 					
 					</div>
@@ -100,11 +100,12 @@
 			
 			const inputElement = document.getElementById("fileInput");
 			inputElement.addEventListener("change", handleFiles, false);
-			window.imageCount=0;
+			imageCount=0;
 			//Functions used to handle file input and drag-and-drop
 			function handleFiles() {
 				var fileList = this.files;
 				if(fileList.length>0){
+					fileName= fileList[0].name;
 					readFile(fileList[0]);
 				}
 			}
@@ -115,7 +116,6 @@
 			
 			function dropHandler(ev) {
   				ev.preventDefault();
-
   				if (ev.dataTransfer.items) {
 					readFile(ev.dataTransfer.items[0].getAsFile());
   				}
