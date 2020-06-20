@@ -103,7 +103,7 @@
 			imageCount=0;
 			//Functions used to handle file input and drag-and-drop
 			function handleFiles() {
-				var fileList = this.files;
+				let fileList = this.files;
 				if(fileList.length>0){
 					fileName=fileList[0].name;
 					readFile(fileList[0]);

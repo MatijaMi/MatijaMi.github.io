@@ -1,18 +1,19 @@
-/*	Function that disables the other buttons during decoding */
-function disableButtons(mode){
-	var elems = document.getElementsByClassName("downloadButton");
-	var color,cursor,textCol;
-	if(mode){
-		color="gray";
-		cursor="default";
-		textCol="lightgray";
-	}else{
+/*	Function that disables the other buttons during decoding 
+	True=On False=Off	*/
+function changeButtonState(state){
+	let elems = document.getElementsByClassName("downloadButton");
+	let color,cursor,textCol;
+	if(state){
 		color="black";
 		cursor="pointer";
 		textCol="white";
+	}else{
+		color="gray";
+		cursor="default";
+		textCol="lightgray";
 	}
-	for(var i =0; i <elems.length;i++){
-		elems[i].disabled=mode;
+	for(let i =0; i <elems.length;i++){
+		elems[i].disabled=!state;
 		elems[i].style.backgroundColor=color;
 		elems[i].style.border="1px solid " +color;
 		elems[i].style.cursor=cursor;
@@ -25,12 +26,12 @@ function initialiseDecodeUI(){
 	document.getElementById("progressBar").style="display:block";
 	document.getElementById("bar").style="width:0.1%";
 	document.getElementById("bar").innerHTML="0.0%"
-	disableButtons(true);
 	document.getElementById("pbText").innerHTML="Transforming bytes";
+	changeButtonState(false);
 }
 /*Shows the UI for a completed decode */
-function showDecodeEndUI(mode,rgb){
-		if(rgb){
+function showDecodeEndUI(mode){
+		if(mode=="drgb"){
 			document.getElementById("decodeRGB").style="display:none";
 		}else{
 			document.getElementById("decodeFormat").style="display:none";
@@ -38,7 +39,7 @@ function showDecodeEndUI(mode,rgb){
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
 		document.getElementById(mode).style="display:";
-		disableButtons(false);
+		changeButtonState(true);
 }
 /*Updating the progress bar with appropriate text and width */
 function updateProgressBar(progress,percent, text){
@@ -69,7 +70,7 @@ function setImage(data){
 
 /* Showing the most user relevant parts of the meta data to the user */
 function initialiseSiteUI(){
-			
+		//TO DO ADD ACTUALLY USER RELEVANT DATA,AFTER EVERYTHING IS WORKING
 		var sof3=metaData.get("SOF3");
 		var output =[];
 		output.push("<p><b>Camera Model: </b>" + metaData.get("ModelName"));
@@ -115,7 +116,7 @@ function initialiseSiteUI(){
 		}
 		//Show fitting button
 		document.getElementById("decodeFormat").innerHTML = "Decode as " +format;
-		disableButtons(false);
+		changeButtonState(true);
 	
 		/*	Starting up the worker needed for later and 
 			stopping an old one if it is still running */

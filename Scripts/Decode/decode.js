@@ -25,7 +25,7 @@ function decodeImage(rgb){
 	w.onmessage=function(e){
 		switch(e.data[0]){
 			case "RES"://RES = Result
-				showDecodeEndUI(e.data[2],e.data[3]);
+				showDecodeEndUI(e.data[2]);
 				downloadBytes= e.data[1];
 				break;
 			case "PB"://PB = Progress Bar

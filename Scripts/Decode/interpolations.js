@@ -3,9 +3,9 @@
 function interpolateYCC(image){
 	var newImg = [];
 	var y, cb, cr;
-	for(var i=0; i <image.length;i++){
+	for(let i=0; i <image.length;i++){
 		var line=[];
-		for(var j=0; j<image[i].length;j++){
+		for(let j=0; j<image[i].length;j++){
 			if(j%2==0){
 				y = image[i][j][0];
 				cb = image[i][j][1];
@@ -40,12 +40,12 @@ function interpolateYCC(image){
 	|Y1 Cb Cr | Y2 | Y1 Cb Cr | Y2 |.. */
 function interpolateYYYYCbCr(image){
 	var newImg=[];
-	for(var i=0;i<image.length;i++){
+	for(let i=0;i<image.length;i++){
 		var line =[];
 		if(i%2==0){
 			var y,cb,cr;
 			//Interpolation for even rows
-			for(var j=0; j<image[i].length;j++){
+			for(let j=0; j<image[i].length;j++){
 				y= image[i][j][0];
 				if(j%2==0){
 					cb= image[i][j][1];
@@ -65,7 +65,7 @@ function interpolateYYYYCbCr(image){
 		}else{
 			//Interpolation for odd rows, y3 and y4 cells at the same time, to save time
 			var y3,y4,cb3,cr3,cb4,cr4,pcb,pcr;
-			for(var j=0; j<image[i].length;j+=2){
+			for(let j=0; j<image[i].length;j+=2){
 				//y3
 				y3=image[i][j][0];
 				if(i==(image.length-1)){
@@ -111,7 +111,7 @@ function interpolateYYYYCbCr(image){
 	
 function bayerInterpolation(image){
 	var newImg =[];
-	for(var i =0; i<image.length;i++){
+	for(let i =0; i<image.length;i++){
 		var line=[];
 		switch(i){
 			case 0:
@@ -135,7 +135,7 @@ function bayerInterpolation(image){
 function interpolateFirstLine(image){
 	var r,g,b;
 	var line = [];
-	for(var i=0; i<image[0].length;i++){
+	for(let i=0; i<image[0].length;i++){
 		if(i==0){
 			r =image[0][0];
 			g = (image[0][1]+image[1][0])/2;
@@ -168,7 +168,7 @@ function interpolateLastLine(image){
 	var l= image.length-1;
 	var r,g,b;
 	var line =[];
-	for(var i=0; i<image[l].length;i++){
+	for(let i=0; i<image[l].length;i++){
 		if(i==0){
 			r =image[l-1][0];
 			g =image[l][0];
@@ -208,7 +208,7 @@ function interpolateLine(image, j){
 function interpolateOddLine(image, j){
 	var r,g,b;
 	var line = [];
-	for(var i=0; i<image[j].length;i++){
+	for(let i=0; i<image[j].length;i++){
 		if(i==0){
 			r = (image[j-1][0]+image[j+1][0])/2;
 			g = image[j][0];
@@ -241,7 +241,7 @@ function interpolateOddLine(image, j){
 function interpolateEvenLine(image, j){
 	var r,g,b;
 	var line =[];
-	for(var i=0; i<image[j].length;i++){
+	for(let i=0; i<image[j].length;i++){
 		if(i==0){
 			r= image[j][i];
 			g= (image[j-1][i]+image[j+1][i]+image[j][i+1])/3;
@@ -266,7 +266,6 @@ function interpolateEvenLine(image, j){
 			}
 		}
 		line.push(r,g,b);
-		
 	}
 	return line;	
 }

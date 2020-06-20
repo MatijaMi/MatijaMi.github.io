@@ -15,11 +15,11 @@ function unsliceRGGB(image, metaData){
 	var totalNofEntries = trueWidth*height;
 	//Initialising
 	var imageLines=[];
-	for(var k =0; k <height;k++){
+	for(let k =0; k <height;k++){
 		imageLines.push([]);
 	}
 	//Going through every slice
-	for(var j=0; j<slices[0]+1;j++){
+	for(let j=0; j<slices[0]+1;j++){
 		
 		if(j==slices[0]){
 			numberOfSamples= slices[2];
@@ -29,7 +29,7 @@ function unsliceRGGB(image, metaData){
 				
 		var numberOfValuesPerSample = numberOfSamples*height;
 		
-		for(var i =0; i<numberOfValuesPerSample;i++){
+		for(let i =0; i<numberOfValuesPerSample;i++){
 			var currentPointer=samplePointer+i;
 			var currentEntry = image[Math.floor(currentPointer/trueWidth)][currentPointer%trueWidth];
 			imageLines[Math.floor(i/numberOfSamples)].push(currentEntry);	
@@ -52,13 +52,13 @@ function unsliceYCbCr(image, metaData){
 	var nComponents=sof3.get("ImageComponents")
 	var imageLines=[];
 	var totalNofEntries = width*numberOfLines;
-	for(var k =0; k <numberOfLines;k++){
+	for(let k =0; k <numberOfLines;k++){
 		imageLines.push([]);
 	}
 	var numberOfEntries=4;
 	var tablePointer=0;
 	
-	for(var k =0; k <slices[0]+1;k++){
+	for(let k =0; k <slices[0]+1;k++){
 		
 		if(k==slices[0]){
 			var sliceWidth=slices[2]/2;
@@ -67,7 +67,7 @@ function unsliceYCbCr(image, metaData){
 		}
 		
 		var numberOfEntriesPerSlice=numberOfLines*sliceWidth*2;
-		for(var i =0; i <numberOfEntriesPerSlice;i+=4){
+		for(let i =0; i <numberOfEntriesPerSlice;i+=4){
 			
 			var currentElement=i+tablePointer;
 			var row =Math.floor(currentElement/width);
@@ -99,12 +99,12 @@ function unsliceYYYYCbCr(image,metaData){
 	var imageLines=[];
 	var totalNofEntries= width*numberOfLines;
 	
-	for(var m =0; m <numberOfLines;m++){
+	for(let m =0; m <numberOfLines;m++){
 		imageLines.push([]);
 	}
 	var numberOfEntries=6;
 	var tablePointer=0;
-	for(var k =0; k <slices[0]+1;k++){
+	for(let k =0; k <slices[0]+1;k++){
 		
 		if(k==slices[0]){
 			var sliceWidth=slices[2]/3;
@@ -113,7 +113,7 @@ function unsliceYYYYCbCr(image,metaData){
 		}
 		
 		var numberOfEntriesPerSlice=numberOfLines*sliceWidth*1.5;
-		for(var i =0; i <numberOfEntriesPerSlice;i+=6){
+		for(let i =0; i <numberOfEntriesPerSlice;i+=6){
 			
 			var currentElement=i+tablePointer;
 			var row = Math.floor(currentElement/width);
@@ -137,9 +137,7 @@ function unsliceYYYYCbCr(image,metaData){
 			//Progress bar update
 			progressBarUpdate((currentElement/6),Math.floor(totalNofEntries/600),"Unslicing Image");
 		}
-		
 		tablePointer+=numberOfEntriesPerSlice;
-		
 	}
 	return imageLines;
 }

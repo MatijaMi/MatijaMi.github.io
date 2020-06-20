@@ -4,7 +4,7 @@
 function findNextValue(huffTable, previousValue,bits){
 	
 	var currentCode="";	
-	for(var i =0; i <16; i++){
+	for(let i =0; i <16; i++){
 		currentCode=currentCode+getNextBit(bitPointer+i,bits);
 		
 		if(typeof huffTable.get(currentCode) !== "undefined"){
@@ -59,7 +59,7 @@ function getDifferenceValue(differenceBits){
 //Returns the next n bits
 function getNextBits(n,bits){
 	var str="";
-	for(var i =0; i<n;i++){
+	for(let i =0; i<n;i++){
 		str=str+getNextBit(bitPointer+i,bits);
 	}
 	return str;
@@ -69,7 +69,7 @@ function getNextBits(n,bits){
 	the proper Huffman Table for each component */
 function setupHTS(sos,ht1,ht2,numberOfComponents){
 	var hts=[];
-	for(var k =0; k <numberOfComponents;k++){
+	for(let k =0; k <numberOfComponents;k++){
 		if(sos.get("DCAC"+k)==0){
 			hts.push(ht1);
 		}else{
@@ -97,7 +97,7 @@ function setupComponentParts(HSF,VSF){
 	Cb and Cr : 0 */
 function setPreviousValues(nComponents,samplePrecision){
 	var previousValues = [];
-	for(var k =0; k<nComponents;k++){
+	for(let k =0; k<nComponents;k++){
 		if(nComponents!=3 || k==0){
 			previousValues[k]=Math.pow(2,samplePrecision-1);
 		}else{
@@ -120,9 +120,10 @@ function getNumberOfEntries(nComponents,HSF,VSF){
 		}
 	}
 }
+
 function adjustPreviousValues(imageLines,i,nComponents,nOfFirst,oldPreviousValues){
 	var previousValues=[];
-		for(var comp=0; comp<nComponents;comp++){		
+		for(let comp=0; comp<nComponents;comp++){		
 			if(nOfFirst==4){
 				if(i%2==0){ //In YYYYCbCr the previous values get reset every 2 lines
 					if(comp==0){

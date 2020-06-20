@@ -3,21 +3,14 @@ self.importScripts('../byteTransformations.js','../Decode/interpolations.js','..
 
 onmessage=function(e){
 	var bitTime = new Date();
-	var bits=transformBytesToBits(e.data[0]);//Transforming the bytes into bits
-	var finTime = new Date();
-	console.log("BIT TIME " + (finTime.getTime()-bitTime.getTime()));
 	var metaData = e.data[1];
 	var mode ="d"+e.data[3];//Either rggb, yycc or yyyycc
 	//The values need to be decompressed first
-	var a = new Date();
-	var image =decompressValues(bits,metaData);
-	bits=[];
-	var c = new Date();
-	console.log("DECOMPRESS TIME " +(c.getTime()-a.getTime()));
+	var image =decompressValues(transformBytesToBits(e.data[0]),metaData);
 	//Applying the correct unslicing and post processing functions on the image
 	switch(mode){
 		case "drggb":		
-			if(metaData.get("Slices")[0]>0){
+			if(metaData.get("Slices")[0]>0){//0 means there is only one slice,therefore no unslicing is needed
 				image = unsliceRGGB(image,metaData);
 			}
 			if(e.data[2]==true){	
@@ -27,7 +20,10 @@ onmessage=function(e){
 			break;
 			
 		case "dyycc":
-			image = interpolateYCC(unsliceYCbCr(image, metaData));
+			if(metaData.get("Slices")[0]>0){
+				image = unsliceYCbCr(image,metaData);
+			}
+			image = interpolateYCC(image, metaData);
 			if(e.data[2]==true){
 				image=convertToRGB(image,"YYCC");			
 				mode="drgb";
@@ -35,7 +31,10 @@ onmessage=function(e){
 			break;
 		
 		case "dyyyycc":
-			image = interpolateYYYYCbCr(unsliceYYYYCbCr(image,metaData));
+			if(metaData.get("Slices")[0]>0){
+				image = unsliceYYYYCbCr(image,metaData);
+			}
+			image = interpolateYYYYCbCr(image,metaData);
 			if(e.data[2]==true){
 				image=convertToRGB(image,"YYYYCC");
 				mode="drgb";
@@ -44,8 +43,10 @@ onmessage=function(e){
 	}
 	postMessage(["DL"]);
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
-	postMessage(["RES",blob,mode,e.data[2]]);
+	postMessage(["RES",blob,mode]);
+	
 	var end = new Date();
 	console.log("TOTAL TIME: " + (end.getTime()-bitTime.getTime()));
+	
 	self.close();
 }

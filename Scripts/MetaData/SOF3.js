@@ -12,8 +12,7 @@ function getSOF3Data(sof3Offset){
 	const numberOfLines = bytes[sof3Offset+5]*256+ bytes[sof3Offset+6];
 	const samplesPerLine = bytes[sof3Offset+7]*256+ bytes[sof3Offset+8];
 	const imageComponents = bytes[sof3Offset+9];
-	var samplingFactor = bytes[sof3Offset+11];
-	
+	const samplingFactor = bytes[sof3Offset+11];
 	
 	sof3.set("SamplePrecision", samplePrecision);
 	sof3.set("NumberOfLines", numberOfLines);
@@ -22,8 +21,7 @@ function getSOF3Data(sof3Offset){
 	//HSF and VSF are 4 bits each saved in one byte
 	if(samplingFactor==17){
 		sof3.set("HSF",1);
-		sof3.set("VSF",1);
-		
+		sof3.set("VSF",1);	
 	}else{
 		if(samplingFactor==33){
 			sof3.set("HSF",2);

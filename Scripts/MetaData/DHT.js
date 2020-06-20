@@ -41,7 +41,7 @@ function decodeHuffmanTree(frequencies, values){
 	var code =0;
 	var minimumValue = [];
 	//Finding the minimum value for the huffman codes of a set length of bits
-	for(var i = 0; i<frequencies.length; i++){
+	for(let i = 0; i<frequencies.length; i++){
 		if(i==0){
 			minimumValue.push(0);
 		}else{
@@ -51,9 +51,9 @@ function decodeHuffmanTree(frequencies, values){
 	}
 	//Creates an array with all the codes that are used based on the minimum values
 	var codes = [];
-	for(var i =0; i <minimumValue.length; i++){
+	for(let i =0; i <minimumValue.length; i++){
 		if(frequencies[i]>0){
-			for(var j = 0; j< frequencies[i]; j++){
+			for(let j = 0; j< frequencies[i]; j++){
 				codes.push(numberToBitString(j+minimumValue[i],i+1));
 			}
 		}
@@ -62,7 +62,7 @@ function decodeHuffmanTree(frequencies, values){
 	
 	var huffmanTable = new Map();
 	//Mapping the values to the corresponding codes
-	for( var i =0; i < values.length; i++){
+	for(let i =0; i < values.length; i++){
 		huffmanTable.set(codes[i],values[i]);
 	}
 	

@@ -1,23 +1,22 @@
 /*	
 	Function to download the decompressed and processed image, either already in RGB 
-	Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)
-*/
+	Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)	*/
 function downloadProcessedImage(type){
-	var name = fileName+type+ ".json";
+	let name = fileName+type+ ".json";
 	saveByteArray(downloadBytes,name);
 	downloadBytes=[];
 }
 //Function to download the jpeg saved in the first image file directory of the CR2 file
 function downloadJpeg(){
-	var name =fileName +".jpg";
-	var blob = new Blob([jpeqBytes], {type: "octet/stream"});
+	let name =fileName +".jpg";
+	let blob = new Blob([jpeqBytes], {type: "octet/stream"});
 	saveByteArray(blob, name);
 }
 
 //Function to download meta data in a readable format
 function downloadMetaData(){
-	var name = fileName +"MetaData.txt";
-	var output="";
+	let name = fileName +"MetaData.txt";
+	let output="";
 	for(let[key,value] of metaData){
 		if(value instanceof Map){
 			var map ="";
@@ -39,7 +38,7 @@ function downloadMetaData(){
 
 //Functions that actually saves the bytes and creates the download
 function saveByteArray(data,name){
-	var a = document.createElement("a");
+	let a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
     url = window.URL.createObjectURL(data);

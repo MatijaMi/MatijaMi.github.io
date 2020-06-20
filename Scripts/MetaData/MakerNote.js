@@ -18,7 +18,7 @@ function getWhiteBalance(mnOffset, model){
 	}
 	//Format for white balance is R-G-G-B
 	var colorBalance=[];
-	for(var i =0; i <4; i++){
+	for(let i =0; i <4; i++){
 		colorBalance.push(transformTwoBytes(bytes[colorBalanceOffset+(wbOffset+i)*2],bytes[colorBalanceOffset+(wbOffset+i)*2+1]));
 	}
 	return colorBalance;
@@ -34,7 +34,7 @@ function getSensorInfo(mnOffset){
 	var sensorInfo=[];
 	sensorInfo.push(sensorWidth);
 	sensorInfo.push(sensorHeight);
-	for(var i =0; i<8;i++){
+	for(let i =0; i<8;i++){
 		sensorInfo.push(transformTwoBytes(bytes[sensorInfoOffset+(5+i)*2],bytes[sensorInfoOffset+(5+i)*2+1]));
 	}
 	return sensorInfo;

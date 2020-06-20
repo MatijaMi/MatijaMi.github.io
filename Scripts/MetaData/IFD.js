@@ -21,13 +21,13 @@ function findIFDEntry(ifdOffset, ifdLength, ID1, ID2){
 	
 	var ifdEntry = [];
 	
-	for(var i =0; i <ifdLength; i++){
+	for(let i =0; i <ifdLength; i++){
 		var tagID1 = bytes[ifdOffset+2+12*i];
 		var tagID2 = bytes[ifdOffset+3+12*i]; 
 			
 		if(tagID1==ID1 && tagID2==ID2){
 			//If the tag is found, the tag plus 10 bytes is the entry
-			for(var j =0; j <12; j++){
+			for(let j =0; j <12; j++){
 				ifdEntry.push(bytes[ifdOffset+2+j+12*i]);
 			}
 			return ifdEntry;
@@ -42,16 +42,16 @@ function findValue(valueOffset, valueLength, isValueString){
 	if(isValueString){
 	var value = "";
 	
-	for(var i =0; i< valueLength; i++){
+	for(let i =0; i< valueLength; i++){
 		value= value + String.fromCharCode(bytes[valueOffset+i]);
 	}
 		
 	}else{
 		//If the value is multiple values, they get saved into an array
 		var value = [];
-		for(var i =0; i< valueLength; i++){
-		value.push(transformTwoBytes(bytes[valueOffset+i*2],bytes[valueOffset+1+i*2]));
-	}	
+		for(let i =0; i< valueLength; i++){
+			value.push(transformTwoBytes(bytes[valueOffset+i*2],bytes[valueOffset+1+i*2]));
+		}	
 	}
 	return value;
 }

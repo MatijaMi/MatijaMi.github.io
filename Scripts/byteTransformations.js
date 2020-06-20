@@ -2,13 +2,13 @@
 //Fix for endianess
 function transformTwoBytes(byte1, byte2){
 	//Effectively a bit shift and addition
-	return byte1 + byte2*256;
+	return byte1 + (byte2<<8);
 }
 
 //Similar to previous function but with 4 bytes
  function transformFourBytes(byte1,byte2,byte3,byte4){
 	 //Effectively some bit shifts and additions
-	return byte1+ byte2*Math.pow(2,8) + byte3*Math.pow(2,16) + byte4*Math.pow(2,24);
+	return byte1 + (byte2<<8) + (byte3<<16) + (byte4<<24);
 }
 
 //Function to correct the length of Huffman Code in order to get a valid code
@@ -20,8 +20,8 @@ function numberToBitString(number, bitCount){
 	for easier decoding, changes to this function are possible, maybe even completely deleting it
 	if a better solution is found */
 function transformBytesToBits(data){
-	var bits =[];
-	for(var i =0; i <data.length;i++){
+	let bits =[];
+	for(let i =0; i <data.length;i++){
 		bits.push(decToBin(data[i]));
 		if(data[i]==255){
 			i++;
@@ -35,7 +35,7 @@ function transformBytesToBits(data){
 /*	Function to transform a number to its binary form
  	faster than the built in toString(2) function */
 function decToBin(num){
-	var bin = "";
+	let bin = "";
 	while(num>=1){
 		bin=(num&1)+bin;
 		num=num>>>1;
