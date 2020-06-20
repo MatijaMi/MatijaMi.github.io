@@ -111,6 +111,9 @@ function interpolateYYYYCbCr(image){
 	
 function bayerInterpolation(image){
 	var newImg =[];
+	if(isGRBG){
+		image.shift();//Remove first line
+	}
 	for(let i =0; i<image.length;i++){
 		var line=[];
 		switch(i){
@@ -268,4 +271,37 @@ function interpolateEvenLine(image, j){
 		line.push(r,g,b);
 	}
 	return line;	
+}
+
+/* 	Some images have a GRBG CFA instead of RGGB, in order to
+	find out which it is we compare the difference between all
+	G1 and G2 values and the differnce between red and blue,
+	If RGGB then the differnce between the greens should be smaller
+	than betwenn red and blue */
+function isGRBG(image){
+	var R=0;
+	var G1=0;
+	var G2=0;
+	var B=0;
+	for(let i =0; i <image.length;i++){
+		for(let j=0; j<image[i].length;j++){
+			if(i%2==0){
+				if(j%2==0){
+					R=R+image[i][j];
+				}else{
+					G1=G1+image[i][j];
+				}
+			}else{
+				if(j%2==0){
+					G2=G2+image[i][j];
+				}else{
+					B=B+image[i][j];
+				}
+			}
+		}
+	}
+	if(Math.abs(R-B)<Math.abs(G1-G2)){
+		return true;
+	}
+	return false;
 }
