@@ -9,7 +9,6 @@ function findIFDTagValue(ifdOffset,tagID1, tagID2, isOffsetToValue, isValueStrin
 	
 	if(isOffsetToValue){
 		return findValue(offsetValue,valueLength, isValueString);
-		
 	}else{
 		return  transformFourBytes.apply(null,tag.slice(8,12));
 	}

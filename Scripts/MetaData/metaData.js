@@ -13,7 +13,8 @@ function collectMetaData(){
 	metaData.set("JpegWidth",findIFDTagValue(16,1,1,false,false));
 	
 	jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
-	 
+	metaData.set("DateTime",findIFDTagValue(ifdZeroOffset,50,1,true,true));
+	metaData.set("DPI", findIFDTagValue(ifdZeroOffset,26,1,true,false));
 	//Code for finding the EXIF Sub-IFD data
 	const exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
 	metaData.set("ExposureTime", findIFDTagValue(exifOffset,154,130,false,false));

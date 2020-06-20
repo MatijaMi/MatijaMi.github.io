@@ -73,16 +73,28 @@ function initialiseSiteUI(){
 		//TO DO ADD ACTUALLY USER RELEVANT DATA,AFTER EVERYTHING IS WORKING
 		var sof3=metaData.get("SOF3");
 		var output =[];
-		output.push("<p><b>Camera Model: </b>" + metaData.get("ModelName"));
-		output.push("<p><b>Length of Raw: </b>" + metaData.get("RawLength") +" Bytes");
-		output.push("<p><b>Slices:</b> " + metaData.get("Slices"));
-		output.push("<p><b>Sample Precision: </b>" + sof3.get("SamplePrecision"));
-		output.push("<p><b>Image Components: </b>" + sof3.get("ImageComponents"));
-		output.push("<p><b>Number of Lines: </b>" + sof3.get("NumberOfLines"));
-		output.push("<p><b>Samples per Line: </b>" + sof3.get("SamplesPerLine"));
-		output.push("<p><b>Horizontal Sampling Factor: </b>" + sof3.get("HSF"));
-		output.push("<p><b>Vertical Sampling Factor: </b>" + sof3.get("VSF"));
-		
+		output.push("<p><b>Camera Model: </b><br>" + metaData.get("ModelName"));
+		output.push("<p><b>Size of Raw: </b><br>" + (metaData.get("RawLength")/(1024*1024)).toFixed(2) +" MB");
+		output.push("<p><b>Dimensions: </b><br>" +sof3.get("SamplesPerLine")*2*sof3.get("VSF")+"x"+sof3.get("NumberOfLines"));
+		output.push("<p><b>DPI: </b><br>" + metaData.get("DPI"));
+		var canonFormat,colorFormat;
+		switch(sof3.get("HSF")*sof3.get("VSF")){
+			case 1:
+				canonFormat="RAW";
+				colorFormat="RGGB";
+				break;
+			case 2:
+				canonFormat="sRAW";
+				colorFormat="YYCbCr";
+				break;
+			case 4:
+				canonFormat="mRAW";
+				colorFormat="YYYYCbCr";
+				break;
+		}
+		output.push("<p><b>Format: </b><br>" + canonFormat);
+		output.push("<p><b>Sample Precision: </b><br>" + sof3.get("SamplePrecision")+" Bits");
+	
 		document.getElementById("inputBox").style="padding-top:15px; padding-bottom:5px";
 		document.getElementById("dropzone").style="margin-bottom:40px";
 		//Showing needed elements
@@ -104,18 +116,7 @@ function initialiseSiteUI(){
 		document.getElementById("pbText").innerHTML="";
 		//Shows the jpeg image as a thumbnail
 		setImage(jpeqBytes);
-		switch(sof3.get("HSF")+sof3.get("VSF")){
-			case 3:
-				var format= "YYCbCr";
-				break;
-			case 4:
-				var format= "YYYYCbCr";
-				break;
-			default:
-				var format= "RGGB";
-		}
-		//Show fitting button
-		document.getElementById("decodeFormat").innerHTML = "Decode as " +format;
+		document.getElementById("decodeFormat").innerHTML = "Decode as " +colorFormat;
 		changeButtonState(true);
 	
 		/*	Starting up the worker needed for later and 

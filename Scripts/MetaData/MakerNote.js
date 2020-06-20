@@ -39,3 +39,11 @@ function getSensorInfo(mnOffset){
 	}
 	return sensorInfo;
 }
+
+function getWhiteLevel(){
+	//TODO
+}
+
+function getBlackLevel(){
+	//TODO
+}
