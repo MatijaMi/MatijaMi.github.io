@@ -1,26 +1,48 @@
-//Still not clear how much of the MakerNote needs to actually be saved
-//WhiteBalance is still needed but unclear how to find
-function getWhiteBalance(mnOffset, model){
-	var colorBalanceOffset = findIFDTagValue(mnOffset,1,64,false,false);
+/*	Format for white balance is R-G-G-B,
+	except for  the G9 where it is G-R-B-G*/
+function getWhiteBalance(makerNoteOffset, model){
 	var wbOffset;
+	var colorBalance=[];
+	var colorDataOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
+	if(isNaN(colorDataOffset)){
+		colorDataOffset=findIFDTagValue(makerNoteOffset,41,0,false,false);
+		var wbInfoTag=true;
+	}
+	
 	if(model.includes("EOS M")|| model.includes("PowerShot")){
-		wbOffset=71;	
+		wbOffset=71;
+		if(model.includes("G9")){
+			wbOffset=8;
+			}
 	}else{
 		if(model.includes("20D")|| model.includes("350D")){
 			wbOffset=25;	
 		}else{
-			if(model.includes("1D Mark II")|| model.includes("1Ds Mark II")){
-				wbOffset=34;	
+			if(model.includes("1D Mark III")){
+				return "No Values";	
 			}else{
-				wbOffset=63;
+				if(model.includes("1D Mark II")|| model.includes("1Ds Mark II")){
+					wbOffset=54;	
+				}else{
+					wbOffset=63;
+				}
 			}
+		}	
+	}
+	if(wbInfoTag){
+		for(let i =0; i <4; i++){
+			var wbBytes=[];
+			for(let j =0; j<4;j++){
+				wbBytes.push(bytes[colorDataOffset+wbOffset+4*i+j]);
+			}
+			colorBalance.push(transformFourBytes.apply(null,wbBytes));
+		}
+	}else{
+		for(let i =0; i <4; i++){
+			colorBalance.push(transformTwoBytes(bytes[colorDataOffset+(wbOffset+i)*2],bytes[colorDataOffset+(wbOffset+i)*2+1]));
 		}
 	}
-	//Format for white balance is R-G-G-B
-	var colorBalance=[];
-	for(let i =0; i <4; i++){
-		colorBalance.push(transformTwoBytes(bytes[colorBalanceOffset+(wbOffset+i)*2],bytes[colorBalanceOffset+(wbOffset+i)*2+1]));
-	}
+	console.log(colorBalance);
 	return colorBalance;
 }
 
