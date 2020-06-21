@@ -111,7 +111,7 @@ function interpolateYYYYCbCr(image){
 	
 function bayerInterpolation(image){
 	var newImg =[];
-	if(isGRBG){
+	if(isGRBG(image)){
 		image.shift();//Remove first line
 	}
 	for(let i =0; i<image.length;i++){

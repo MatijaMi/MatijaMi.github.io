@@ -8,7 +8,6 @@ function getWhiteBalance(makerNoteOffset, model){
 		colorDataOffset=findIFDTagValue(makerNoteOffset,41,0,false,false);
 		var wbInfoTag=true;
 	}
-	
 	if(model.includes("EOS M")|| model.includes("PowerShot")){
 		wbOffset=71;
 		if(model.includes("G9")){
@@ -62,10 +61,40 @@ function getSensorInfo(mnOffset){
 	return sensorInfo;
 }
 
-function getWhiteLevel(){
+function getWhiteLevel(makerNoteOffset,){
 	//TODO
 }
 
-function getBlackLevel(){
+function getBlackLevel(makerNoteOffset,model){
 	//TODO
+	var blackLevels=[];
+	var colorDataOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
+	var blOffset;
+	if(model.includes("EOS M")|| model.includes("PowerShot")){
+		blOffset=264;
+		if(model.includes("G9")){
+			blOffset=8;
+			}
+	}else{
+		if(model.includes("20D")|| model.includes("350D")){
+			blOffset=25;	
+		}else{
+			if(model.includes("1D Mark III")){
+				return "No Values";	
+			}else{
+				if(model.includes("1D Mark II")|| model.includes("1Ds Mark II")){
+					blOffset=196;	
+				}else{
+					blOffset=231;
+				}
+			}
+		}	
+	}
+	for(let i =0; i <4; i++){
+			blackLevels.push(transformTwoBytes(bytes[colorDataOffset+(blOffset+i)*2],bytes[colorDataOffset+(blOffset+i)*2+1]));
+		}
+	console.log(blackLevels);
+	return blackLevels;
+	
+	
 }
