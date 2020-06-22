@@ -4,7 +4,7 @@
     
     <head>
 		<meta charset="UTF-8">
-    	<link rel="icon" href="icon.svg">
+    	<link rel="icon" href="Images/icon.svg">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CR2 Decoder</title>
         <link rel="stylesheet" href="../baseStyle.css">
@@ -32,10 +32,18 @@
 			<h3><u>Basics</u></h3>
 			<p> The .CR2 (Canon Raw 2) file format is a TIFF file format used by some Canon digital cameras in order to save the raw sensor data captured by the camera with almost no processing. The RAW data does not contain an image that we can directly see, unlike a JPEG file, but offers way higher quality and precision of image data (12 or 15 bits per color) compared to JPEG (8 bits per color). That increase in quality especially becomes important for post-processing and further work on the image where having just a normal JPEG image can cause problems and lower quality. In order to manage the size of the data a lossless compression is used, whereas JPEG which uses lossy compression. </p>
 			<h3><u>Structure</u></h3>
-			<p>The basic structure of a CR2 file can de defined as follows: a TIFF header, a CR2 header and 4 pairs of Image File Directories and their respective images:
+			<p>The basic structure of a CR2 file contains a TIFF header, a CR2 header, 4 Image File Directories and their respective images in the following order:
 			<br><img class="textImage" src="../Images/CR2Structure.svg" style="width: 30%">
-			<br> So CR2 contains a TIFF header at the very start of the file and following that it has its own CR2 header, each having a constant size of 8 bytes. The most important information in these headers can be found in the first 2 bytes in the TIFF header, which either have the value 0x4949 or 0x4d4d which respectively mean that the file is using either little endian or a big endian byte order. The other important information can be found in the last four bytes of the CR2 header that contain the offset from the beginning of the file to the start of IFD#3 in bytes. </p>
 			<br>
+			So CR2 contains a TIFF header at the very start of the file and following that it has its own CR2 header, each having a constant size of 8 bytes. The most important information in these headers can be found in the first 2 bytes in the TIFF header, which either have the value 0x4949 or 0x4d4d which respectively mean that the file is using either little endian or a big endian byte order. The other important information can be found in the last four bytes of the CR2 header that contain the offset from the beginning of the file to the start of IFD#3 in bytes and IFD#3 gives us information about the RAW Data that we need for decoding it.
+			<br><br>
+			The 4 IFDs and their respective images are all different and have distinct purposes. The first IFD contains information about its image, which is a simple JPEG representation of the image. It also contains 2 subIFDs: the EXIF and the MakerNote subIFDs. The EXIF subIFD contains general information about the camera and lense, while the MakerNote subIFD, just like in all TIFF file formats, is for the creator of the camera to put in their own specific data and information that they need.
+			<br> 
+			The second IFD contains information about a small JPEG thumbnail image (160x120 pixels) and isn't really too important for us. The third IFD contains information about a small version of the image that isn't compressed and hasn't had any white balancing applied to which also isn't relevant for our project.
+			<br> The fourth and most important IFD contains information about the actual raw image, most importantly it contains the size and how the image is split into vertical slices, which we need to know to properly decode the data.
+			<br><br>
+			For a more detailed and thourough explanation of the .CR2 format, check out  <a href="http://lclevy.free.fr/cr2/">Inside the Canon RAW format version 2</a>, which was used as the main source for this project. We will only be explaining the parts most relevant for us and the user.</p>
+			
 		</div>
     </body>
 </html>

@@ -1,7 +1,6 @@
 //Function to collect data from IFD#0,IFD#3, EXIF and MakerNote-SubIFD
 function collectMetaData(){
 	var metaData = new Map();
-	
 	//The offset to IFD#0 is always 16 Bytes
 	const ifdZeroOffset = 16;
 	metaData.set("ModelName", findIFDTagValue(ifdZeroOffset, 16,1,true,true));
@@ -38,6 +37,10 @@ function collectMetaData(){
 	
 	metaData.set("RawLength", rawLength);
 	metaData.set("Slices", findIFDTagValue(ifdThreeOffset,64,198,true,false));
+	//Some images don't have the slice tag because they do not use a sliced image
+	if(metaData.get("Slices").length==0){
+		metaData.set("Slices", [0]);
+	}
 	const hts = getDecodedHTs(rawOffset, bytes[rawOffset+4]*256 + bytes[rawOffset+5]);
 	metaData.set("HT1", hts[0]);
 	metaData.set("HT2", hts[1]);

@@ -41,7 +41,7 @@ function getWhiteBalance(makerNoteOffset, model){
 			colorBalance.push(transformTwoBytes(bytes[colorDataOffset+(wbOffset+i)*2],bytes[colorDataOffset+(wbOffset+i)*2+1]));
 		}
 	}
-	console.log(colorBalance);
+	//console.log(colorBalance);
 	return colorBalance;
 }
 
@@ -93,7 +93,7 @@ function getBlackLevel(makerNoteOffset,model){
 	for(let i =0; i <4; i++){
 			blackLevels.push(transformTwoBytes(bytes[colorDataOffset+(blOffset+i)*2],bytes[colorDataOffset+(blOffset+i)*2+1]));
 		}
-	console.log(blackLevels);
+	//console.log(blackLevels);
 	return blackLevels;
 	
 	
