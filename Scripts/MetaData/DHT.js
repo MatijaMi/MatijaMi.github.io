@@ -17,7 +17,6 @@ function getDecodedHTs(rawOffset, length){
 	var ft2Start = vt1Start+valueTableLength+1;
 	var vt2Start= ft2Start+16;
 	
-	
 	//First Huffman Table
 	var frequencyTable1 = bytes.slice(ft1Start,vt1Start);
 	var valueTable1 = bytes.slice(vt1Start,ft2Start-1);
@@ -28,10 +27,7 @@ function getDecodedHTs(rawOffset, length){
 	var valueTable2 = bytes.slice(vt2Start,vt2Start+valueTableLength);
 	var huffmanTable2 = decodeHuffmanTree(frequencyTable2,valueTable1);
 	
-	var output = [];
-	output.push(huffmanTable1);
-	output.push(huffmanTable2);
-	return output;
+	return [huffmanTable1,huffmanTable2];
 }
 
 

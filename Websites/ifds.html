@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html lang="en" style="height: 100%">
+    
+    <head>
+		<meta charset="UTF-8">
+    	<link rel="icon" href="../Images/icon.svg">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CR2 Decoder</title>
+        <link rel="stylesheet" href="../baseStyle.css">
+    </head>
+    
+    <body>
+		
+		<div class="header"> 
+			<a href="../index.html">Home</a>
+			<div class="dropdown">
+				<a href="cr2.html">CR2</a>
+				<div class="dropdownContent">
+					<a href="cr2.html">Intro</a>
+    				<a href="rawdata.html">Raw Data</a>
+    				<a href="decoding.html">Decoding</a>
+    				<a href="rawdata.html">Raw Data</a>
+				</div>
+			</div>
+			<a href="tutorial.html">Tutorial</a>
+			<a href="About.html">About</a>
+		</div>
+		
+		<div class="textContent"> 
+			<h1> Image File Directories</h1>
+			<h3><u>IFD Structure</u></h3>
+			<p>All Image file directories follow the same basic structure. The first two bytes are designated for the amount of IFD Entries in the IFD. Then come the IFDs Entries which all consist of 12 Bytes and at the end the last 4 Bytes are the offset to the next IFD. The most important part are the IFD Entries of course and they too follow a simple structure.
+			<br>Every IFD Entry consists of 4 parts:</p>
+			<ul><li>2 Byte for the entries Tag</li>
+				<li>2 Bytes for the Type</li>
+				<li>4 Bytes for the amount of values</li>
+				<li>4 Bytes of the value or a pointer to the data</li> 
+			</ul>
+			<h3><u>IFD #0 Data</u></h3>
+			<p>The first IFD mainly contains the information about its own JPEG image, which isn't too imporant for our use case, but it does contain the Camera Model and the EXIF and MakerNote subIFDs so that it cannot be ignored. The model can be found by the tag 0x0110 and it is a string which means that the value actually saved in the IFD is just the offset to where the model is actually saved. The next important tag is 0x8769 which points to the EXIF subIFD, in which we can find out about the exposure time, f-time and the serial number of the lense among other things. And finally with tag 0x927c we can find the offset to the MakerNote subIFD. The MakerNote section contains, as the name suggests, information from the maker of the camera itself. From here we can find out the dimenstion of the sensors, color balancing which are necessary for the user to make an image without weird artifacts.The tags we search for are respectively 0x00e0 and 0x4001 and have their own distinct structures. For a complete explanation of these and the rest of the Canon Tags check out <a href="https://exiftool.org/TagNames/Canon.html">Canon Tags</a> made by Phil Harvey and his excellent ExifTool. </p>
+			<br>
+			<h3><u>IFD #3 Data</u></h3>
+			<p>The final IFD, pointed to from the CR2 header at the beginning of the file, contains information about the RAW data compressed in a lossless JPEG format (ITU-T81). From here we extract the offset to the raw sensor data(0x0111), the size of it in bytes(0x0117) and the slices(0xc640). The first two are pretty self-explanatory but the slices are a bit complicated. The slices tell us that the decoded values, which are in a table, need to be rearranged into vertical slices, which are filled left to right and the slices are filled from top to bottom. The slices are defined using 3 numbers, let's take [2, 1440, 1432] as an example. These tell us that the first two slices have width of 1440 and the final slices is 1432 samples wide. In case the first number is 0 then there are no slices, which only happens in a few cameras. Why exactly slices are used isn't completely known, it is asummed to have some performance or parallelization benefits which make it useful. </p>
+			<br>
+			<div class="navButtonsContainer">
+			<a href="cr2.html" class="navButtonPrev">Previous</a>
+			<a href= "rawdata.html" class="navButtonNext">Next</a>
+			</div>
+		</div>
+    </body>
+</html>

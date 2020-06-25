@@ -4,7 +4,7 @@
     
     <head>
 		<meta charset="UTF-8">
-    	<link rel="icon" href="Images/icon.svg">
+    	<link rel="icon" href="../Images/icon.svg">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CR2 Decoder</title>
         <link rel="stylesheet" href="../baseStyle.css">
@@ -18,9 +18,9 @@
 				<a href="cr2.html">CR2</a>
 				<div class="dropdownContent">
 					<a href="cr2.html">Intro</a>
-    				<a href="idf0.html">IFD #0</a>
-    				<a href="ifdthree.html">IFD #3</a>
+    				<a href="ifds.html">IFDs</a>
     				<a href="rawdata.html">Raw Data</a>
+    				<a href="decoding.html">Decoding</a>
 				</div>
 			</div>
 			<a href="tutorial.html">Tutorial</a>
@@ -28,7 +28,21 @@
 		</div>
 		
 		<div class="textContent"> 
-			<h2> RAW DATA</h2>
+			<h2> Raw Data</h2>
+			<p>After collecting necessary information from the IFDs we finally get to the raw data but before we can decode and decompress it we still need to extract data from its three headers: the DHT, SOF3 and SOS headers. The three headers all start with their respective marker(0xffc4,0xffc3,0xffda) and their length followed by their data. In DHT are the 2 Huffman Table we need for decoding, in SOF3 we can find the dimensions, sampling precision and sampling factors(horizontal and vertical) as well as the number of components(RGGB, YYCbCr, YYYYCbCr) and SOS tells us what Huffman Tables to use for what component.</p>
+			<h3><u>Define Huffman Table (DHT)</u></h3>
+			<p>In order to compress the sensor data CR2 uses two Huffman Tables. How the tables are used and what they represent will be explained later but now let's dig into how they are saved and how we can reconstruct the codes from them. The two Huffamn tables are defined in the same way and each consists of a 16 Byte sequence of code length frequencies followed by 16 Byte sequence of values from 0 to 15. The frequencies table tell us how many values have codes of a specific length. In this case the position in this sequence, starting from 1, defines the length. The values are just the numbers from 0 to 15 sorted by how often they appear. Based purely on the lengths of the codes we can genereate the proper codes and by iterating over them once assing them the values. Here is an example how a Huffman Tree could look like:</p>
+			<img style="width:80%" src=../Images/huffmanTree.svg>
+			<h3><u>Start Of Frame 3 (SOF3)</u></h3>
+			<p>The Start of Frame 3 part of the data contains, as already said, the dimensions of the image, sampling precision and sampling factors. The dimensions in this case are number of lines and number of samples per line, this is imporant because the decoding of the values puts them in a table of such dimensions and is required to properly decompress them before getting unsliced. Sampling precision can either be 15(YYCbCr), 14 or 12 Bits  (RGGB), which tells us how big the values are and also plays a big roll in initializing values.
+			<br><br>Then there is also the horizontal and vertical sampling factors, which can be used to determine what type of raw we have. In a standard RAW the factors are both 1, in an sRAW the horizontal factor is 2 and for mRAW both factors are 2. In the case of sRAW that means that its values(YCbCr) contain an additional Y value for the next cell hence it is in YYCbCr. So when we are decoding it we will have a pattern of Y1Y2CbCr,Y1Y2CbCr... that needs to be interpreted as |Y1CbCr|Y2|Y1CbCr|Y2|... and for the Y2 cells we can simply interpolate the Cb2 and Cr2 values from the horizontally adjacent cells. This causes the file to be quite smaller in size but still keep decent quality.
+			<br><br>For mRAW the pattern is Y1Y2Y3Y4CbCr,Y1Y2Y3Y4CbCr... but it has to be interpreted as |Y1CbCr|Y2|Y1CbCr|Y2|.. in the even lines and in the odd line |Y3|Y4|Y3|Y4|... . For Y2 the interpolation stays the same, for Y3 we use the verticaly adjacent cells and for Y4 we used the interpolated values from the adjacent Y3 cells.
+			<h3><u>Start of Scan (SOS)</u></h3>
+			<p>The Start of Scan contains just the number of components again and what Huffman Tables are used for what values. For RGGB usually the first table is used for R and G2 while the second one does G1 and B. For sRAW and mRAW the first table is used for the Y values and the second one for the Cb and Cr values.</p>
+			<div class="navButtonsContainer">
+			<a href="ifds.html" class="navButtonPrev">Previous</a>
+			<a href= "decoding.html" class="navButtonNext">Next</a>
+			</div>
 		</div>
     </body>
 </html>
