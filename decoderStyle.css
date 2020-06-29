@@ -20,7 +20,7 @@
 	width: 30%;
 }
 
-label{
+.uploadLabel{
 	font-family:Arial,sans-serif;
 	font-size: 15px;
 	background-color: black;
@@ -38,14 +38,38 @@ label{
 
 .left{
 	display: none;
-	width: 50%;
+	width: 30%;
 	float:left;
 }
+
+.mid{
+	display: none;
+	width: 40%;
+	float:left;
+}
+
 .right{
 	display: none;
-	width: 50%;
+	width: 25%;
 	float:left;
+	padding: 10px;
+	background-color: #eee;
+	border: 1px solid black;
 }
+
+.checkBox{
+	width: 13px;
+	height: 13px;
+	margin: 8px;
+	float: left;
+	margin-left: 0px;
+}
+
+.checkLabels{
+	float: left;
+	padding: 5px;
+}
+
 
 
 .intro{
@@ -70,17 +94,16 @@ label{
 	
 }
 
-.downloadButton{
+.mainButtons{
 	color:white;
 	background-color: black;
 	border-radius: 10px;
 	border-color: black;
-	padding: 10px;
+	padding: 13px;
 	margin-bottom: 10px;
 	cursor:pointer;
+	font-size: 13px;
 }
-
-
 .buttons{
 	text-align: center;
 }

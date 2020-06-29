@@ -8,24 +8,24 @@ function decodeImage(rgb){
 	
 	switch(hsf+vsf){
 		case 3:
-			var mode ="yycc";
+			var colorFormat ="dyycc";
 			break;
 		case 4:
-			var mode="yyyycc";
+			var colorFormat="dyyyycc";
 			break;
 		default:
-			var mode ="rggb";
+			var colorFormat ="drggb";
 	}
 	initialiseDecodeUI();
 	/*	Due to JavaScript being limited to one thread workers are used for
 		the heavier computations so that the website doesn't freeze up
 		Worker is already initialised with the site to allow termination at any point */	
-	w.postMessage([bytes,metaData,rgb,mode]);
+	w.postMessage([bytes,metaData,colorFormat,interpolationMode,cropMode,colorBalance,blackLevels,colorMode]);
 	
 	w.onmessage=function(e){
 		switch(e.data[0]){
 			case "RES"://RES = Result
-				showDecodeEndUI(e.data[2]);
+				showDecodeEndUI();
 				downloadBytes= e.data[1];
 				break;
 			case "PB"://PB = Progress Bar

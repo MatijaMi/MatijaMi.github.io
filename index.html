@@ -48,43 +48,48 @@
 		</div>
 		
 		<div class="content"> 
-			
+
 			<image class="logoImage" src="Images/logo.svg"></image>
+			
 			<div  id="inputBox" class="inputBox">
 				<input type="file" id="fileInput" name="files">
 				<div class="dropzone" id="dropzone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-					<label id="label" for="fileInput">Upload a .CR2 file</label>
+					<label id="label" class="uploadLabel" for="fileInput">Upload a .CR2 file</label>
 				</div>
 				
 				<div class="left" id="left">
 					<div id="info"></div>
 				</div>
 				
-				
-				<div class="right" id="right">
+				<div class="mid" id="mid">
 					
 					<div class="image" id="image"></div>
 					<div class="buttons">
-						<button class="downloadButton" id="downloadBasic" onclick="downloadJpeg()"> Download as Jpeg</button>
-						<button class="downloadButton" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
-						
-						<button class="downloadButton" id="decodeFormat" onclick="decodeImage(false)"> Decode as </button>
-						<button class="downloadButton" id="dyycc" onclick="downloadProcessedImage('YCC')"> Download YCbCr Data</button>
-						<button class="downloadButton" id="dyyyycc" onclick="downloadProcessedImage('YYYYCC')"> Download YYYYCbCr Data</button>
-						<button class="downloadButton" id="drggb" onclick="downloadProcessedImage('RGGB')"> Download RGGB Data</button>
-						
-						<button class="downloadButton" id="decodeRGB" onclick="decodeImage(true)"> Decode as RGB</button>
-						<button class="downloadButton" id="drgb" onclick="downloadProcessedImage('RGB')"> Download RGB Data</button>
-					
+						<button class="mainButtons" id="downloadBasic" onclick="downloadJpeg()"> Download as Jpeg</button>
+						<button class="mainButtons" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
+						<button class="mainButtons" id="decodeRGB" onclick="decodeImage(true)"> Decode .CR2</button>
+						<button class="mainButtons" id="drgb" onclick="downloadProcessedImage('RGB')"> Download Decoded Raw</button>
 					</div>
 					<div class="pbText" id="pbText"></div>
-					
 					<div class="progressBar" id="progressBar">
 						<div class="bar" id="bar">0.0%</div>
 					</div>
-					
 					<img class="loading" id="loading" src="Images/stolen.gif" alt="Loading">
 			</div>
+							
+				<div class="right" id="right">
+					<u>Additional Options</u>
+  					<label class="checkLabels" >Color Balancing</label> 
+						<input type="checkbox" class="checkBox" onclick="switchColorBalance()">
+					<label  class="checkLabels" >Black Levels</label>
+						<input type="checkbox" class="checkBox" onclick="switchBlackLevels();"> 
+					<label  class="checkLabels" >Crop borders</label> 
+						<input type="checkbox" class="checkBox" onclick="switchCropMode()">
+					<label  class="checkLabels" >Complex Interpolation</label> 
+						<input type="checkbox" class="checkBox" onclick="switchInterpolationMode()">
+					<label  class="checkLabels">24-bit Color</label> 
+						<input type="checkbox" class="checkBox" onclick="switchColorMode()">
+				</div>
 		</div>
 		<div class="intro">
 			<h3>What is CR2 Decoder?</h3>
@@ -93,9 +98,25 @@
 			
 			</div>
 		</div>
-
+	
+		
 		<script  type="text/javascript">
-			
+			function switchBlackLevels(){
+				blackLevels=!blackLevels;
+			}
+			function switchColorBalance(){
+				colorBalance=!colorBalance;
+			}
+			function switchColorMode(){
+				colorMode=!colorMode;
+			}
+			function switchInterpolationMode(){
+				interpolationMode=!interpolationMode;
+			}
+			function switchCropMode(){
+				cropMode=!cropMode;
+			}
+		
 			const inputElement = document.getElementById("fileInput");
 			inputElement.addEventListener("change", handleFiles, false);
 			imageCount=0;
@@ -117,8 +138,9 @@
   				if (ev.dataTransfer.items) {
 					readFile(ev.dataTransfer.items[0].getAsFile());
   				}
-			}
-		
+			}		
 		</script>
+		
+		
     </body>
 </html>

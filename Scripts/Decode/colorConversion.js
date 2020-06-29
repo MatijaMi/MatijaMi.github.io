@@ -35,3 +35,10 @@ function convertToRGB(image,mode){
 	return newImg;
 }
 
+
+function convertTo24Bit(image){
+	
+	
+	
+}
+

@@ -1,7 +1,7 @@
 /*	Function that disables the other buttons during decoding 
 	True=On False=Off	*/
 function changeButtonState(state){
-	let elems = document.getElementsByClassName("downloadButton");
+	let elems = document.getElementsByClassName("mainButtons");
 	let color,cursor,textCol;
 	if(state){
 		color="black";
@@ -30,15 +30,11 @@ function initialiseDecodeUI(){
 	changeButtonState(false);
 }
 /*Shows the UI for a completed decode */
-function showDecodeEndUI(mode){
-		if(mode=="drgb"){
-			document.getElementById("decodeRGB").style="display:none";
-		}else{
-			document.getElementById("decodeFormat").style="display:none";
-		}
+function showDecodeEndUI(){
+		document.getElementById("decodeRGB").style="display:none";
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
-		document.getElementById(mode).style="display:";
+		document.getElementById("drgb").style="display:";
 		changeButtonState(true);
 }
 /*Updating the progress bar with appropriate text and width */
@@ -62,7 +58,7 @@ function setImage(data){
 	// Use createObjectURL to make a URL for the blob
 	var image = new Image();
 	image.src = URL.createObjectURL(blob);
-	image.style.width="75%";
+	image.style.width="90%";
 	image.style.border="1px solid black"
 	document.getElementById("image").innerHTML="";
 	document.getElementById("image").appendChild(image);
@@ -76,20 +72,16 @@ function initialiseSiteUI(){
 		output.push("<p><b>Camera Model: </b><br>" + metaData.get("ModelName"));
 		output.push("<p><b>Size of Raw: </b><br>" + (metaData.get("RawLength")/(1024*1024)).toFixed(2) +" MB");
 		output.push("<p><b>Dimensions: </b><br>" +sof3.get("SamplesPerLine")*2*sof3.get("VSF")+"x"+sof3.get("NumberOfLines"));
-		output.push("<p><b>DPI: </b><br>" + metaData.get("DPI"));
-		var canonFormat,colorFormat;
+		var canonFormat;
 		switch(sof3.get("HSF")*sof3.get("VSF")){
 			case 1:
 				canonFormat="RAW";
-				colorFormat="RGGB";
 				break;
 			case 2:
 				canonFormat="sRAW";
-				colorFormat="YYCbCr";
 				break;
 			case 4:
 				canonFormat="mRAW";
-				colorFormat="YYYYCbCr";
 				break;
 		}
 		output.push("<p><b>Format: </b><br>" + canonFormat);
@@ -100,23 +92,19 @@ function initialiseSiteUI(){
 		//Showing needed elements
 		document.getElementById("label").innerHTML="Upload a different file";
 		document.getElementById("left").style="display:block";
+		document.getElementById("mid").style="display:block";
 		document.getElementById("right").style="display:block";
 		document.getElementById("info").style="text-align:left";
 		document.getElementById("info").innerHTML= '<ul>' + output.join('') + '</ul>';
-		document.getElementById("decodeFormat").style="display:";
 		document.getElementById("decodeRGB").style="display:";
 
 		//Hiding buttons that aren't needed
 		document.getElementById("loading").style="display:none"
-		document.getElementById("dyycc").style="display:none";
-		document.getElementById("dyyyycc").style="display:none";
-		document.getElementById("drggb").style="display:none";
 		document.getElementById("drgb").style="display:none";
 		document.getElementById("progressBar").style="display:none";
 		document.getElementById("pbText").innerHTML="";
 		//Shows the jpeg image as a thumbnail
 		setImage(jpeqBytes);
-		document.getElementById("decodeFormat").innerHTML = "Decode as " +colorFormat;
 		changeButtonState(true);
 	
 		/*	Starting up the worker needed for later and 
@@ -125,4 +113,14 @@ function initialiseSiteUI(){
 			w.terminate();
 		}
 		w = new Worker('Scripts/Workers/decode_Worker.js');
+		blackLevels=false;
+		colorBalance=false;
+		interpolationMode=false;
+		colorMode=false;
+		cropMode=false;
+		
+		let elems = document.getElementsByClassName("checkBox");
+		for(let i =0; i <elems.length;i++){
+			elems[i].checked=false;
+		}
 }

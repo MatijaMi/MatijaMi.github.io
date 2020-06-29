@@ -305,3 +305,8 @@ function isGRBG(image){
 	}
 	return false;
 }
+
+function coolInterpolation(image){
+	
+	
+}
