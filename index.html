@@ -65,10 +65,10 @@
 					
 					<div class="image" id="image"></div>
 					<div class="buttons">
-						<button class="mainButtons" id="downloadBasic" onclick="downloadJpeg()"> Download as Jpeg</button>
-						<button class="mainButtons" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button>
-						<button class="mainButtons" id="decodeRGB" onclick="decodeImage(true)"> Decode .CR2</button>
-						<button class="mainButtons" id="drgb" onclick="downloadProcessedImage('RGB')"> Download Decoded Raw</button>
+						<div style="width: 100%"><button class="mainButtons" id="downloadBasic" onclick="downloadJpeg()"> Download as Jpeg</button>
+							<button class="mainButtons" id="downloadBasic" onclick="downloadMetaData()"> Download Meta Data</button></div>
+						<div style="width: 100%"><button class="mainButtons" id="decodeRGB" onclick="decodeImage(true)"> Decode .CR2</button>
+							<button class="mainButtons" id="drgb" onclick="downloadProcessedImage('RGB')"> Download Decoded Raw</button></div>
 					</div>
 					<div class="pbText" id="pbText"></div>
 					<div class="progressBar" id="progressBar">
@@ -79,16 +79,16 @@
 							
 				<div class="right" id="right">
 					<u>Additional Options</u>
-  					<label class="checkLabels" >Color Balancing</label> 
-						<input type="checkbox" class="checkBox" onclick="switchColorBalance()">
-					<label  class="checkLabels" >Black Levels</label>
-						<input type="checkbox" class="checkBox" onclick="switchBlackLevels();"> 
-					<label  class="checkLabels" >Crop borders</label> 
-						<input type="checkbox" class="checkBox" onclick="switchCropMode()">
-					<label  class="checkLabels" >Complex Interpolation</label> 
-						<input type="checkbox" class="checkBox" onclick="switchInterpolationMode()">
-					<label  class="checkLabels">24-bit Color</label> 
-						<input type="checkbox" class="checkBox" onclick="switchColorMode()">
+  					<div class="checkBoxDiv"> <label class="checkLabels" >Color Balancing</label> 
+						  	<input type="checkbox" class="checkBox" onclick="switchColorBalance()"></div>
+					<div class="checkBoxDiv">  <label  class="checkLabels" >Black Level Adjustment</label>
+						  	<input type="checkbox" class="checkBox" onclick="switchBlackLevels();"></div> 
+					<div class="checkBoxDiv">  <label  class="checkLabels" >Crop Sensor Borders</label> 
+							<input type="checkbox" class="checkBox" onclick="switchCropMode()"></div>
+					<div class="checkBoxDiv">  <label  class="checkLabels" >Hue-Based Interpolation</label> 
+							<input type="checkbox" class="checkBox" onclick="switchInterpolationMode()"></div>
+					<div class="checkBoxDiv">  <label  class="checkLabels">24-bit Color</label> 
+							<input type="checkbox" class="checkBox" onclick="switchColorMode()"></div>
 				</div>
 		</div>
 		<div class="intro">

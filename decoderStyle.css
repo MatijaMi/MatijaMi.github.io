@@ -56,6 +56,10 @@
 	background-color: #eee;
 	border: 1px solid black;
 }
+.checkBoxDiv{
+	width: 100%;
+	float: left;
+}
 
 .checkBox{
 	width: 13px;

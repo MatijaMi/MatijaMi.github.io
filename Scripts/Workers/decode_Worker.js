@@ -1,5 +1,5 @@
 self.importScripts('../Decode/decompress.js','../Decode/decodeUtils.js','../Decode/unslicing.js');
-self.importScripts('../byteTransformations.js','../Decode/interpolations.js','../Decode/colorConversion.js');
+self.importScripts('../byteTransformations.js','../Decode/interpolations.js','../Decode/colorConversion.js','../Decode/postProcessing.js');
 
 onmessage=function(e){
 	var bitTime = new Date();
@@ -40,13 +40,13 @@ onmessage=function(e){
 			break;	
 	}
 	if(cropMode){
-		image=cropImage(image);
+		image=cropImage(image,metaData,colorFormat);
 	}
 	if(colorBalance){
-		image=applyColorBalance(image);
+		image=applyColorBalance(image,metaData);
 	}
 	if(blackLevelMode){
-		image=adjustBlackLevels(image);
+		image=adjustBlackLevels(image,metaData);
 	}
 	if(colorMode){
 		image= convertTo24Bit(image);
