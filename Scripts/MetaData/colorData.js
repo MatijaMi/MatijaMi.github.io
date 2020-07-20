@@ -15,3 +15,19 @@ function detectColorDataVersion(cameraModel){
 	}
 	return cdv.get(cameraModel);
 }
+
+
+function getWhiteBalanceIndex(colorDataVersion){
+	switch(colorDataVersion){
+		case 1:
+			return 25;
+		case 2:
+			return 24;
+		case 5:
+			return 71;
+		case 9: 
+			return 71
+		default:
+			return 63;
+	}
+}

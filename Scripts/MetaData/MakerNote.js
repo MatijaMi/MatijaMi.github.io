@@ -1,6 +1,6 @@
 /*	Format for white balance is R-G-G-B,
-	except for  the G9 where it is G-R-B-G*/
-function getWhiteBalance(makerNoteOffset, model){
+	except for  the G9 where it is G-R-B-G */
+function getWhiteBalance(makerNoteOffset, colorDataVersion){
 	var wbOffset;
 	var colorBalance=[];
 	var colorDataOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
@@ -8,27 +8,9 @@ function getWhiteBalance(makerNoteOffset, model){
 		colorDataOffset=findIFDTagValue(makerNoteOffset,41,0,false,false);
 		var wbInfoTag=true;
 	}
-	if(model.includes("EOS M")|| model.includes("PowerShot")){
-		wbOffset=71;
-		if(model.includes("G9")){
-			wbOffset=8;
-			}
-	}else{
-		if(model.includes("20D")|| model.includes("350D")){
-			wbOffset=25;	
-		}else{
-			if(model.includes("1D Mark III")){
-				return "No Values";	
-			}else{
-				if(model.includes("1D Mark II")|| model.includes("1Ds Mark II")){
-					wbOffset=54;	
-				}else{
-					wbOffset=63;
-				}
-			}
-		}	
-	}
+	
 	if(wbInfoTag){
+		wbOffset=8;
 		for(let i =0; i <4; i++){
 			var wbBytes=[];
 			for(let j =0; j<4;j++){
@@ -37,11 +19,13 @@ function getWhiteBalance(makerNoteOffset, model){
 			colorBalance.push(transformFourBytes.apply(null,wbBytes));
 		}
 	}else{
+		wbOffset=getWhiteBalanceIndex(colorDataVersion);
 		for(let i =0; i <4; i++){
 			colorBalance.push(transformTwoBytes(bytes[colorDataOffset+(wbOffset+i)*2],bytes[colorDataOffset+(wbOffset+i)*2+1]));
 		}
 	}
 	return colorBalance;
+	
 }
 
 //Function to get some of the relevant sensor information in the MakerNote section
@@ -60,7 +44,8 @@ function getSensorInfo(mnOffset){
 	return sensorInfo;
 }
 
-function getWhiteLevel(makerNoteOffset,){
+
+function getWhiteLevel(makerNoteOffset,colorDataVersion){
 	//TODO
 }
 
@@ -69,6 +54,8 @@ function getBlackLevel(makerNoteOffset,model){
 	var blackLevels=[];
 	var colorDataOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
 	var blOffset;
+	
+	
 	if(model.includes("EOS M")|| model.includes("PowerShot")){
 		blOffset=264;
 		if(model.includes("G9")){
@@ -89,6 +76,8 @@ function getBlackLevel(makerNoteOffset,model){
 			}
 		}	
 	}
+	
+	
 	for(let i =0; i <4; i++){
 			blackLevels.push(transformTwoBytes(bytes[colorDataOffset+(blOffset+i)*2],bytes[colorDataOffset+(blOffset+i)*2+1]));
 		}
