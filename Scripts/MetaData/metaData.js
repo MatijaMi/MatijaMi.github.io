@@ -4,6 +4,7 @@ function collectMetaData(){
 	//The offset to IFD#0 is always 16 Bytes
 	const ifdZeroOffset = 16;
 	metaData.set("ModelName", findIFDTagValue(ifdZeroOffset, 16,1,true,true));
+	detectColorDataVersion(metaData.get("ModelName"));
 	metaData.set("MakerName", findIFDTagValue(ifdZeroOffset,15,1,true,true));
 	
 	const image0Offset = findIFDTagValue(ifdZeroOffset,17,1,false,false);
