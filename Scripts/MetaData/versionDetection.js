@@ -1,13 +1,17 @@
+/*	Function that finds which version of the color data in the
+	MakerNote section is used for the given camera */ 
+
 function detectColorDataVersion(cameraModel){
-	console.log(cameraModel);
-	let requestURL= "https://github.com/MatijaMi/MatijaMi.github.io/Data/colorDataVersion.js"
-	let request = new XMLHttpRequest();
-	request.open('GET', requestURL);
-	request.responseType = 'json';
-	request.send();
-	request.onload = function() {
-		let cdv = request.response;
-		console.log(cdv);
+	if(cameraModel.includes("Canon EOS-")){
+		cameraModel=cameraModel.replace("Canon EOS", "").slice(0,-1);
+	}else{
+		if(cameraModel.includes("Canon EOS")){
+			cameraModel=cameraModel.replace("Canon EOS ", "").slice(0,-1);
+		}else{
+			if(cameraModel.includes("PowerShot")){
+				return 5;
+			}
+		}
 	}
-	
+	return cdv.get(cameraModel);
 }

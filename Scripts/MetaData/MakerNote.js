@@ -41,7 +41,6 @@ function getWhiteBalance(makerNoteOffset, model){
 			colorBalance.push(transformTwoBytes(bytes[colorDataOffset+(wbOffset+i)*2],bytes[colorDataOffset+(wbOffset+i)*2+1]));
 		}
 	}
-	//console.log(colorBalance);
 	return colorBalance;
 }
 
