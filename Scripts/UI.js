@@ -1,6 +1,6 @@
 /*	Function that disables the other buttons during decoding 
 	True=On False=Off	*/
-function changeButtonState(state){
+function changeButtonState(state){//TO DO Disable checkboxes
 	let elems = document.getElementsByClassName("mainButtons");
 	let color,cursor,textCol;
 	if(state){
@@ -51,17 +51,6 @@ function startLoadingAnimation(){
 		document.getElementById("pbText").innerHTML="<b> Preparing Download </b>";
 		document.getElementById("loading").style="display:"
 		document.getElementById("progressBar").style="display:none";
-}
-
-function setImage(data){
-	var blob = new Blob([data], {type: 'image/jpeg'});
-	// Use createObjectURL to make a URL for the blob
-	var image = new Image();
-	image.src = URL.createObjectURL(blob);
-	image.style.width="90%";
-	image.style.border="1px solid black"
-	document.getElementById("image").innerHTML="";
-	document.getElementById("image").appendChild(image);
 }
 
 /* Showing the most user relevant parts of the meta data to the user */
@@ -124,3 +113,15 @@ function initialiseSiteUI(){
 			elems[i].checked=false;
 		}
 }
+
+function setImage(data){
+	var blob = new Blob([data], {type: 'image/jpeg'});
+	// Use createObjectURL to make a URL for the blob
+	var image = new Image();
+	image.src = URL.createObjectURL(blob);
+	image.style.width="90%";
+	image.style.border="1px solid black"
+	document.getElementById("image").innerHTML="";
+	document.getElementById("image").appendChild(image);
+}
+

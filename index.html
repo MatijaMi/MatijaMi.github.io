@@ -38,9 +38,9 @@
 			<a href="index.html">Home</a>
 			<div class="dropdown">
 				
-				<a href="MatijaMi.github.io/Websites/cr2.html">CR2</a>
+				<a href="Websites/cr2.html">CR2</a>
 				<div class="dropdownContent">
-					<a href="MatijaMi.github.io/Websites/cr2.html">Intro</a>
+					<a href="Websites/cr2.html">Intro</a>
     				<a href="Websites/ifds.html">IFDs</a>
     				<a href="Websites/rawdata.html">Raw Data</a>
     				<a href="Websites/decoding.html">Decoding</a>
@@ -56,6 +56,7 @@
 			<image class="logoImage" src="Images/logo.svg"></image>
 			
 			<div  id="inputBox" class="inputBox">
+				
 				<input type="file" id="fileInput" name="files">
 				<div class="dropzone" id="dropzone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
 					<label id="label" class="uploadLabel" for="fileInput">Upload a .CR2 file</label>
@@ -64,6 +65,7 @@
 				<div class="left" id="left">
 					<div id="info"></div>
 				</div>
+				
 				
 				<div class="mid" id="mid">
 					
@@ -79,27 +81,35 @@
 						<div class="bar" id="bar">0.0%</div>
 					</div>
 					<img class="loading" id="loading" src="Images/stolen.gif" alt="Loading">
-			</div>
+				</div>
+				
 							
 				<div class="right" id="right">
 					<u>Additional Options</u>
-  					<div class="checkBoxDiv"> <label class="checkLabels" >Color Balancing</label> 
-						  	<input type="checkbox" class="checkBox" onclick="switchColorBalance()"></div>
-					<div class="checkBoxDiv">  <label  class="checkLabels" >Black Level Adjustment</label>
-						  	<input type="checkbox" class="checkBox" onclick="switchBlackLevels();"></div> 
+					
+  					<div class="checkBoxDiv"> <label class="checkLabels" >White Balancing</label> 
+						  	<input type="checkbox" class="checkBox" onclick="switchColorBalance()">
+					</div>
+					
+					<div class="checkBoxDiv">  <label  class="checkLabels" >Color Level Adjustment</label>
+						  	<input type="checkbox" class="checkBox" onclick="switchBlackLevels();">
+					</div> 
+					
 					<div class="checkBoxDiv">  <label  class="checkLabels" >Crop Sensor Borders</label> 
-							<input type="checkbox" class="checkBox" onclick="switchCropMode()"></div>
+						<input type="checkbox" class="checkBox" onclick="switchCropMode()">
+					</div>
+					
 					<div class="checkBoxDiv">  <label  class="checkLabels" >Hue-Based Interpolation</label> 
-							<input type="checkbox" class="checkBox" onclick="switchInterpolationMode()"></div>
-					<div class="checkBoxDiv">  <label  class="checkLabels">24-bit Color</label> 
-							<input type="checkbox" class="checkBox" onclick="switchColorMode()"></div>
+						<input type="checkbox" class="checkBox" onclick="switchInterpolationMode()">
+					</div>
 				</div>
-		</div>
-		<div class="intro">
-			<h3>What is CR2 Decoder?</h3>
-			<p>CR2 Decoder is a project aimed at making working with Canon Raw 2 files easier by making the raw data that the camera collects, as well as the most important meta data used by the camera more accesible and easier to extract from the  .CR2 file. It also functions as a simple .CR2 to .JPEG converter for those who only need that function. Seeing as there is only so much knowledge about the .CR format that has been found out there are certain limitations as to what this tool can do and we cannot promise that it will work with every camera and every file that you choose. It is still a work in progress so a lot of improvements are always on the way and in case you encounter any bugs or problems please do report them to our team so we can deal with them switfly and on time.
-			</p>
-			
+		
+			</div>
+		
+			<div class="intro">
+				<h3>What is CR2 Decoder?</h3>
+				<p>CR2 Decoder is a project aimed at making working with Canon Raw 2 files easier by making the raw data that the camera collects, as well as the most important meta data used by the camera more accesible and easier to extract from the  .CR2 file. It also functions as a simple .CR2 to .JPEG converter for those who only need that function. Seeing as there is only so much knowledge about the .CR format that has been found out there are certain limitations as to what this tool can do and we cannot promise that it will work with every camera and every file that you choose. It is still a work in progress so a lot of improvements are always on the way and in case you encounter any bugs or problems please do report them to our team so we can deal with them switfly and on time.
+				</p>
 			</div>
 		</div>
 	

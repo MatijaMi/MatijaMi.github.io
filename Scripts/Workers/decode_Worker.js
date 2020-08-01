@@ -10,6 +10,7 @@ onmessage=function(e){
 	var colorBalance=e.data[5];
 	var blackLevelMode=e.data[6];
 	var colorMode=e.data[7];
+	
 	//The values need to be decompressed first
 	var image =decompressValues(transformBytesToBits(e.data[0]),metaData);
 	//Applying the correct unslicing and post processing functions on the image
@@ -17,6 +18,10 @@ onmessage=function(e){
 		case "drggb":		
 			if(metaData.get("Slices")[0]>0){//0 means there is only one slice,therefore no unslicing is needed
 				image = unsliceRGGB(image,metaData);
+			}
+			//TO DO ADD WHITE BALANCE
+			if(colorBalance){
+				image=applyColorBalance(image,metaData);
 			}
 			if(interpolationMode){
 				image=bayerInterpolation(image);//TO Do Implement other interpolation
@@ -42,14 +47,8 @@ onmessage=function(e){
 	if(cropMode){
 		image=cropImage(image,metaData,colorFormat);
 	}
-	if(colorBalance){
-		image=applyColorBalance(image,metaData);
-	}
 	if(blackLevelMode){
 		image=adjustBlackLevels(image,metaData);
-	}
-	if(colorMode){
-		image= convertTo24Bit(image);
 	}
 	postMessage(["DL"]);
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});

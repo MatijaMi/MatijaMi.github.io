@@ -23,7 +23,7 @@ function collectMetaData(){
 	//MakerNotes code
 	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
 	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
-	metaData.set("BlackLevel", getBlackLevel(makerNoteOffset,metaData.get("ModelName")));
+	metaData.set("BlackLevel", getBlackLevel(makerNoteOffset,metaData.get("ColorDataVersion")));
 	metaData.set("WhiteLevel", getWhiteLevel(makerNoteOffset,metaData.get("ColorDataVersion")));
 	
 	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
