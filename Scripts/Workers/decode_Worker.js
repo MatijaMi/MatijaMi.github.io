@@ -1,5 +1,5 @@
 self.importScripts('../Decode/decompress.js','../Decode/decodeUtils.js','../Decode/unslicing.js');
-self.importScripts('../byteTransformations.js','../Decode/interpolations.js','../Decode/colorConversion.js','../Decode/postProcessing.js');
+self.importScripts('../Util/byteTransformations.js','../Decode/interpolations.js','../Decode/colorConversion.js','../Decode/postProcessing.js');
 
 onmessage=function(e){
 	var bitTime = new Date();
@@ -50,6 +50,8 @@ onmessage=function(e){
 	if(blackLevelMode){
 		image=adjustBlackLevels(image,metaData);
 	}
+	console.log("HEIGHT: "+image.length);
+	console.log("HEIGHT: "+(image[0].length/3));
 	postMessage(["DL"]);
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
 	postMessage(["RES",blob]);

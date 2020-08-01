@@ -56,23 +56,29 @@ function startLoadingAnimation(){
 /* Showing the most user relevant parts of the meta data to the user */
 function initialiseSiteUI(){
 		//TO DO ADD ACTUALLY USER RELEVANT DATA,AFTER EVERYTHING IS WORKING
-		var sof3=metaData.get("SOF3");
 		var output =[];
-		output.push("<p><b>Camera Model: </b><br>" + metaData.get("ModelName"));
-		output.push("<p><b>Size of Raw: </b><br>" + (metaData.get("RawLength")/(1024*1024)).toFixed(2) +" MB");
-		output.push("<p><b>Dimensions: </b><br>" +sof3.get("SamplesPerLine")*2*sof3.get("VSF")+"x"+sof3.get("NumberOfLines"));
+		var sof3=metaData.get("SOF3");
+		var slices=metaData.get("Slices");
+	
 		var canonFormat;
 		switch(sof3.get("HSF")*sof3.get("VSF")){
 			case 1:
 				canonFormat="RAW";
+				var width = (slices[0]*slices[1]+slices[2]);
 				break;
 			case 2:
 				canonFormat="sRAW";
+				var width = (slices[0]*slices[1]+slices[2])/2;
 				break;
 			case 4:
 				canonFormat="mRAW";
+				var width = (slices[0]*slices[1]+slices[2])/3;
 				break;
 		}
+	
+		output.push("<p><b>Camera Model: </b><br>" + metaData.get("ModelName"));
+		output.push("<p><b>Size of Raw: </b><br>" + (metaData.get("RawLength")/(1024*1024)).toFixed(2) +" MB");
+		output.push("<p><b>Dimensions: </b><br>" +width+"x"+sof3.get("NumberOfLines"));
 		output.push("<p><b>Format: </b><br>" + canonFormat);
 		output.push("<p><b>Sample Precision: </b><br>" + sof3.get("SamplePrecision")+" Bits");
 	
