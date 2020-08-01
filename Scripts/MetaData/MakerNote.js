@@ -1,3 +1,19 @@
+/* 	Finds the ID of the number, useful for finding black
+	and white levels as well as camera color matrix */
+
+function getModelID(makerNoteOffset,modelName,hsf){
+	var modelID =(Math.pow(2,32)+findIFDTagValue(makerNoteOffset,16,0,false,false)).toString(16);
+	if(modelName.includes("PowerShot")){
+		return modelID.substr(1);// PowerShot cameras have 2 not needed characters at start
+	}else{
+		if(hsf>1){
+			return modelID+"y";
+		}else{
+			return modelID;	
+		}
+	}
+}
+
 /*	Format for white balance is R-G-G-B,
 	except for  the G9 where it is G-R-B-G */
 function getWhiteBalance(makerNoteOffset, colorDataVersion){
@@ -45,27 +61,12 @@ function getSensorInfo(mnOffset){
 }
 
 
-function getWhiteLevel(makerNoteOffset,colorDataVersion){
-	//TODO
+function getWhiteLevel(modelID){
+	console.log(colorData.get(modelID)[1]);
+	return colorData.get(modelID)[1];
 }
 
-function getBlackLevel(makerNoteOffset,colorDataVersion){
-	//TODO
-	var blackLevels=[];
-	var colorDataOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
-	var blOffset = getBlackLevelIndex(colorDataVersion);
-	console.log(colorDataVersion);
-	console.log(blOffset)
-	if(blOffset>0){
-		for(let i =0; i <4; i++){
-			blackLevels.push(transformTwoBytes(bytes[colorDataOffset+(blOffset+i)*2],bytes[colorDataOffset+(blOffset+i)*2+1]));
-		}
-		console.log(blackLevels);
-		return blackLevels;
-	}
-	
-	console.log("heh");
-	return [0,0,0,0];
-	
-	
+function getBlackLevel(modelID){
+	console.log(colorData.get(modelID)[0]);
+	return colorData.get(modelID)[0];
 }

@@ -20,15 +20,6 @@ function collectMetaData(){
 	metaData.set("ExposureTime", findIFDTagValue(exifOffset,154,130,false,false));
 	metaData.set("fNumber", findIFDTagValue(exifOffset,157,130,false,false));
 	
-	//MakerNotes code
-	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
-	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
-	metaData.set("BlackLevel", getBlackLevel(makerNoteOffset,metaData.get("ColorDataVersion")));
-	metaData.set("WhiteLevel", getWhiteLevel(makerNoteOffset,metaData.get("ColorDataVersion")));
-	
-	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
-	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
-	
 	//IFD3 Code
 	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	metaData.set("IFD3Offset", ifdThreeOffset);
@@ -53,7 +44,18 @@ function collectMetaData(){
 
 	metaData.set("SOS", getSOSData(sosOffset));
 	metaData.set("RawBitOffset", sosOffset+getSOSLength(sosOffset)+2);
+	
+	//MakerNotes code
+	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
+	metaData.set("ModelID", getModelID(makerNoteOffset,metaData.get("ModelName"), metaData.get("SOF3").get("HSF")));
+	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
+	metaData.set("BlackLevel", getBlackLevel(metaData.get("ModelID")));
+	metaData.set("WhiteLevel", getWhiteLevel(metaData.get("ModelID")));
+	
+	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
+	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 		
+	
 	//Removing the bytes of the file that are not part of the pure raw bytes
 	bytes=bytes.slice(metaData.get("RawBitOffset"));
 	

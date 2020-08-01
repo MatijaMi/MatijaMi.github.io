@@ -31,26 +31,3 @@ function getWhiteBalanceIndex(colorDataVersion){
 			return 63;
 	}
 }
-
-function getBlackLevelIndex(colorDataVersion){
-	switch(colorDataVersion){
-		case 1:
-			return -1;
-		case 2:
-			return -1;
-		case 3:
-			return 196;
-		case 4:
-			return 231;
-		case 5:
-			return 264;
-		case 6:
-			return 479;
-		case 7: 
-			return 504;
-		case 8: 
-			return 326;
-		case 9: 
-			return 329;
-	}
-}
