@@ -111,9 +111,6 @@ function interpolateYYYYCbCr(image){
 	
 function bayerInterpolation(image){
 	var newImg =[];
-	if(isGRBG(image)){
-		image.shift();//Remove first line
-	}
 	for(let i =0; i<image.length;i++){
 		var line=[];
 		switch(i){
@@ -304,9 +301,4 @@ function isGRBG(image){
 		return true;
 	}
 	return false;
-}
-
-function coolInterpolation(image){
-	
-	
 }

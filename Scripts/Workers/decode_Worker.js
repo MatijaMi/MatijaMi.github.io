@@ -14,12 +14,16 @@ onmessage=function(e){
 			if(metaData.get("Slices")[0]>0){//0 means there is only one slice,therefore no unslicing is needed
 				image = unsliceRGGB(image,metaData);
 			}
-			//TO DO ADD WHITE BALANCE
+			if(isGRBG(image)){
+				image.shift();//Remove first line
+			}
+			
 			if(decodeMode!="pure"){
 				image=applyWhiteBalance(image,metaData);
 			}
 			
 			image=bayerInterpolation(image);
+			
 			if(decodeMode=="full"){
 				image=correctGamma(convertTosRGB(image,metaData));
 			}

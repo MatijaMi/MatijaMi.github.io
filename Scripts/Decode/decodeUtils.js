@@ -164,3 +164,18 @@ function getDecodeMode(){
 		return document.getElementById("full").value;
 	}
 }
+
+
+function getWhiteBalanceRatios(whiteBalance){
+	var min = whiteBalance[0];
+	for(let i=1; i<whiteBalance.length;i++){
+		if(whiteBalance[i]<min){
+			min=whiteBalance[i];
+		}
+	}
+	
+	for(let i=0; i<whiteBalance.length;i++){
+		whiteBalance[i]=Math.round((whiteBalance[i]/min)*1000)/1000;
+	}
+	return whiteBalance;
+}

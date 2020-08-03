@@ -4,7 +4,7 @@
 function getModelID(makerNoteOffset,modelName,hsf){
 	var modelID =(Math.pow(2,32)+findIFDTagValue(makerNoteOffset,16,0,false,false)).toString(16);
 	if(modelName.includes("PowerShot")){
-		return modelID.substr(1);// PowerShot cameras have 2 not needed characters at start
+		return modelID.substr(1);// PowerShot cameras have a not needed character at the start
 	}else{
 		if(hsf>1){
 			return modelID+"y";
