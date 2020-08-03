@@ -151,3 +151,16 @@ function progressBarUpdate(progress,total,message){
 			postMessage(["PB",progress,total,message]);
 		}
 }
+
+
+function getDecodeMode(){
+	if(document.getElementById("pure").checked){
+		return document.getElementById("pure").value;
+	}
+	if(document.getElementById("whiteBal").checked){
+		return document.getElementById("whiteBal").value;
+	}
+	if(document.getElementById("full").checked){
+		return document.getElementById("full").value;
+	}
+}

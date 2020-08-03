@@ -51,7 +51,7 @@ function collectMetaData(){
 	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
 	metaData.set("BlackLevel", getBlackLevel(metaData.get("ModelID")));
 	metaData.set("WhiteLevel", getWhiteLevel(metaData.get("ModelID")));
-	
+	metaData.set("ColorSpaceMatrix", getColorSpaceMatrix(metaData.get("ModelID")));
 	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
 	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 		

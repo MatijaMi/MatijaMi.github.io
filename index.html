@@ -58,7 +58,7 @@
 			
 			<div  id="inputBox" class="inputBox">
 				
-				<input type="file" id="fileInput" name="files">
+				<input type="file" id="fileInput" class="fileInput" name="files">
 				<div class="dropzone" id="dropzone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
 					<label id="label" class="uploadLabel" for="fileInput">Upload a .CR2 file</label>
 				</div>
@@ -86,23 +86,14 @@
 				
 							
 				<div class="right" id="right">
-					<u>Additional Options</u>
-					
-  					<div class="checkBoxDiv"> <label class="checkLabels" >White Balancing</label> 
-						  	<input type="checkbox" class="checkBox" onclick="switchColorBalance()">
-					</div>
-					
-					<div class="checkBoxDiv">  <label  class="checkLabels" >Color Level Adjustment</label>
-						  	<input type="checkbox" class="checkBox" onclick="switchBlackLevels();">
-					</div> 
-					
-					<div class="checkBoxDiv">  <label  class="checkLabels" >Crop Sensor Borders</label> 
-						<input type="checkbox" class="checkBox" onclick="switchCropMode()">
-					</div>
-					
-					<div class="checkBoxDiv">  <label  class="checkLabels" >Hue-Based Interpolation</label> 
-						<input type="checkbox" class="checkBox" onclick="switchInterpolationMode()">
-					</div>
+					<u>Decode Modes</u>
+					<br><br>
+					<label for="pure">Pure Sensor Data</label>
+					<input type="radio" id="pure" name="decodeMode" value="pure" checked ><br>
+					<label for="whiteBal">White Balanced Data</label>
+					<input type="radio" id="whiteBal" name="decodeMode" value="whiteBal"><br>
+					<label for="full">Fully Processed Data</label> 
+					<input type="radio" id="full" name="decodeMode" value="full">
 				</div>
 		
 			</div>
@@ -116,22 +107,7 @@
 	
 		
 		<script  type="text/javascript">
-			function switchBlackLevels(){
-				blackLevels=!blackLevels;
-			}
-			function switchColorBalance(){
-				colorBalance=!colorBalance;
-			}
-			function switchColorMode(){
-				colorMode=!colorMode;
-			}
-			function switchInterpolationMode(){
-				interpolationMode=!interpolationMode;
-			}
-			function switchCropMode(){
-				cropMode=!cropMode;
-			}
-		
+					
 			const inputElement = document.getElementById("fileInput");
 			inputElement.addEventListener("change", handleFiles, false);
 			imageCount=0;

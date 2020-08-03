@@ -5,12 +5,7 @@ onmessage=function(e){
 	var bitTime = new Date();
 	var metaData = e.data[1];
 	var colorFormat =e.data[2];//Either rggb, yycc or yyyycc
-	var interpolationMode=e.data[3];
-	var cropMode=e.data[4];
-	var colorBalance=e.data[5];
-	var blackLevelMode=e.data[6];
-	var colorMode=e.data[7];
-	
+	var decodeMode = e.data[3];
 	//The values need to be decompressed first
 	var image =decompressValues(transformBytesToBits(e.data[0]),metaData);
 	//Applying the correct unslicing and post processing functions on the image
@@ -20,13 +15,13 @@ onmessage=function(e){
 				image = unsliceRGGB(image,metaData);
 			}
 			//TO DO ADD WHITE BALANCE
-			if(colorBalance){
-				image=applyColorBalance(image,metaData);
+			if(decodeMode!="pure"){
+				image=applyWhiteBalance(image,metaData);
 			}
-			if(interpolationMode){
-				image=bayerInterpolation(image);//TO Do Implement other interpolation
-			}else{
-				image=bayerInterpolation(image);
+			
+			image=bayerInterpolation(image);
+			if(decodeMode=="full"){
+				image=correctGamma(convertTosRGB(image,metaData));
 			}
 			break;
 			
@@ -44,14 +39,6 @@ onmessage=function(e){
 			image=convertToRGB(interpolateYYYYCbCr(image,metaData),"YYYYCC");
 			break;	
 	}
-	if(cropMode){
-		image=cropImage(image,metaData,colorFormat);
-	}
-	if(blackLevelMode){
-		image=adjustBlackLevels(image,metaData);
-	}
-	console.log("HEIGHT: "+image.length);
-	console.log("HEIGHT: "+(image[0].length/3));
 	postMessage(["DL"]);
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
 	postMessage(["RES",blob]);

@@ -56,24 +56,6 @@
 	background-color: #eee;
 	border: 1px solid black;
 }
-.checkBoxDiv{
-	width: 100%;
-	float: left;
-}
-
-.checkBox{
-	width: 13px;
-	height: 13px;
-	margin: 8px;
-	float: left;
-	margin-left: 0px;
-}
-
-.checkLabels{
-	float: left;
-	padding: 5px;
-}
-
 
 
 .intro{
@@ -135,7 +117,7 @@
 	border-radius: 4px;
 }
 
-input{
+.fileInput{
 	width: 0.1px;
 	height: 0.1px;
 }

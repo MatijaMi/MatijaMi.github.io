@@ -11,13 +11,26 @@ function cropImage(image,metaData,colorFormat){
 	return newImg;
 }
 
-function applyColorBalance(image,metaData){
+function applyWhiteBalance(image,metaData){
 	
 	
 	
 }
 
-function adjustBlackLevels(image,metaData){
+function adjustColorLevels(image,metaData){
+	
+	
+}
+
+function correctGamma(image){
+	
+	
+	
+} 
+
+function convertTosRGB(image, metaData){
+	
+	
 	
 	
 }

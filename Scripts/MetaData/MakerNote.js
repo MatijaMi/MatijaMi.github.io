@@ -61,12 +61,14 @@ function getSensorInfo(mnOffset){
 }
 
 
+function getBlackLevel(modelID){
+	return colorData.get(modelID)[0];
+}
+
 function getWhiteLevel(modelID){
-	console.log(colorData.get(modelID)[1]);
 	return colorData.get(modelID)[1];
 }
 
-function getBlackLevel(modelID){
-	console.log(colorData.get(modelID)[0]);
-	return colorData.get(modelID)[0];
+function getColorSpaceMatrix(modelID){
+	return colorData.get(modelID)[2];
 }

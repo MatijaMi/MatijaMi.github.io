@@ -27,6 +27,9 @@ function initialiseDecodeUI(){
 	document.getElementById("bar").style="width:0.1%";
 	document.getElementById("bar").innerHTML="0.0%"
 	document.getElementById("pbText").innerHTML="Transforming bytes";
+	document.getElementById("pure").disabled=true;
+	document.getElementById("whiteBal").disabled=true;
+	document.getElementById("full").disabled=true;
 	changeButtonState(false);
 }
 /*Shows the UI for a completed decode */
@@ -35,6 +38,9 @@ function showDecodeEndUI(){
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
 		document.getElementById("drgb").style="display:";
+		document.getElementById("pure").disabled=false;
+		document.getElementById("whiteBal").disabled=false;
+		document.getElementById("full").disabled=false;
 		changeButtonState(true);
 }
 /*Updating the progress bar with appropriate text and width */
