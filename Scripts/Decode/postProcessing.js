@@ -28,6 +28,7 @@ function applyWhiteBalance(image,metaData){
 	}
 	return newImg;	
 }
+
 /* Using the matrices for changing color spaces,
 	moves the colors from the camera color space to sRGB */
 function convertTosRGB(image, metaData){
@@ -57,7 +58,7 @@ function convertTosRGB(image, metaData){
 			//Faster matrix multiplication for this case
 			for(var k =0;k<3;k++){
 				var color=camTosRGB[k][0]*cR+camTosRGB[k][1]*cG+camTosRGB[k][2]*cB;
-				line.push(Math.round(Math.max(Math.min(color,1),0)*10000));
+				line.push(Math.round(Math.max(Math.min(color,1),0)*100000));
 			}
 		}
 		newImg.push(line);
@@ -68,7 +69,24 @@ function convertTosRGB(image, metaData){
 
 
 function correctGamma(image){
-	return image;
+	var d = new Date();
+	var newImg = [];
+	for(var i =0; i <image.length;i++){
+		var line = [];
+		for(var j=0; j<image[i].length;j++){
+			var x = image[i][j]/100000;
+			if(x<0.00304){
+				x=x*12.92;
+			}else{
+				x=(1.055*Math.pow(x,1/2.4))-0.055;
+			}
+			line.push(Math.round(x*100000));
+		}
+		newImg.push(line);
+	}
+	var b = new Date();
+	console.log(b.getTime()-d.getTime());
+	return newImg;
 } 
 
 /*	Crops image in order  to remove black space
@@ -103,6 +121,6 @@ function arrayTo3x3(arr){
 /*	Applies the proper color levels and
 	normalized the color to a [0,1] range*/
 function normalizeColor(color, blackLevel, whiteLevel){
-	return (Math.min(Math.max(color,blackLevel),whiteLevel)-blackLevel)/(whiteLevel-blackLevel);
+	return (Math.min(Math.max(color,blackLevel),whiteLevel)-blackLevel)/(Math.pow(2,14));
 }
 

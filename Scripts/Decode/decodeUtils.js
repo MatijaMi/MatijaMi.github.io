@@ -175,7 +175,7 @@ function getWhiteBalanceRatios(whiteBalance){
 	}
 	
 	for(let i=0; i<whiteBalance.length;i++){
-		whiteBalance[i]=Math.round((whiteBalance[i]/min)*1000)/1000;
+		whiteBalance[i]=whiteBalance[i]/min;
 	}
 	return whiteBalance;
 }
