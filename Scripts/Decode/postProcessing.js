@@ -1,16 +1,3 @@
-function cropImage(image,metaData,colorFormat){
-	let newImg=[];
-	let sensorBorders =metaData.get("SensorInfo");
-	let x0 = sensorBorders[2]*3;
-	let y0 = sensorBorders[3];
-	let height = sensorBorders[5];
-	let width = sensorBorders[4]*3;
-	for(let i =y0; i <height;i++){
-		newImg.push(image[i].slice(x0,width));
-	}
-	return newImg;
-}
-
 function applyWhiteBalance(image,metaData){
 	var whiteBalanceRatios = getWhiteBalanceRatios(metaData.get("WhiteBalance"));
 	var newImg=[];
@@ -33,35 +20,58 @@ function applyWhiteBalance(image,metaData){
 				}
 			}
 		}
-		newImg.push(line);	
+		newImg.push(line);
+		progressBarUpdate(i,Math.floor(image.length/100),"Applying White Balance");
 	}
 	return newImg;	
 }
+
+function convertTosRGB(image, metaData){
+	var newImg=[];
+	var blackLevel = metaData.get("BlackLevel");
+	var whiteLevel = metaData.get("WhiteLevel");
+
+	var sRGBtoXYZ=[[0.412453, 0.357580, 0.180423],
+				   [0.212671, 0.715160, 0.072169],
+				   [0.019334, 0.119193, 0.950227]];
+	var XYZtoCam=arrayTo3x3(metaData.get("ColorSpaceMatrix"));
+	var camTosRGB=invert3x3(matrixNormalize(matrixMul(XYZtoCam,sRGBtoXYZ)));
+	
+	for(var i =0; i<image.length;i++){
+		var line =[];
+		for(var j=0; j<image[i].length;j+=3){
+			var cR=normalizeColor(image[i][j],blackLevel,whiteLevel);
+			var cG=normalizeColor(image[i][j+1],blackLevel,whiteLevel);
+			var cB=normalizeColor(image[i][j+2],blackLevel,whiteLevel);
+			for(var k =0;k<3;k++){
+				var color=camTosRGB[k][0]*cR+camTosRGB[k][1]*cG+camTosRGB[k][2]*cB;
+				line.push(Math.round(Math.max(Math.min(color,1),0)*10000));
+			}
+		}
+		newImg.push(line);
+		progressBarUpdate(i,Math.floor(image.length/100),"Converting to sRGB");
+	}
+	return newImg;	
+}
+
 
 function correctGamma(image){
 	return image;
 } 
 
-function convertTosRGB(image, metaData){
-	var sRGBtoXYZ=[[0.412453, 0.357580, 0.180423],
-				   [0.212671, 0.715160, 0.072169],
-				   [0.019334, 0.119193, 0.950227]];
-	var XYZtoCam=arrayTo3x3(metaData.get("ColorSpaceMatrix"));
-	var blackLevel = metaData.get("BlackLevel");
-	var whiteLevel = metaData.get("WhiteLevel");
-	image = prepareColors(image,blackLevel,whiteLevel);
-	var camTosRGB=invert3x3(matrixNormalize(matrixMul(XYZtoCam,sRGBtoXYZ)));
-	var newImg=[];
-	for(var i =0; i<image.length;i++){
-		var line =[];
-		for(var j=0; j<image[i].length;j+=3){
-			var camColors=[[image[i][j]],[image[i][j+1]],[image[i][j+2]]];
-			var sRGBColors = clipColors(matrixMul(camTosRGB,camColors));//Optimization
-			line.push(sRGBColors[0],sRGBColors[1],sRGBColors[2]);
-		}
-		newImg.push(line);	
+/*	Crops image in order  to remove black space
+	outside of the sensor borders */
+function cropImage(image,metaData,colorFormat){
+	let newImg=[];
+	let sensorBorders =metaData.get("SensorInfo");
+	let x0 = sensorBorders[2]*3;
+	let y0 = sensorBorders[3];
+	let height = sensorBorders[5];
+	let width = sensorBorders[4]*3;
+	for(let i =y0; i <height;i++){
+		newImg.push(image[i].slice(x0,width));
 	}
-	return newImg;	
+	return newImg;
 }
 
 function arrayTo3x3(arr){
@@ -76,50 +86,7 @@ function arrayTo3x3(arr){
 	return mat;
 }
 
-function prepareColors(image, blackLevel, whiteLevel){
-	var newImg= [];
-	for(var i=0;i<image.length;i++){
-		var newLine=[];
-		for(var j=0;j<image[i].length;j++){
-			var prepared= (Math.min(Math.max(image[i][j],blackLevel),whiteLevel)-blackLevel)/(whiteLevel-blackLevel);
-			newLine.push(prepared);
-		}
-		newImg.push(newLine);
-	}
-	return newImg;
+function normalizeColor(color, blackLevel, whiteLevel){
+	return (Math.min(Math.max(color,blackLevel),whiteLevel)-blackLevel)/(whiteLevel-blackLevel);
 }
-
-function clipColors(arr){
-	var clipped=[];
-	for(var i =0; i <arr.length;i++){
-		if(arr[i][0]>1){
-			clipped.push(1);
-		}else{
-			if(arr[i][0]<0){
-				clipped.push(0);
-			}else{
-				clipped.push(Math.round(arr[i][0]*10000)/10000);
-			}
-		}
-	}
-	return clipped;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

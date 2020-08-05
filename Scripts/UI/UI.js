@@ -107,6 +107,10 @@ function initialiseSiteUI(){
 		//Shows the jpeg image as a thumbnail
 		setImage(jpeqBytes);
 		changeButtonState(true);
+		//Reset radio buttons
+		document.getElementById("pure").disabled=false;
+		document.getElementById("whiteBal").disabled=false;
+		document.getElementById("full").disabled=false;
 	
 		/*	Starting up the worker needed for later and 
 			stopping an old one if it is still running */
@@ -114,12 +118,6 @@ function initialiseSiteUI(){
 			w.terminate();
 		}
 		w = new Worker('Scripts/Workers/decode_Worker.js');
-		blackLevels=false;
-		colorBalance=false;
-		interpolationMode=false;
-		colorMode=false;
-		cropMode=false;
-		
 		let elems = document.getElementsByClassName("checkBox");
 		for(let i =0; i <elems.length;i++){
 			elems[i].checked=false;
