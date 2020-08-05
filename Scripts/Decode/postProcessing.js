@@ -1,3 +1,6 @@
+/* 	Applies the white balance multiplies from
+	the metadata to the coresponding colors
+	White Balance Format: R G G B */
 function applyWhiteBalance(image,metaData){
 	var whiteBalanceRatios = getWhiteBalanceRatios(metaData.get("WhiteBalance"));
 	var newImg=[];
@@ -25,24 +28,33 @@ function applyWhiteBalance(image,metaData){
 	}
 	return newImg;	
 }
-
+/* Using the matrices for changing color spaces,
+	moves the colors from the camera color space to sRGB */
 function convertTosRGB(image, metaData){
 	var newImg=[];
 	var blackLevel = metaData.get("BlackLevel");
 	var whiteLevel = metaData.get("WhiteLevel");
-
+	//Standard matrix for sRGB to XYZ transformation
 	var sRGBtoXYZ=[[0.412453, 0.357580, 0.180423],
 				   [0.212671, 0.715160, 0.072169],
 				   [0.019334, 0.119193, 0.950227]];
+	//Matrix for XYZ to Camera color space transformation
 	var XYZtoCam=arrayTo3x3(metaData.get("ColorSpaceMatrix"));
+	/*	The matrix for the actual transformation is achieved
+		by multiplying the XYZtoCam and sRGBtoXYZ matrices, normalizing
+		the rows so the sums of the elements is 1 and then getting 
+		the inverse of that matrix	*/
 	var camTosRGB=invert3x3(matrixNormalize(matrixMul(XYZtoCam,sRGBtoXYZ)));
 	
 	for(var i =0; i<image.length;i++){
 		var line =[];
 		for(var j=0; j<image[i].length;j+=3){
+			/*For the conversion the colors need to have the 
+			proper color levels and be normalized to a [0,1] range */
 			var cR=normalizeColor(image[i][j],blackLevel,whiteLevel);
 			var cG=normalizeColor(image[i][j+1],blackLevel,whiteLevel);
 			var cB=normalizeColor(image[i][j+2],blackLevel,whiteLevel);
+			//Faster matrix multiplication for this case
 			for(var k =0;k<3;k++){
 				var color=camTosRGB[k][0]*cR+camTosRGB[k][1]*cG+camTosRGB[k][2]*cB;
 				line.push(Math.round(Math.max(Math.min(color,1),0)*10000));
@@ -74,6 +86,8 @@ function cropImage(image,metaData,colorFormat){
 	return newImg;
 }
 
+/*	The XYZtoCam matrix is saved a an array with 9
+	elements that need to be put in a 2D 3x3 array	*/
 function arrayTo3x3(arr){
 	var mat=[];
 	for(var i =0;i<3;i++){
@@ -86,6 +100,8 @@ function arrayTo3x3(arr){
 	return mat;
 }
 
+/*	Applies the proper color levels and
+	normalized the color to a [0,1] range*/
 function normalizeColor(color, blackLevel, whiteLevel){
 	return (Math.min(Math.max(color,blackLevel),whiteLevel)-blackLevel)/(whiteLevel-blackLevel);
 }

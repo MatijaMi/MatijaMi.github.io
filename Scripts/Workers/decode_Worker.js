@@ -43,6 +43,7 @@ onmessage=function(e){
 			image=convertToRGB(interpolateYYYYCbCr(image,metaData),"YYYYCC");
 			break;	
 	}
+	
 	postMessage(["DL"]);
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
 	postMessage(["RES",blob]);
