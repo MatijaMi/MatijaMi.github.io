@@ -44,14 +44,16 @@ function getDifferenceValue(differenceBits){
 		bitPointer=bitPointer+1;
 		return parseInt(differenceBits)*2-1;
 	}
-	
+	var firstBit = parseInt(differenceBits.substring(0,1));
 	var restBits = parseInt(differenceBits.substring(1),2);
-	
+	/*
 	if (differenceBits.charAt(0)==0){//Sign
 			number = (1 - Math.pow(2,differenceBits.length))+restBits;
 		}else{
 			number = Math.pow(2,differenceBits.length-1)+restBits;				
 		}
+		*/
+	number=1-firstBit+(-1+2*firstBit)*Math.pow(2,differenceBits.length-firstBit)+restBits;
 	bitPointer=bitPointer+differenceBits.length;
 	return number;
 }

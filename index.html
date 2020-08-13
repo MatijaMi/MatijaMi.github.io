@@ -95,6 +95,12 @@
 					<input type="radio" id="whiteBal" name="decodeMode" value="whiteBal"><br>
 					<label for="full">Fully Processed Data</label> 
 					<input type="radio" id="full" name="decodeMode" value="full">
+					<br><br>
+					<u>Additional Options</u><br><br>
+					<label for="cropMode">Crop Sensor Borders</label>
+					<input type="checkbox"  class="checkBox" name="cropMode" id="cropMode" onclick="changeCropMode()"><br>
+					<label for="interpolationMode">Hue Based Interpolation</label>
+					<input type="checkbox" class="checkBox"  id="interpolationMode" name="interpolationMode" onclick="changeInterpolationMode()"><br>
 				</div>
 		
 			</div>
@@ -130,7 +136,15 @@
   				if (ev.dataTransfer.items) {
 					readFile(ev.dataTransfer.items[0].getAsFile());
   				}
-			}		
+			}
+			
+			function changeCropMode(){
+				return !cropMode;
+			}
+			
+			function changeInterpolationMode(){
+				return !advancedInterpolation;
+			}
 		</script>
 		
 		

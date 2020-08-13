@@ -15,12 +15,25 @@ function collectMetaData(){
 	jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	metaData.set("DateTime",findIFDTagValue(ifdZeroOffset,50,1,true,true));
 	metaData.set("DPI", findIFDTagValue(ifdZeroOffset,26,1,true,false));
+	
 	//Code for finding the EXIF Sub-IFD data
 	const exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
 	metaData.set("ExposureTime", findIFDTagValue(exifOffset,154,130,false,false));
 	metaData.set("fNumber", findIFDTagValue(exifOffset,157,130,false,false));
-	
-	//IFD3 Code
+	/*var if0len = bytes[ifdZeroOffset];
+	var fb=bytes[ifdZeroOffset+2+12*(if0len)];
+	var sb=bytes[ifdZeroOffset+2+12*(if0len)+1];
+	var tb=bytes[ifdZeroOffset+2+12*(if0len)+2];
+	var fob=bytes[ifdZeroOffset+2+12*(if0len)+3];
+	var ifd0neOffset = transformFourBytes(fb,sb,tb,fob);
+	var thumbOffset=findIFDTagValue(ifd0neOffset,1,2,false,false);
+	var thumbLen=findIFDTagValue(ifd0neOffset,2,2,false,false);
+	//jpeqBytes=bytes.slice(thumbOffset,thumbOffset+thumbLen);
+	var ifdTwoOffset = transformFourBytes(bytes[ifd0neOffset+2+12*2],bytes[ifd0neOffset+2+12*2+1],bytes[ifd0neOffset+2+12*2+2],bytes[ifd0neOffset+2+12*2+3]);
+	var tiffOffset = findIFDTagValue(ifdTwoOffset,17,1,false,false);
+	var tiffLen = findIFDTagValue(ifdTwoOffset,23,1,false,false);
+	//jpeqBytes=bytes.slice(tiffOffset,tiffOffset+tiffLen);
+	//IFD3 Code*/
 	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	metaData.set("IFD3Offset", ifdThreeOffset);
 	

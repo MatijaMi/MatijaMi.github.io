@@ -71,14 +71,17 @@ function initialiseSiteUI(){
 			case 1:
 				canonFormat="RAW";
 				var width = (slices[0]*slices[1]+slices[2]);
+				document.getElementById("interpolationMode").disabled=false;
 				break;
 			case 2:
 				canonFormat="sRAW";
 				var width = (slices[0]*slices[1]+slices[2])/2;
+				document.getElementById("interpolationMode").disabled=true;
 				break;
 			case 4:
 				canonFormat="mRAW";
 				var width = (slices[0]*slices[1]+slices[2])/3;
+				document.getElementById("interpolationMode").disabled=true;
 				break;
 		}
 	
@@ -122,6 +125,8 @@ function initialiseSiteUI(){
 		for(let i =0; i <elems.length;i++){
 			elems[i].checked=false;
 		}
+		cropMode=false;
+		advancedInterpolation=false;
 }
 
 function setImage(data){

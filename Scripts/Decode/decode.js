@@ -19,7 +19,7 @@ function decodeImage(rgb){
 	/*	Due to JavaScript being limited to one thread workers are used for
 		the heavier computations so that the website doesn't freeze up
 		Worker is already initialised with the site to allow termination at any point */	
-	w.postMessage([bytes,metaData,colorFormat,decodeMode]);
+	w.postMessage([bytes,metaData,colorFormat,decodeMode,cropMode,advancedInterpolation]);
 	
 	//React to messages from worker
 	w.onmessage=function(e){

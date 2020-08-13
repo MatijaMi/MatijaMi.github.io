@@ -6,6 +6,8 @@ onmessage=function(e){
 	var metaData = e.data[1];
 	var colorFormat =e.data[2];//Either rggb, yycc or yyyycc
 	var decodeMode = e.data[3];
+	var cropMode = e.data[4];
+	var advancedInterpolation = e.data[5];
 	//The values need to be decompressed first
 	var image =decompressValues(transformBytesToBits(e.data[0]),metaData);
 	//Applying the correct unslicing and post processing functions on the image
@@ -21,11 +23,16 @@ onmessage=function(e){
 			if(decodeMode!="pure"){
 				image=applyWhiteBalance(image,metaData);
 			}
-			
-			image=bayerInterpolation(image);
-			
+			if(advancedInterpolation){
+				image=hueInterpolation(image);
+			}else{
+				image=bayerInterpolation(image);
+			}
 			if(decodeMode=="full"){
 				image=correctGamma(convertTosRGB(image,metaData));
+			}
+			if(cropMode){
+				image=cropImage(image,metaData);
 			}
 			break;
 			
@@ -34,6 +41,9 @@ onmessage=function(e){
 				image = unsliceYCbCr(image,metaData);
 			}
 			image=convertToRGB(interpolateYCC(image, metaData),"YYCC");
+			if(cropMode){
+				image=cropImage(image,metaData);
+			}
 			break;
 		
 		case "dyyyycc":
@@ -41,6 +51,9 @@ onmessage=function(e){
 				image = unsliceYYYYCbCr(image,metaData);
 			}
 			image=convertToRGB(interpolateYYYYCbCr(image,metaData),"YYYYCC");
+			if(cropMode){
+				image=cropImage(image,metaData);
+			}
 			break;	
 	}
 	

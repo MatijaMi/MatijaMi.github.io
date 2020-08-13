@@ -91,7 +91,7 @@ function correctGamma(image){
 
 /*	Crops image in order  to remove black space
 	outside of the sensor borders */
-function cropImage(image,metaData,colorFormat){
+function cropImage(image,metaData){
 	let newImg=[];
 	let sensorBorders =metaData.get("SensorInfo");
 	let x0 = sensorBorders[2]*3;
