@@ -272,8 +272,8 @@ function interpolateEvenLine(image, j){
 
 function hueInterpolation(image){
 	var newImg = [];
-	for (var i =0; i <image.length){
-		for(var j=i%2); j<image[i].length;j++){
+	for (var i =0; i <image.length;i++){
+		for(var j=i%2; j<image[i].length;j++){
 			
 		}
 	}

@@ -41,6 +41,9 @@ onmessage=function(e){
 				image = unsliceYCbCr(image,metaData);
 			}
 			image=convertToRGB(interpolateYCC(image, metaData),"YYCC");
+			if(decodeMode=="full"){
+				image=(convertTosRGB(image,metaData));
+			}
 			if(cropMode){
 				image=cropImage(image,metaData);
 			}
@@ -51,6 +54,9 @@ onmessage=function(e){
 				image = unsliceYYYYCbCr(image,metaData);
 			}
 			image=convertToRGB(interpolateYYYYCbCr(image,metaData),"YYYYCC");
+			if(decodeMode=="full"){
+				image=(convertTosRGB(image,metaData));
+			}
 			if(cropMode){
 				image=cropImage(image,metaData);
 			}

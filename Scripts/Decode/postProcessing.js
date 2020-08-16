@@ -121,6 +121,20 @@ function arrayTo3x3(arr){
 /*	Applies the proper color levels and
 	normalized the color to a [0,1] range*/
 function normalizeColor(color, blackLevel, whiteLevel){
-	return (Math.min(Math.max(color,blackLevel),whiteLevel)-blackLevel)/(Math.pow(2,14));
+	return (Math.min(Math.max(color,blackLevel),whiteLevel)-blackLevel)/(whiteLevel-blackLevel);
+}
+
+function adjustLevelsYCC(image,metaData){
+	var newImage=[];
+	var blackLevel= metaData.get("BlackLevel");
+	var whiteLevel= metaData.get("WhiteLevel");
+	for(var i =0; i <image.length;i++){
+		var newLine=[];
+		for(var j =0; j<image[i].length;j++){
+			newLine.push(Math.round(normalizeColor(image[i][j],blackLevel,whiteLevel)*100000));
+		}
+		newImage.push(newLine);
+	}
+	return newImage;
 }
 
