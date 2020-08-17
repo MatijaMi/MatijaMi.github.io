@@ -3,25 +3,14 @@
 	White Balance Format: R G G B */
 function applyWhiteBalance(image,metaData){
 	var whiteBalanceRatios = getWhiteBalanceRatios(metaData.get("WhiteBalance"));
+	console.log(whiteBalanceRatios);
+	var maxValue= Math.pow(2,metaData.get("SOF3").get("SamplePrecision"));
+	console.log(maxValue);
 	var newImg=[];
 	for(var i =0; i<image.length;i++){
 		var line =[];
-		if(i%2==0){
-			for(var j=0; j<image[i].length;j++){
-				if(j%2==0){
-					line.push(Math.round(image[i][j]*whiteBalanceRatios[0]));
-				}else{
-					line.push(Math.round(image[i][j]*whiteBalanceRatios[1]));
-				}
-			}
-		}else{
-			for(var j=0; j<image[i].length;j++){
-				if(j%2==0){
-					line.push(Math.round(image[i][j]*whiteBalanceRatios[2]));
-				}else{
-					line.push(Math.round(image[i][j]*whiteBalanceRatios[3]));
-				}
-			}
+		for(var j=0; j<image[i].length;j++){
+			line.push(Math.min(image[i][j]*whiteBalanceRatios[i%2+j%2],maxValue));
 		}
 		newImg.push(line);
 		progressBarUpdate(i,Math.floor(image.length/100),"Applying White Balance");
@@ -36,16 +25,16 @@ function convertTosRGB(image, metaData){
 	var blackLevel = metaData.get("BlackLevel");
 	var whiteLevel = metaData.get("WhiteLevel");
 	//Standard matrix for sRGB to XYZ transformation
-	var sRGBtoXYZ=[[0.412453, 0.357580, 0.180423],
+	var RGBtoXYZ=[[0.412453, 0.357580, 0.180423],
 				   [0.212671, 0.715160, 0.072169],
 				   [0.019334, 0.119193, 0.950227]];
 	//Matrix for XYZ to Camera color space transformation
 	var XYZtoCam=arrayTo3x3(metaData.get("ColorSpaceMatrix"));
 	/*	The matrix for the actual transformation is achieved
-		by multiplying the XYZtoCam and sRGBtoXYZ matrices, normalizing
+		by multiplying the XYZtoCam and RGBtoXYZ matrices, normalizing
 		the rows so the sums of the elements is 1 and then getting 
 		the inverse of that matrix	*/
-	var camTosRGB=invert3x3(matrixNormalize(matrixMul(XYZtoCam,sRGBtoXYZ)));
+	var camTosRGB=invert3x3(matrixNormalize(matrixMul(XYZtoCam,RGBtoXYZ)));
 	
 	for(var i =0; i<image.length;i++){
 		var line =[];
@@ -85,7 +74,7 @@ function correctGamma(image){
 		newImg.push(line);
 	}
 	var b = new Date();
-	console.log(b.getTime()-d.getTime());
+	//console.log(b.getTime()-d.getTime());
 	return newImg;
 } 
 
@@ -121,20 +110,6 @@ function arrayTo3x3(arr){
 /*	Applies the proper color levels and
 	normalized the color to a [0,1] range*/
 function normalizeColor(color, blackLevel, whiteLevel){
-	return (Math.min(Math.max(color,blackLevel),whiteLevel)-blackLevel)/(whiteLevel-blackLevel);
+	color=(color-blackLevel)/(whiteLevel-blackLevel);
+	return Math.min(Math.max(color,0),1);
 }
-
-function adjustLevelsYCC(image,metaData){
-	var newImage=[];
-	var blackLevel= metaData.get("BlackLevel");
-	var whiteLevel= metaData.get("WhiteLevel");
-	for(var i =0; i <image.length;i++){
-		var newLine=[];
-		for(var j =0; j<image[i].length;j++){
-			newLine.push(Math.round(normalizeColor(image[i][j],blackLevel,whiteLevel)*100000));
-		}
-		newImage.push(newLine);
-	}
-	return newImage;
-}
-

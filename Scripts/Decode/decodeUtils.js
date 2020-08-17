@@ -175,9 +175,11 @@ function getWhiteBalanceRatios(whiteBalance){
 			min=whiteBalance[i];
 		}
 	}
-	
+	var ratios=[];
 	for(let i=0; i<whiteBalance.length;i++){
-		whiteBalance[i]=whiteBalance[i]/min;
+		if(i!=2){
+			ratios.push(whiteBalance[i]/min);
+		}
 	}
-	return whiteBalance;
+	return ratios;
 }
