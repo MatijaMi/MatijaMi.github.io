@@ -17,23 +17,24 @@ function decompressValues(bits,mData){
 	var hts = setupHTS(sos,ht1,ht2,nComponents);
 	var previousValues = setPreviousValues(nComponents,samplePrecision);
 	var imageLines=[];
-	
+	var samples=samplesPerLine/(HSF*VSF);
 	bitPointer=0;//Initialising the bit pointer
 	for(let i =0; i < numberOfLines;i++){
-		imageLines.push([]);//newLine
+		var newRow=[];//newLine
 		/*On all lines except the first, the previous value is taken
 		from the previous line, from the first occurence of the component*/
 		if(i>0){
 			previousValues=adjustPreviousValues(imageLines,i,nComponents,compParts[0],previousValues);
 		}
-		for(let j =0; j <(samplesPerLine/(HSF*VSF));j++){//For every line
+		for(let j =0; j <samples;j++){//For every line
 			for(let comps = 0; comps<nComponents;comps++){//For every component
 				for(let part=0; part<compParts[comps];part++){//For every repetition of the component
 					previousValues[comps]=findNextValue(hts[comps],previousValues[comps],bits);//Find the next value
-					imageLines[i].push(previousValues[comps]);//And save it
+					newRow.push(previousValues[comps]);//And save it
 				}
 			}
 		}
+		imageLines.push(newRow);
 		progressBarUpdate(i,Math.floor(numberOfLines/100),"Decompressing Values");
 	}
 	return imageLines;

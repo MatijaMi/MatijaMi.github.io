@@ -147,3 +147,20 @@ function arrayTo3x3(arr){
 	}
 	return mat;
 }
+
+
+function getWhiteBalanceRatios(whiteBalance){
+	var min = whiteBalance[0];
+	for(let i=1; i<whiteBalance.length;i++){
+		if(whiteBalance[i]<min){
+			min=whiteBalance[i];
+		}
+	}
+	var ratios=[];
+	for(let i=0; i<whiteBalance.length;i++){
+		if(i!=2){
+			ratios.push(whiteBalance[i]/min);
+		}
+	}
+	return ratios;
+}

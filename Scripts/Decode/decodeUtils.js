@@ -2,32 +2,24 @@
 	by checking if the sequence of the next bits is in the Huffman Table, 
 	if it isn't it adds the next bit and checks again */
 function findNextValue(huffTable, previousValue,bits){
-	
-	var currentCode="";	
-	for(let i =0; i <16; i++){
-		currentCode=currentCode+getNextBit(bitPointer+i,bits);
-		
-		if(typeof huffTable.get(currentCode) !== "undefined"){
-				break;
-			}
+	var currentCode=getNextBit(bits);
+	while(!huffTable.has(currentCode)){
+		currentCode=currentCode+getNextBit(bits);
 	}
-
-	bitPointer=bitPointer+currentCode.length;
-	var differenceCodeLength =huffTable.get(currentCode);
 	//The next value is equal to the previous value + the difference value
-	return previousValue+getDifferenceValue(getNextBits(differenceCodeLength,bits));
+	return previousValue+getDifferenceValue(getNextBits(huffTable.get(currentCode),bits));
 }
 
-function getNextBit(bitPointer,bits){
-	var byte= bits[Math.floor(bitPointer/8)];
+function getNextBit(bits){
 	var bit = bitPointer%8;
+	var byte= bits[(bitPointer-bit)/8];
 	var rest = 8-byte.length;
-	if(bit<(rest)){
+	bitPointer++;
+	if(bit<rest){
 		return "0";
 	}else{
 		return byte.charAt(bit-rest);
 	}
-	
 }
 
 /*	Given a sequence of bits, calculates their value based
@@ -36,36 +28,53 @@ function getNextBit(bitPointer,bits){
 	-If negative the value is equal to -1 + 2^lengthOfDifferenceCode+ bitsWithoutSign.toDecimal
 	-If positive the value is equal to 2^(lengthOfDifferenceCode-1)+ bitsWithoutSign.toDecimal */
 function getDifferenceValue(differenceBits){
-	var number;
-	if(differenceBits.length==0){//If zero then there is no difference
-		return 0;
-	}
-	if (differenceBits.length==1){//For length one it's either -1 or 1
-		bitPointer=bitPointer+1;
-		return parseInt(differenceBits)*2-1;
-	}
-	var firstBit = parseInt(differenceBits.substring(0,1));
-	var restBits = parseInt(differenceBits.substring(1),2);
-	
-	if (differenceBits.charAt(0)==0){//Sign
-			number = (1 - Math.pow(2,differenceBits.length))+restBits;
-		}else{
-			number = Math.pow(2,differenceBits.length-1)+restBits;				
+	if(differenceBits.length>1){//If zero then there is no difference
+		var firstBit = parseInt(differenceBits.charAt(0));
+		var restBits = parseInt(differenceBits.substring(1),2);
+		return 1-firstBit+(2*firstBit-1)*(1<<(differenceBits.length-firstBit))+restBits;
+	}else{
+		if(differenceBits.length==0){
+			return 0;
+		}else{//For length one it's either -1 or 1
+			return parseInt(differenceBits)*2-1;
 		}
-		/*
-	number=1-firstBit+(-1+2*firstBit)*Math.pow(2,differenceBits.length-firstBit)+restBits;*/
-	bitPointer=bitPointer+differenceBits.length;
-	return number;
+	}
 }
 
 //Returns the next n bits
 function getNextBits(n,bits){
 	var str="";
-	for(let i =0; i<n;i++){
-		str=str+getNextBit(bitPointer+i,bits);
+	while(n>0){
+		str=str+getNextBit(bits);
+		n--;
 	}
 	return str;
 }
+
+function adjustPreviousValues(imageLines,i,nComponents,nOfFirst,oldPreviousValues){
+	var previousValues=[];
+		for(let comp=0; comp<nComponents;comp++){		
+			if(nOfFirst==4){
+				if(i%2==0){ //In YYYYCbCr the previous values get reset every 2 lines
+					if(comp==0){
+						previousValues[comp]=imageLines[i-2][comp];//Adjusting for additional Ys
+					}else{
+						previousValues[comp]=imageLines[i-2][comp+3];//Adjusting for additional Ys
+					}
+				}else{
+					previousValues=oldPreviousValues;
+				}	
+			}else{
+				if(nOfFirst==2 && comp>0){
+					previousValues[comp]=imageLines[i-1][comp+1];//Adjusting for additional Ys
+				}else{
+					previousValues[comp]=imageLines[i-1][comp];	
+				}
+			}
+		}
+ 		return previousValues;
+}
+/////////////////////////////////////////////////////////////////
 
 /*	Depending on the number of components, returns an array with
 	the proper Huffman Table for each component */
@@ -123,38 +132,6 @@ function getNumberOfEntries(nComponents,HSF,VSF){
 	}
 }
 
-function adjustPreviousValues(imageLines,i,nComponents,nOfFirst,oldPreviousValues){
-	var previousValues=[];
-		for(let comp=0; comp<nComponents;comp++){		
-			if(nOfFirst==4){
-				if(i%2==0){ //In YYYYCbCr the previous values get reset every 2 lines
-					if(comp==0){
-						previousValues[comp]=imageLines[i-2][comp];//Adjusting for additional Ys
-					}else{
-						previousValues[comp]=imageLines[i-2][comp+3];//Adjusting for additional Ys
-					}
-				}else{
-					previousValues=oldPreviousValues;
-				}	
-			}else{
-				if(nOfFirst==2 && comp>0){
-					previousValues[comp]=imageLines[i-1][comp+1];//Adjusting for additional Ys
-				}else{
-					previousValues[comp]=imageLines[i-1][comp];	
-				}
-			}
-		}
- 		return previousValues;
-}
-
-//Function that sends a message to update the progress bar to the main thread
-function progressBarUpdate(progress,total,message){
-	if(progress%total==0){
-			postMessage(["PB",progress,total,message]);
-		}
-}
-
-
 function getDecodeMode(){
 	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
 	for(var i =0; i <modes.length; i++){
@@ -163,20 +140,10 @@ function getDecodeMode(){
 		}
 	}
 }
-
-
-function getWhiteBalanceRatios(whiteBalance){
-	var min = whiteBalance[0];
-	for(let i=1; i<whiteBalance.length;i++){
-		if(whiteBalance[i]<min){
-			min=whiteBalance[i];
+//Function that sends a message to update the progress bar to the main thread
+function progressBarUpdate(progress,total,message){
+	if(progress%total==0){
+			postMessage(["PB",progress,total,message]);
 		}
-	}
-	var ratios=[];
-	for(let i=0; i<whiteBalance.length;i++){
-		if(i!=2){
-			ratios.push(whiteBalance[i]/min);
-		}
-	}
-	return ratios;
 }
+

@@ -14,6 +14,8 @@ onmessage=function(e){
 	var aat =new Date();
 	console.log("BIT TIME:" +(aat.getTime()-at.getTime()));
 	image =decompressValues(image,metaData);
+	var aaat =new Date();
+	console.log("BIT TIME:" +(aaat.getTime()-aat.getTime()));
 	//Applying the correct unslicing and post processing functions on the image
 	
 	var bt =new Date();

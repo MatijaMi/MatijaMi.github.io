@@ -28,17 +28,19 @@ function transformBytesToBits(data){
 		}
 		//Updates for the progress bar
 		progressBarUpdate(i,Math.floor(data.length/100),"Transforming Bytes");
-	} 
+	}
 	return bits;
 }
 
 /*	Function to transform a number to its binary form
  	faster than the built in toString(2) function */
 function decToBin(num){
-	let bin = "";
+	let bin = 0;
+	let k= 1;
 	while(num>=1){
-		bin=(num&1)+bin;
+		bin+=(num&1)*k;
+		k*=10;
 		num=num>>>1;
 	}
-	return bin;
+	return bin.toString();
 }
