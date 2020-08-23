@@ -46,14 +46,14 @@ function getDifferenceValue(differenceBits){
 	}
 	var firstBit = parseInt(differenceBits.substring(0,1));
 	var restBits = parseInt(differenceBits.substring(1),2);
-	/*
+	
 	if (differenceBits.charAt(0)==0){//Sign
 			number = (1 - Math.pow(2,differenceBits.length))+restBits;
 		}else{
 			number = Math.pow(2,differenceBits.length-1)+restBits;				
 		}
-		*/
-	number=1-firstBit+(-1+2*firstBit)*Math.pow(2,differenceBits.length-firstBit)+restBits;
+		/*
+	number=1-firstBit+(-1+2*firstBit)*Math.pow(2,differenceBits.length-firstBit)+restBits;*/
 	bitPointer=bitPointer+differenceBits.length;
 	return number;
 }
@@ -156,14 +156,11 @@ function progressBarUpdate(progress,total,message){
 
 
 function getDecodeMode(){
-	if(document.getElementById("pure").checked){
-		return document.getElementById("pure").value;
-	}
-	if(document.getElementById("whiteBal").checked){
-		return document.getElementById("whiteBal").value;
-	}
-	if(document.getElementById("full").checked){
-		return document.getElementById("full").value;
+	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+	for(var i =0; i <modes.length; i++){
+		if(document.getElementById(modes[i]).checked){
+			return i;
+		}
 	}
 }
 

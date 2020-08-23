@@ -5,13 +5,9 @@ function collectMetaData(){
 	const ifdZeroOffset = 16;
 	metaData.set("ModelName", findIFDTagValue(ifdZeroOffset, 16,1,true,true));
 	metaData.set("ColorDataVersion", detectColorDataVersion(metaData.get("ModelName")));
-	metaData.set("MakerName", findIFDTagValue(ifdZeroOffset,15,1,true,true));
 	
 	const image0Offset = findIFDTagValue(ifdZeroOffset,17,1,false,false);
 	const image0Length = findIFDTagValue(ifdZeroOffset,23,1,false,false);
-	metaData.set("JpegHeight",findIFDTagValue(16,0,1,false,false));
-	metaData.set("JpegWidth",findIFDTagValue(16,1,1,false,false));
-	
 	jpeqBytes=bytes.slice(image0Offset,image0Offset+image0Length);
 	metaData.set("DateTime",findIFDTagValue(ifdZeroOffset,50,1,true,true));
 	metaData.set("DPI", findIFDTagValue(ifdZeroOffset,26,1,true,false));
@@ -30,10 +26,13 @@ function collectMetaData(){
 	var thumbLen=findIFDTagValue(ifd0neOffset,2,2,false,false);
 	//jpeqBytes=bytes.slice(thumbOffset,thumbOffset+thumbLen);
 	var ifdTwoOffset = transformFourBytes(bytes[ifd0neOffset+2+12*2],bytes[ifd0neOffset+2+12*2+1],bytes[ifd0neOffset+2+12*2+2],bytes[ifd0neOffset+2+12*2+3]);
+	var tiffWidth = findIFDTagValue(ifdTwoOffset,0,1,false,false);
+	var tiffHeight = findIFDTagValue(ifdTwoOffset,1,1,false,false);
+	console.log(tiffWidth,tiffHeight);
 	var tiffOffset = findIFDTagValue(ifdTwoOffset,17,1,false,false);
 	var tiffLen = findIFDTagValue(ifdTwoOffset,23,1,false,false);
-	//jpeqBytes=bytes.slice(tiffOffset,tiffOffset+tiffLen);
-	//IFD3 Code*/
+	jpeqBytes=bytes.slice(tiffOffset,tiffOffset+tiffLen);*/
+	//IFD3 Code
 	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	metaData.set("IFD3Offset", ifdThreeOffset);
 	
@@ -66,6 +65,7 @@ function collectMetaData(){
 	metaData.set("WhiteLevel", getWhiteLevel(metaData.get("ModelID")));
 	metaData.set("ColorSpaceMatrix", getColorSpaceMatrix(metaData.get("ModelID")));
 	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
+	console.log(metaData.get("WhiteBalance"));
 	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 		
 	

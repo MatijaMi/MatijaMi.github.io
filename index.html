@@ -87,27 +87,38 @@
 				
 							
 				<div class="right" id="right">
-					<u>Decode Modes</u>
+					<u>Decode Levels</u>
 					<br><br>
-					<label for="pure">Pure Sensor Data</label>
-					<input type="radio" id="pure" name="decodeMode" value="pure" checked ><br>
-					<label for="whiteBal">White Balanced Data</label>
-					<input type="radio" id="whiteBal" name="decodeMode" value="whiteBal"><br>
-					<label for="full">Fully Processed Data</label> 
-					<input type="radio" id="full" name="decodeMode" value="full">
+					<label for="pure">Sensor</label>
+					<input type="radio" id="pure" name="decodeMode" value="pure" checked onclick="disableAdOptions()"><br>
+					
+					<label for="normal">Normalized</label>
+					<input type="radio" id="normal" name="decodeMode" value="normal" onclick="disableAdOptions()"><br>
+					
+					<label for="whiteBal">White Balanced </label>
+					<input type="radio" id="whiteBal" name="decodeMode" value="whiteBal" onclick="disableAdOptions()"><br>
+					
+					<label for="demosaiced">Demosaiced</label>
+					<input type="radio" id="demosaiced" name="decodeMode" value="demosaiced" onclick="disableBrightness()"><br>
+					
+					<label for="sRGB">sRGB</label>
+					<input type="radio" id="sRGB" name="decodeMode" value="sRGB" onclick="enableAdOptions()">
 					<br><br>
+					
 					<u>Additional Options</u><br><br>
-					<label for="cropMode">Crop Sensor Borders</label>
+					
+					<label for="cropMode">Crop Borders</label>
 					<input type="checkbox"  class="checkBox" name="cropMode" id="cropMode" onclick="changeCropMode()"><br>
-					<label for="interpolationMode">Hue Based Interpolation</label>
-					<input type="checkbox" class="checkBox"  id="interpolationMode" name="interpolationMode" onclick="changeInterpolationMode()"><br>
+					
+					<label for="brightnessMode">Adjust Brightness</label>
+					<input type="checkbox" class="checkBox"  id="brightnessMode" name="brightnessMode" onclick="changebrightnessMode()">
 				</div>
 		
 			</div>
 		
 			<div class="intro">
 				<h3>What is CR2 Decoder?</h3>
-				<p>CR2 Decoder is a project aimed at making working with Canon Raw 2 files easier by making the raw data that the camera collects, as well as the most important meta data used by the camera more accesible and easier to extract from the  .CR2 file. It also functions as a simple .CR2 to .JPEG converter for those who only need that function. Seeing as there is only so much knowledge about the .CR format that has been found out there are certain limitations as to what this tool can do and we cannot promise that it will work with every camera and every file that you choose. It is still a work in progress so a lot of improvements are always on the way and in case you encounter any bugs or problems please do report them to our team so we can deal with them switfly and on time.
+				<p>CR2 Decoder is a project aimed at making working with Canon Raw 2 files easier by making the raw data that the camera collects, as well as the most important meta data used by the camera more accesible and easier to extract from the  .CR2 file. It also functions as a simple .CR2 to .JPEG converter for those who only need that function. Seeing as there is only so much knowledge about the .CR2 format that has been found out there are certain limitations as to what this tool can do and we cannot promise that it will work with every camera and every file that you choose. It is still a work in progress so a lot of improvements are always on the way and in case you encounter any bugs or problems please do report them to our team so we can deal with them switfly and on time.
 				</p>
 			</div>
 		</div>
@@ -139,12 +150,35 @@
 			}
 			
 			function changeCropMode(){
-				return !cropMode;
+				cropMode=!cropMode;
 			}
 			
-			function changeInterpolationMode(){
-				return !advancedInterpolation;
+			function changebrightnessMode(){
+				brightnessMode= !brightnessMode;
 			}
+			
+			function disableAdOptions(){
+				document.getElementById("cropMode").checked=false;
+				document.getElementById("cropMode").disabled=true;
+				cropMode=false;
+				document.getElementById("brightnessMode").checked=false;
+				document.getElementById("brightnessMode").disabled=true;
+				
+				brightnessMode=false;
+			}
+			function enableAdOptions(){
+				document.getElementById("cropMode").disabled=false;
+				document.getElementById("brightnessMode").disabled=false;
+			}
+			function disableBrightness(){
+				document.getElementById("cropMode").disabled=false;
+				document.getElementById("brightnessMode").checked=false;
+				document.getElementById("brightnessMode").disabled=true;
+				
+				brightnessMode=false;
+			}
+			
+			
 		</script>
 		
 		

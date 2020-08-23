@@ -34,16 +34,11 @@ function getDecodedHTs(rawOffset, length){
 //Function that decodes the huffman tree using the two tables 
 function decodeHuffmanTree(frequencies, values){
 	
-	var code =0;
 	var minimumValue = [];
+	minimumValue.push(0);
 	//Finding the minimum value for the huffman codes of a set length of bits
-	for(let i = 0; i<frequencies.length; i++){
-		if(i==0){
-			minimumValue.push(0);
-		}else{
-		code = (code + frequencies[i-1])*2;
-		minimumValue.push(code);
-	}	
+	for(let i = 1; i<frequencies.length; i++){
+		minimumValue.push((minimumValue[i-1]+ frequencies[i-1])*2);	
 	}
 	//Creates an array with all the codes that are used based on the minimum values
 	var codes = [];

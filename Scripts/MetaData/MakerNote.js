@@ -35,9 +35,9 @@ function getWhiteBalance(makerNoteOffset, colorDataVersion){
 			colorBalance.push(transformFourBytes.apply(null,wbBytes));
 		}
 	}else{
-		wbOffset=getWhiteBalanceIndex(colorDataVersion);
-		for(let i =0; i <4; i++){
-			colorBalance.push(transformTwoBytes(bytes[colorDataOffset+(wbOffset+i)*2],bytes[colorDataOffset+(wbOffset+i)*2+1]));
+		wbOffset=getWhiteBalanceIndex(colorDataVersion)*2;
+		for(let i =0; i <8; i+=2){
+			colorBalance.push(transformTwoBytes(bytes[colorDataOffset+wbOffset+i],bytes[colorDataOffset+wbOffset+i+1]));
 		}
 	}
 	return colorBalance;

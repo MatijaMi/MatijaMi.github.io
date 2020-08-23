@@ -270,17 +270,6 @@ function interpolateEvenLine(image, j){
 	return line;	
 }
 
-function hueInterpolation(image){
-	var newImg = [];
-	for (var i =0; i <image.length;i++){
-		for(var j=i%2; j<image[i].length;j++){
-			
-		}
-	}
-	
-	return image;
-}
-
 /* 	Some images have a GRBG CFA instead of RGGB, in order to
 	find out which it is we compare the difference between all
 	G1 and G2 values and the differnce between red and blue,

@@ -9,6 +9,13 @@ function downloadProcessedImage(type){
 //Function to download the jpeg saved in the first image file directory of the CR2 file
 function downloadJpeg(){
 	let name =fileName +".jpg";
+	/*var newImg=[];
+	newImg.push("[");
+	for(var i =0; i <jpeqBytes.length;i+=2){
+		newImg.push(transformTwoBytes(jpeqBytes[i],jpeqBytes[i+1]));
+	}
+	newImg.push("]");
+	jpeqBytes=newImg;*/
 	let blob = new Blob([jpeqBytes], {type: "octet/stream"});
 	saveByteArray(blob, name);
 }

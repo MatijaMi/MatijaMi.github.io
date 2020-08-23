@@ -27,9 +27,10 @@ function initialiseDecodeUI(){
 	document.getElementById("bar").style="width:0.1%";
 	document.getElementById("bar").innerHTML="0.0%"
 	document.getElementById("pbText").innerHTML="Transforming bytes";
-	document.getElementById("pure").disabled=true;
-	document.getElementById("whiteBal").disabled=true;
-	document.getElementById("full").disabled=true;
+	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+	for(var i =0; i <modes.length; i++){
+		document.getElementById(modes[i]).disabled=true;
+	}
 	changeButtonState(false);
 }
 /*Shows the UI for a completed decode */
@@ -38,9 +39,10 @@ function showDecodeEndUI(){
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
 		document.getElementById("drgb").style="display:";
-		document.getElementById("pure").disabled=false;
-		document.getElementById("whiteBal").disabled=false;
-		document.getElementById("full").disabled=false;
+		var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+		for(var i =0; i <modes.length; i++){
+			document.getElementById(modes[i]).disabled=false;
+		}
 		changeButtonState(true);
 }
 /*Updating the progress bar with appropriate text and width */
@@ -61,7 +63,11 @@ function startLoadingAnimation(){
 
 /* Showing the most user relevant parts of the meta data to the user */
 function initialiseSiteUI(){
-		//TO DO ADD ACTUALLY USER RELEVANT DATA,AFTER EVERYTHING IS WORKING
+		//Reset radio buttons
+		var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+		for(var i =0; i <modes.length; i++){
+			document.getElementById(modes[i]).disabled=false;
+		}
 		var output =[];
 		var sof3=metaData.get("SOF3");
 		var slices=metaData.get("Slices");
@@ -71,17 +77,16 @@ function initialiseSiteUI(){
 			case 1:
 				canonFormat="RAW";
 				var width = (slices[0]*slices[1]+slices[2]);
-				document.getElementById("interpolationMode").disabled=false;
 				break;
 			case 2:
 				canonFormat="sRAW";
 				var width = (slices[0]*slices[1]+slices[2])/2;
-				document.getElementById("interpolationMode").disabled=true;
+				document.getElementById("demosaiced").disabled=true;
 				break;
 			case 4:
 				canonFormat="mRAW";
 				var width = (slices[0]*slices[1]+slices[2])/3;
-				document.getElementById("interpolationMode").disabled=true;
+				document.getElementById("demosaiced").disabled=true;
 				break;
 		}
 	
@@ -110,11 +115,7 @@ function initialiseSiteUI(){
 		//Shows the jpeg image as a thumbnail
 		setImage(jpeqBytes);
 		changeButtonState(true);
-		//Reset radio buttons
-		document.getElementById("pure").disabled=false;
-		document.getElementById("whiteBal").disabled=false;
-		document.getElementById("full").disabled=false;
-	
+			
 		/*	Starting up the worker needed for later and 
 			stopping an old one if it is still running */
 		if(typeof w !== "undefined"){
@@ -125,8 +126,13 @@ function initialiseSiteUI(){
 		for(let i =0; i <elems.length;i++){
 			elems[i].checked=false;
 		}
+	
+		document.getElementById("pure").checked=true;
+		document.getElementById("cropMode").disabled=true;
 		cropMode=false;
-		advancedInterpolation=false;
+		document.getElementById("brightnessMode").disabled=true;
+		brightnessMode=false;
+		
 }
 
 function setImage(data){
