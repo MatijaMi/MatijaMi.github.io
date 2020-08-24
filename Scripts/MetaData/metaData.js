@@ -60,12 +60,12 @@ function collectMetaData(){
 	//MakerNotes code
 	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
 	metaData.set("ModelID", getModelID(makerNoteOffset,metaData.get("ModelName"), metaData.get("SOF3").get("HSF")));
+	console.log(metaData.get("ModelID"));
 	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
 	metaData.set("BlackLevel", getBlackLevel(metaData.get("ModelID")));
 	metaData.set("WhiteLevel", getWhiteLevel(metaData.get("ModelID")));
 	metaData.set("ColorSpaceMatrix", getColorSpaceMatrix(metaData.get("ModelID")));
 	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
-	console.log(metaData.get("WhiteBalance"));
 	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 		
 	

@@ -16,7 +16,7 @@ function getModelID(makerNoteOffset,modelName,hsf){
 
 /*	Format for white balance is R-G-G-B,
 	except for  the G9 where it is G-R-B-G */
-function getWhiteBalance(makerNoteOffset, colorDataVersion){
+function getWhiteBalance(makerNoteOffset, cameraModel){
 	var wbOffset;
 	var colorBalance=[];
 	var colorDataOffset = findIFDTagValue(makerNoteOffset,1,64,false,false);
@@ -35,6 +35,7 @@ function getWhiteBalance(makerNoteOffset, colorDataVersion){
 			colorBalance.push(transformFourBytes.apply(null,wbBytes));
 		}
 	}else{
+		var colorDataVersion= detectColorDataVersion(cameraModel);
 		wbOffset=getWhiteBalanceIndex(colorDataVersion)*2;
 		for(let i =0; i <8; i+=2){
 			colorBalance.push(transformTwoBytes(bytes[colorDataOffset+wbOffset+i],bytes[colorDataOffset+wbOffset+i+1]));

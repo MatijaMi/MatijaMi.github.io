@@ -22,7 +22,7 @@ cdv.set("DIGITAL REBEL XS",  4);
 cdv.set("1000D",  4);
 cdv.set("1100D",  4);
 cdv.set("REBEL T3",  4);
-cdv.set("M",  5);
+cdv.set("M",  4);
 cdv.set("M3",  5);
 cdv.set("600D",  6);
 cdv.set("1200D",  6);

@@ -17,7 +17,6 @@ function normalizeImage(image,metaData){
 	White Balance Format: R G G B */
 function applyWhiteBalance(image,metaData){
 	var whiteBalanceRatios = getWhiteBalanceRatios(metaData.get("WhiteBalance"));
-	console.log(whiteBalanceRatios);
 	var newImg=[];
 	for(var i =0; i<image.length;i++){
 		var line =[];
@@ -34,8 +33,6 @@ function applyWhiteBalance(image,metaData){
 	moves the colors from the camera color space to sRGB */
 function convertTosRGB(image, metaData){
 	var newImg=[];
-	var blackLevel = metaData.get("BlackLevel");
-	var whiteLevel = metaData.get("WhiteLevel");
 	//Standard matrix for sRGB to XYZ transformation
 	var RGBtoXYZ=[[0.412453, 0.357580, 0.180423],
 				   [0.212671, 0.715160, 0.072169],
@@ -76,13 +73,12 @@ function brightenImage(image){
 		}
 	}	
 	var mean= sumY/(image.length*image[0].length);
-	console.log(mean);
 	var mul =0.03/mean;
 	
 	for(var i =0; i <image.length;i++){
 		var newRow =[];
 		for(var j=0; j <image[i].length;j++){
-			newRow.push(Math.min(Math.round((image[i][j]/10000)*mul*10000),10000));
+			newRow.push(Math.min(Math.round(image[i][j]*mul),10000));
 		}
 		newImg.push(newRow);
 		progressBarUpdate(i,Math.floor(image.length/100),"Adjusting Brightness");
@@ -151,6 +147,16 @@ function arrayTo3x3(arr){
 
 function getWhiteBalanceRatios(whiteBalance){
 	var min = whiteBalance[0];
+	if(min==0){
+		return [1,1,1,1];
+	}
+	if(whiteBalance[0]==whiteBalance[3]){
+		whiteBalance[0]=whiteBalance[1];
+		whiteBalance[1]=whiteBalance[3];
+		whiteBalance[3]=whiteBalance[2];
+		whiteBalance[2]=whiteBalance[1];
+		
+	}
 	for(let i=1; i<whiteBalance.length;i++){
 		if(whiteBalance[i]<min){
 			min=whiteBalance[i];
