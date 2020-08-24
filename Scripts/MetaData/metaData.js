@@ -60,6 +60,11 @@ function collectMetaData(){
 	//MakerNotes code
 	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
 	metaData.set("ModelID", getModelID(makerNoteOffset,metaData.get("ModelName"), metaData.get("SOF3").get("HSF")));
+	
+	if(!colorData.has(metaData.get("ModelID"))){
+		alert("Camera currently not supported");
+		return false;
+	}
 	console.log(metaData.get("ModelID"));
 	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
 	metaData.set("BlackLevel", getBlackLevel(metaData.get("ModelID")));

@@ -8,7 +8,9 @@ function readFile(file) {
 			if(checkIfCR2(bytes.slice(0,12))){
 				//The meta data from the file gets read and the relevant parts get displayed in the website
 				metaData=collectMetaData();
-				initialiseSiteUI();
+				if(metaData!=false){
+					initialiseSiteUI();
+				}
 			}else{
 				bytes=[];
 				alert("Please upload a .CR2 file");

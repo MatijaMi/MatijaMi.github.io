@@ -2,7 +2,6 @@
 function decompressValues(bits,mData){
 	//Needed data
 	var metaData=mData;
-	var sliceDimensions = metaData.get("Slices");
 	var sos = metaData.get("SOS");
 	var ht1 = metaData.get("HT1");
 	var ht2 = metaData.get("HT2");

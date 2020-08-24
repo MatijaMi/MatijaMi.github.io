@@ -11,7 +11,6 @@ onmessage=function(e){
 	//The values need to be decompressed first
 	var image =decompressValues(transformBytesToBits(e.data[0]),metaData);
 	//Applying the correct unslicing and post processing functions on the image
-	
 	if(metaData.get("Slices")[0]!=0){
 		switch(colorFormat){
 			case "drggb":
