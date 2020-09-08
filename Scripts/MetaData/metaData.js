@@ -14,6 +14,7 @@ function collectMetaData(){
 	
 	//Code for finding the EXIF Sub-IFD data
 	const exifOffset = findIFDTagValue(ifdZeroOffset,105,135,false,false);
+	
 	metaData.set("ExposureTime", findIFDTagValue(exifOffset,154,130,false,false));
 	metaData.set("fNumber", findIFDTagValue(exifOffset,157,130,false,false));
 	/*var if0len = bytes[ifdZeroOffset];
@@ -38,7 +39,6 @@ function collectMetaData(){
 	
 	const rawOffset = findIFDTagValue(ifdThreeOffset,17,1,false,false);
 	const rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
-	
 	metaData.set("RawLength", rawLength);
 	metaData.set("Slices", findIFDTagValue(ifdThreeOffset,64,198,true,false));
 	//Some images don't have the slice tag because they do not use a sliced image

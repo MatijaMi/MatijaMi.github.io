@@ -159,6 +159,9 @@ function interpolateFirstLine(image){
 				}
 			}
 		}
+		r=Math.round(r);
+		g=Math.round(g);
+		b=Math.round(b);
 		line.push(r,g,b);
 	}
 	return line;
@@ -192,6 +195,9 @@ function interpolateLastLine(image){
 				}
 			}
 		}
+		r=Math.round(r);
+		g=Math.round(g);
+		b=Math.round(b);
 		line.push(r,g,b);
 	}
 	return line;
@@ -232,6 +238,9 @@ function interpolateOddLine(image, j){
 				}
 			}
 		}
+		r=Math.round(r);
+		g=Math.round(g);
+		b=Math.round(b);
 		line.push(r,g,b);
 		
 	}
@@ -265,6 +274,9 @@ function interpolateEvenLine(image, j){
 				}
 			}
 		}
+		r=Math.round(r);
+		g=Math.round(g);
+		b=Math.round(b);
 		line.push(r,g,b);
 	}
 	return line;	

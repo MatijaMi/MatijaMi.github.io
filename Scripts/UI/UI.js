@@ -27,7 +27,7 @@ function initialiseDecodeUI(){
 	document.getElementById("bar").style="width:0.1%";
 	document.getElementById("bar").innerHTML="0.0%"
 	document.getElementById("pbText").innerHTML="Transforming bytes";
-	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB", "full"];
 	for(var i =0; i <modes.length; i++){
 		document.getElementById(modes[i]).disabled=true;
 	}
@@ -39,7 +39,7 @@ function showDecodeEndUI(){
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
 		document.getElementById("drgb").style="display:";
-		var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+		var modes = ["pure", "normal","whiteBal","demosaiced","sRGB","full"];
 		for(var i =0; i <modes.length; i++){
 			document.getElementById(modes[i]).disabled=false;
 		}
@@ -129,10 +129,7 @@ function initialiseSiteUI(){
 	
 		document.getElementById("pure").checked=true;
 		document.getElementById("cropMode").disabled=true;
-		cropMode=false;
-		document.getElementById("brightnessMode").disabled=true;
-		brightnessMode=false;
-		
+		cropMode=false;	
 }
 
 function setImage(data){

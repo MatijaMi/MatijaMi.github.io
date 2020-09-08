@@ -133,7 +133,7 @@ function getNumberOfEntries(nComponents,HSF,VSF){
 }
 
 function getDecodeMode(){
-	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB","full"];
 	for(var i =0; i <modes.length; i++){
 		if(document.getElementById(modes[i]).checked){
 			return i;
