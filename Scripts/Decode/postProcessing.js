@@ -71,20 +71,44 @@ function brightenImage(image){
 		for(var j=0; j <image[i].length;j+=3){
 			sumY=sumY+0.2126729*(image[i][j]/10000)+0.7151522*(image[i][j+1]/10000)+0.0721750 *(image[i][j+2]/10000);
 		}
-	}	
-	var mean= sumY/(image.length*image[0].length/9);
-	console.log("MEAN:" +mean);
-	var mul =1/mean;
+	}
+	
+	var meanBrightness= sumY/(image.length*image[0].length/9);
+	var brightnessMul= assingNewBrightness(meanBrightness)/meanBrightness;
 	
 	for(var i =0; i <image.length;i++){
 		var newRow =[];
 		for(var j=0; j <image[i].length;j++){
-			newRow.push(Math.min(Math.round(image[i][j]*mul),10000));
+			newRow.push(Math.min(Math.round(image[i][j]*brightnessMul),10000));
 		}
 		newImg.push(newRow);
 		progressBarUpdate(i,Math.floor(image.length/100),"Adjusting Brightness");
 	}	
 	return newImg;
+}
+
+function assingNewBrightness(meanBrightness){
+	if(meanBrightness<0.1){
+		return 0.2;
+	}else{
+		if(meanBrightness<0.15){
+			return 0.3;
+		}else{
+			if(meanBrightness<0.35){
+				return 0.6;
+			}else{
+				if(meanBrightness<0.65){
+					return 0.8;
+				}else{
+					if(meanBrightness<0.8){
+						return 0.9;
+					}else{
+						return 1;
+					}
+				}
+			}
+		}
+	}
 }
 
 function correctGamma(image){
