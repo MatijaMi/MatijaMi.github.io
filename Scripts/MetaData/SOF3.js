@@ -18,7 +18,8 @@ function getSOF3Data(sof3Offset){
 	sof3.set("NumberOfLines", numberOfLines);
 	sof3.set("SamplesPerLine", samplesPerLine);
 	sof3.set("ImageComponents", imageComponents);
-	//HSF and VSF are 4 bits each saved in one byte
+	/*HSF and VSF are 4 bits each saved in one byte,
+		there are 3 possible values */
 	if(samplingFactor==17){
 		sof3.set("HSF",1);
 		sof3.set("VSF",1);	

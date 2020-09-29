@@ -1,3 +1,5 @@
+/*	Map that contains the versions of the color data
+	in the makernote of the supported cameras */
 cdv =new Map();
 cdv.set("20D", 1);
 cdv.set("350D DIGITAL",  1);

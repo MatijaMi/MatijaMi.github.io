@@ -1,9 +1,11 @@
 //Functions to gather data from the SOS part
+
+//Get SOS Length in bytes
 function getSOSLength(sosOffset){
 	return bytes[sosOffset+2]*256 + bytes[sosOffset+3];
 }
 
-
+//Function to collect SOS data
 function getSOSData(sosOffset){
 	//Data is in constant positions relative to offset
 	let sosData = new Map();
@@ -18,6 +20,5 @@ function getSOSData(sosOffset){
 			sosData.set("DCAC" +i, 1);
 		}	
 	}
-	
 	return sosData;
 }

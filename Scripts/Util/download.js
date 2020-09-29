@@ -1,6 +1,4 @@
-/*	
-	Function to download the decompressed and processed image, either already in RGB 
-	Or as one of the CR2 formats (RGGB, YCbCr, YYYYCbCr)	*/
+/*	Function to download the decompressed and processed image*/
 function downloadProcessedImage(type){
 	let name = fileName+type+ ".json";
 	saveByteArray(downloadBytes,name);
@@ -9,13 +7,6 @@ function downloadProcessedImage(type){
 //Function to download the jpeg saved in the first image file directory of the CR2 file
 function downloadJpeg(){
 	let name =fileName +".jpg";
-	/*var newImg=[];
-	newImg.push("[");
-	for(var i =0; i <jpeqBytes.length;i+=2){
-		newImg.push(transformTwoBytes(jpeqBytes[i],jpeqBytes[i+1]));
-	}
-	newImg.push("]");
-	jpeqBytes=newImg;*/
 	let blob = new Blob([jpeqBytes], {type: "octet/stream"});
 	saveByteArray(blob, name);
 }
@@ -39,7 +30,7 @@ function downloadMetaData(){
 			}
 		}
 	}
-	var blob = new Blob([output], {type: "text/plain"});
+	let blob = new Blob([output], {type: "text/plain"});
 	saveByteArray(blob, name);
 }
 

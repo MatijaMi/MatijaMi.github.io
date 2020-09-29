@@ -7,7 +7,6 @@
 	G = Y - 1.377 * Cb - 2.869 * Cr 
 	B = Y + 7.080 * Cb + 0.025 * Cr
 	Assuming the our Cb and Cr values are equal to 0.25*Cb and 0.25*Cr */
-
 function convertToRGB(image,mode){ 
 	var newImg=[];
 	for(var i=0; i <image.length;i++){

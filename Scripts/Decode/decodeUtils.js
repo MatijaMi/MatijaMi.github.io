@@ -3,13 +3,14 @@
 	if it isn't it adds the next bit and checks again */
 function findNextValue(huffTable, previousValue,bits){
 	var currentCode=getNextBit(bits);
+	//Creare code until it is found in the huffman table
 	while(!huffTable.has(currentCode)){
 		currentCode=currentCode+getNextBit(bits);
 	}
 	//The next value is equal to the previous value + the difference value
 	return previousValue+getDifferenceValue(getNextBits(huffTable.get(currentCode),bits));
 }
-
+//Function to get next bit based on the pointer
 function getNextBit(bits){
 	var bit = bitPointer%8;
 	var byte= bits[(bitPointer-bit)/8];
@@ -26,7 +27,8 @@ function getNextBit(bits){
 	on the system used for difference values:
 	-The first bit represents the sign, 1 is minus and 0 plus
 	-If negative the value is equal to -1 + 2^lengthOfDifferenceCode+ bitsWithoutSign.toDecimal
-	-If positive the value is equal to 2^(lengthOfDifferenceCode-1)+ bitsWithoutSign.toDecimal */
+	-If positive the value is equal to 2^(lengthOfDifferenceCode-1)+ bitsWithoutSign.toDecimal 
+		In this implementation a combined equation is used	*/
 function getDifferenceValue(differenceBits){
 	if(differenceBits.length>1){//If zero then there is no difference
 		var firstBit = parseInt(differenceBits.charAt(0));
@@ -50,7 +52,7 @@ function getNextBits(n,bits){
 	}
 	return str;
 }
-
+//Adjust the previous values at the start of every new line in the picture
 function adjustPreviousValues(imageLines,i,nComponents,nOfFirst,oldPreviousValues){
 	var previousValues=[];
 		for(let comp=0; comp<nComponents;comp++){		
@@ -89,7 +91,7 @@ function setupHTS(sos,ht1,ht2,numberOfComponents){
 	}
 	return hts;
 }
-//Returns how the components and  how many of their parts are saved in the bits
+//Returns how the components and  how many of their repetitions are saved in the bits
 function setupComponentParts(HSF,VSF){
 	if(HSF==1){
 		var compParts=[1,1,1,1];
@@ -131,7 +133,7 @@ function getNumberOfEntries(nComponents,HSF,VSF){
 		}
 	}
 }
-
+//Returns numerical value equal to the seleceted decoding mode
 function getDecodeMode(){
 	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB","full"];
 	for(var i =0; i <modes.length; i++){

@@ -17,22 +17,6 @@ function collectMetaData(){
 	
 	metaData.set("ExposureTime", findIFDTagValue(exifOffset,154,130,false,false));
 	metaData.set("fNumber", findIFDTagValue(exifOffset,157,130,false,false));
-	/*var if0len = bytes[ifdZeroOffset];
-	var fb=bytes[ifdZeroOffset+2+12*(if0len)];
-	var sb=bytes[ifdZeroOffset+2+12*(if0len)+1];
-	var tb=bytes[ifdZeroOffset+2+12*(if0len)+2];
-	var fob=bytes[ifdZeroOffset+2+12*(if0len)+3];
-	var ifd0neOffset = transformFourBytes(fb,sb,tb,fob);
-	var thumbOffset=findIFDTagValue(ifd0neOffset,1,2,false,false);
-	var thumbLen=findIFDTagValue(ifd0neOffset,2,2,false,false);
-	//jpeqBytes=bytes.slice(thumbOffset,thumbOffset+thumbLen);
-	var ifdTwoOffset = transformFourBytes(bytes[ifd0neOffset+2+12*2],bytes[ifd0neOffset+2+12*2+1],bytes[ifd0neOffset+2+12*2+2],bytes[ifd0neOffset+2+12*2+3]);
-	var tiffWidth = findIFDTagValue(ifdTwoOffset,0,1,false,false);
-	var tiffHeight = findIFDTagValue(ifdTwoOffset,1,1,false,false);
-	console.log(tiffWidth,tiffHeight);
-	var tiffOffset = findIFDTagValue(ifdTwoOffset,17,1,false,false);
-	var tiffLen = findIFDTagValue(ifdTwoOffset,23,1,false,false);
-	jpeqBytes=bytes.slice(tiffOffset,tiffOffset+tiffLen);*/
 	//IFD3 Code
 	const ifdThreeOffset = transformFourBytes.apply(null,bytes.slice(12,16));
 	metaData.set("IFD3Offset", ifdThreeOffset);
@@ -41,6 +25,7 @@ function collectMetaData(){
 	const rawLength = findIFDTagValue(ifdThreeOffset,23,1,false,false);
 	metaData.set("RawLength", rawLength);
 	metaData.set("Slices", findIFDTagValue(ifdThreeOffset,64,198,true,false));
+	
 	//Some images don't have the slice tag because they do not use a sliced image
 	if(metaData.get("Slices").length==0){
 		metaData.set("Slices", [0]);
@@ -57,15 +42,16 @@ function collectMetaData(){
 	metaData.set("SOS", getSOSData(sosOffset));
 	metaData.set("RawBitOffset", sosOffset+getSOSLength(sosOffset)+2);
 	
-	//MakerNotes code
+	//MakerNote code
 	const makerNoteOffset = findIFDTagValue(exifOffset,124,146,false,false);
 	metaData.set("ModelID", getModelID(makerNoteOffset,metaData.get("ModelName"), metaData.get("SOF3").get("HSF")));
 	
-	if(!colorData.has(metaData.get("ModelID"))){
+	//If model isn't in the DNG data the camera isn't supported
+	if(!dngData.has(metaData.get("ModelID"))){
 		alert("Camera currently not supported");
 		return false;
 	}
-	console.log(metaData.get("ModelID"));
+	
 	metaData.set("WhiteBalance", getWhiteBalance(makerNoteOffset,metaData.get("ModelName")));
 	metaData.set("BlackLevel", getBlackLevel(metaData.get("ModelID")));
 	metaData.set("WhiteLevel", getWhiteLevel(metaData.get("ModelID")));
@@ -73,7 +59,6 @@ function collectMetaData(){
 	metaData.set("colorSpace", findIFDTagValue(makerNoteOffset,180,0,false,false));//sRGB=1 AdobeRGB=2
 	metaData.set("SensorInfo", getSensorInfo(makerNoteOffset));
 		
-	
 	//Removing the bytes of the file that are not part of the pure raw bytes
 	bytes=bytes.slice(metaData.get("RawBitOffset"));
 	

@@ -2,10 +2,10 @@ self.importScripts('../Decode/decompress.js','../Decode/decodeUtils.js','../Deco
 self.importScripts('../Util/byteTransformations.js','../Decode/interpolations.js','../Decode/colorConversion.js','../Decode/postProcessing.js','../Util/matrixFunctions.js');
 
 onmessage=function(e){
-	var metaData = e.data[1];
+	var metaData = e.data[1]; //Collected metaData
 	var colorFormat =e.data[2];//Either rggb, yycc or yyyycc
-	var decodeMode = e.data[3];
-	var cropMode = e.data[4];
+	var decodeMode = e.data[3];// How much processing is wanted
+	var cropMode = e.data[4];//To be cropped of not
 	//The values need to be decompressed first
 	var image =decompressValues(transformBytesToBits(e.data[0]),metaData);
 	//Applying the correct unslicing and post processing functions on the image
@@ -14,42 +14,43 @@ onmessage=function(e){
 			case "drggb":
 				image = unsliceRGGB(image,metaData);
 				if(isGRBG(image)){
-					image.shift();//Remove first line
+					image.shift();//Remove first line if it's a GRBG CFA, in order toget an RGGB CFA
 				}
 				break;
 			case "dyycc":
-				image = interpolateYCC(unsliceYCbCr(image,metaData));
-				image = convertToRGB(image,"YYCC");
+				image = interpolateYCC(unsliceYCbCr(image,metaData));//Interpolation
+				image = convertToRGB(image,"YYCC");//Conversion to RGB
 				break;
 			case "dyyyycc":
-				image = interpolateYYYYCbCr(unsliceYYYYCbCr(image,metaData));
-				image = convertToRGB(image,"YYYYCC");
+				image = interpolateYYYYCbCr(unsliceYYYYCbCr(image,metaData));//Interpolation
+				image = convertToRGB(image,"YYYYCC");//Conversion to RGB
 				break;
 		}
 	}
-	if(decodeMode>0){
+	if(decodeMode>0){//Normalized Color
 		image=normalizeImage(image,metaData);
 	}
-	if(decodeMode>1){
+	if(decodeMode>1){//White-Balancing
 		image=applyWhiteBalance(image,metaData);
 	}
-	if(decodeMode>2 && colorFormat.includes("drggb")){
+	if(decodeMode>2 && colorFormat.includes("drggb")){//Demosaicing
 		image=bayerInterpolation(image);
 	}
-	if(cropMode){
+	if(cropMode){//Crop
 		image=cropImage(image,metaData);
 	}
-	if(decodeMode>3){
+	if(decodeMode>3){//Color Conversion
 		image=convertTosRGB(image,metaData);
 	}
-	if(decodeMode>4){
+	if(decodeMode>4){//Brightness and Gamma correction
 		image=brightenImage(image);
 		image=correctGamma(image);
 	}
 	
 	postMessage(["DL"]);
+	//Transform data to JSON File
 	var blob = new Blob( [JSON.stringify(image)], {type: "octet/stream"});
-	postMessage(["RES",blob]);
+	postMessage(["RES",blob]);//Send data to main thread
 	
-	self.close();
+	self.close();// Close the worker
 }

@@ -5,11 +5,11 @@ function readFile(file) {
 		//Once the .cr2 file has been read it gets saved as a byte array(==Uint8Array)
 		reader.onload = function(){
 			bytes = new Uint8Array(reader.result);
-			if(checkIfCR2(bytes.slice(0,12))){
+			if(checkIfCR2(bytes.slice(0,12))){// Verification that file is .CR2
 				//The meta data from the file gets read and the relevant parts get displayed in the website
-				metaData=collectMetaData();
+				metaData=collectMetaData();//Collect metadata
 				if(metaData!=false){
-					initialiseSiteUI();
+					initialiseSiteUI();//Start decoder UI
 				}
 			}else{
 				bytes=[];

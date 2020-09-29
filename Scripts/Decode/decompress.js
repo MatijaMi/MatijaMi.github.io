@@ -1,4 +1,4 @@
-/* Given the meta data decompressed the raw bytes to the actual values*/
+/* Given the meta data decompresses the raw bytes to the actual values*/
 function decompressValues(bits,mData){
 	//Needed data
 	var metaData=mData;

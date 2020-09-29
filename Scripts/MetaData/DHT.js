@@ -4,7 +4,7 @@ function getDHTLength(rawOffset){
 	return bytes[rawOffset+4]*256 + bytes[rawOffset+5];
 }
 
-
+//Function that decodes the Huffman Tables
 function getDecodedHTs(rawOffset, length){
 	
 	//Actual data needed comes 6 Bytes after the raw offset
@@ -47,15 +47,12 @@ function decodeHuffmanTree(frequencies, values){
 			for(let j = 0; j< frequencies[i]; j++){
 				codes.push(numberToBitString(j+minimumValue[i],i+1));
 			}
-		}
-		
+		}	
 	}
-	
 	var huffmanTable = new Map();
 	//Mapping the values to the corresponding codes
 	for(let i =0; i < values.length; i++){
 		huffmanTable.set(codes[i],values[i]);
 	}
-	
 	return huffmanTable;
 }

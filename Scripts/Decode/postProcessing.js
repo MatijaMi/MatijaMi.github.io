@@ -1,3 +1,5 @@
+/* 	Function that normalizes the colors to the [0,1] interval 
+	and sets the white/black levels */
 function normalizeImage(image,metaData){
 	var newImg =[];
 	var blackLevel = metaData.get("BlackLevel");
@@ -64,6 +66,7 @@ function convertTosRGB(image, metaData){
 	return newImg;	
 }
 
+/* Brightness correction function based on relative luminance */
 function brightenImage(image){
 	var newImg =[];
 	var sumY=0;
@@ -87,6 +90,7 @@ function brightenImage(image){
 	return newImg;
 }
 
+//Function that decides the new brightness for the image
 function assingNewBrightness(meanBrightness){
 	if(meanBrightness<0.1){
 		return 0.2;
@@ -111,6 +115,7 @@ function assingNewBrightness(meanBrightness){
 	}
 }
 
+// Gammacorrection function based on the formula for sRGB
 function correctGamma(image){
 	var newImg = [];
 	for(var i =0; i <image.length;i++){
@@ -169,25 +174,28 @@ function arrayTo3x3(arr){
 	return mat;
 }
 
-
+/* Takes the White-Balance values from the metadata
+	and creates the ratios needed for multiplication */
 function getWhiteBalanceRatios(whiteBalance){
 	var min = whiteBalance[0];
 	if(min==0){
 		return [1,1,1,1];
 	}
-	if(whiteBalance[0]==whiteBalance[3]){
+	if(whiteBalance[0]==whiteBalance[3]){//GRBG case can happen, ends up being rearranged to RGGB
 		whiteBalance[0]=whiteBalance[1];
 		whiteBalance[1]=whiteBalance[3];
 		whiteBalance[3]=whiteBalance[2];
 		whiteBalance[2]=whiteBalance[1];
 		
 	}
+	//Find minimum
 	for(let i=1; i<whiteBalance.length;i++){
 		if(whiteBalance[i]<min){
 			min=whiteBalance[i];
 		}
 	}
 	var ratios=[];
+	//Calcualte ratios
 	for(let i=0; i<whiteBalance.length;i++){
 		if(i!=2){
 			ratios.push(whiteBalance[i]/min);

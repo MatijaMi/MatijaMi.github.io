@@ -2,7 +2,7 @@
 function findIFDTagValue(ifdOffset,tagID1, tagID2, isOffsetToValue, isValueString){
 	var ifdLength = transformTwoBytes(bytes[ifdOffset],bytes[ifdOffset+1]);
 	
-	//IFDEntryFormat /2 Bytes Tag - 2 Bytes Type - 4 Bytes Length - 4 Bytes Value
+	//IFDEntryFormat /2 Bytes Tag - 2 Bytes Type - 4 Bytes Length - 4 Bytes Value/Offset
 	var tag = findIFDEntry(ifdOffset, ifdLength,tagID1,tagID2);
 	var offsetValue = transformFourBytes.apply(null,tag.slice(8,12));
 	var valueLength = transformFourBytes.apply(null,tag.slice(4,8))
@@ -39,12 +39,10 @@ function findIFDEntry(ifdOffset, ifdLength, ID1, ID2){
 function findValue(valueOffset, valueLength, isValueString){
 	//If the value is a string it just concatinates all the the chars
 	if(isValueString){
-	var value = "";
-	
-	for(let i =0; i< valueLength; i++){
-		value= value + String.fromCharCode(bytes[valueOffset+i]);
-	}
-		
+		var value = "";
+		for(let i =0; i< valueLength; i++){
+			value= value + String.fromCharCode(bytes[valueOffset+i]);
+		}	
 	}else{
 		//If the value is multiple values, they get saved into an array
 		var value = [];

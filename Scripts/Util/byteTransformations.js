@@ -1,5 +1,5 @@
-//Takes two bytes a and b and returns the value the binary string b-a would have
-//Fix for endianess
+/*	Takes two bytes a and b and returns the value the binary string b-a
+would have, fix for endianess*/
 function transformTwoBytes(byte1, byte2){
 	//Effectively a bit shift and addition
 	return byte1 + (byte2<<8);
@@ -11,14 +11,13 @@ function transformTwoBytes(byte1, byte2){
 	return byte1 + (byte2<<8) + (byte3<<16) + (byte4<<24);
 }
 
-//Function to correct the length of Huffman Code in order to get a valid code
+//Function to correct the length of a Huffman Code in order to get a valid code
 function numberToBitString(number, bitCount){
 	return ("00000000" +number.toString(2)).substr(-bitCount);
 }
 
 /*	Transforming all of the bytes into an array of bytes represented in bits
-	for easier decoding, changes to this function are possible, maybe even completely deleting it
-	if a better solution is found */
+	for easier decoding */
 function transformBytesToBits(data){
 	let bits =[];
 	for(let i =0; i <data.length;i++){

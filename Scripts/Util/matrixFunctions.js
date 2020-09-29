@@ -1,11 +1,14 @@
+/*	Script that contains all necessary matrix functions,
+	optimized for cases they will be used in	*/
+
 //Matrix multiplication
 function matrixMul(mat1,mat2){
 	var output=[];
-	for(var i =0; i<mat1.length;i++){
+	for(let i =0; i<mat1.length;i++){
 		var row=[];
-		for(var j =0; j< mat2[0].length;j++){
+		for(let j =0; j< mat2[0].length;j++){
 			var col =[];
-			for(var k =0;k<mat2.length;k++){
+			for(let k =0;k<mat2.length;k++){
 				col.push(mat2[k][j]);
 			}
 			row.push(dotProd(mat1[i],col));
@@ -19,7 +22,7 @@ function matrixMul(mat1,mat2){
 function dotProd(arr1,arr2){
 	var product=0;
 	if(arr1.length==arr2.length){
-		for(var i =0; i <arr1.length;i++){
+		for(let i =0; i <arr1.length;i++){
 			product+=arr1[i]*arr2[i];
 		}
 	}
@@ -27,12 +30,12 @@ function dotProd(arr1,arr2){
 }
 //Normalizes the values in the rows of a matrix so that the sum of the row is 1
 function matrixNormalize(mat){
-	for(var i =0; i <mat.length;i++){
+	for(let i =0; i <mat.length;i++){
 		var sum=0;
-		for(var j=0;j<mat[i].length;j++){
+		for(let j=0;j<mat[i].length;j++){
 			sum+=mat[i][j];
 		}
-		for(var j=0;j<mat[i].length;j++){
+		for(let j=0;j<mat[i].length;j++){
 			mat[i][j]=mat[i][j]/sum;
 		}
 	}
@@ -47,8 +50,8 @@ function invert3x3(mat){
 //Calculates the matrix of minors
 function matrixOfMinors(mat){
 	var mom =[[0,0,0],[0,0,0],[0,0,0]];
-	for(var i =0; i <mat.length;i++){
-		for(var j=0; j<mat[i].length;j++){
+	for(let i =0; i <mat.length;i++){
+		for(let j=0; j<mat[i].length;j++){
 			mom[i][j]=determinant2x2(getNotCrossedOut(mat,i,j));
 		}
 	}
@@ -76,8 +79,8 @@ function toCofactor3x3(mat){
 //Matrix transposing
 function transpose(mat){
 	var tmat=[[0,0,0],[0,0,0],[0,0,0]];
-	for(var i =0; i <mat.length;i++){
-		for(var j=0; j<mat[i].length;j++){
+	for(let i =0; i <mat.length;i++){
+		for(let j=0; j<mat[i].length;j++){
 			tmat[j][i]=mat[i][j];
 		}
 	}
@@ -85,8 +88,8 @@ function transpose(mat){
 }
 //Simple scalar multiplication
 function scalarMul(scal, mat){
-	for(var i =0; i <mat.length;i++){
-		for(var j=0; j<mat[i].length;j++){
+	for(let i =0; i <mat.length;i++){
+		for(let j=0; j<mat[i].length;j++){
 			mat[i][j]=mat[i][j]*scal;
 		}
 	}
@@ -97,9 +100,9 @@ function scalarMul(scal, mat){
 	matrix that aren't in a specific row or column */
 function getNotCrossedOut(mat,crossi,crossj){
 	var notCrossed =[];
-	for(var i =0; i <mat.length;i++){
+	for(let i =0; i <mat.length;i++){
 		if(i!=crossi){
-			for(var j=0; j<mat[i].length;j++){
+			for(let j=0; j<mat[i].length;j++){
 				if(j!=crossj){
 					notCrossed.push(mat[i][j]);
 				}

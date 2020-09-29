@@ -1,6 +1,6 @@
-/*	Function that disables the other buttons during decoding 
+/*	Function that disables/enables the other buttons during/after decoding 
 	True=On False=Off	*/
-function changeButtonState(state){//TO DO Disable checkboxes
+function changeButtonState(state){
 	let elems = document.getElementsByClassName("mainButtons");
 	let color,cursor,textCol;
 	if(state){
@@ -27,8 +27,8 @@ function initialiseDecodeUI(){
 	document.getElementById("bar").style="width:0.1%";
 	document.getElementById("bar").innerHTML="0.0%"
 	document.getElementById("pbText").innerHTML="Transforming bytes";
-	var modes = ["pure", "normal","whiteBal","demosaiced","sRGB", "full"];
-	for(var i =0; i <modes.length; i++){
+	let modes = ["pure", "normal","whiteBal","demosaiced","sRGB", "full"];
+	for(let i =0; i <modes.length; i++){
 		document.getElementById(modes[i]).disabled=true;
 	}
 	changeButtonState(false);
@@ -39,8 +39,8 @@ function showDecodeEndUI(){
 		document.getElementById("pbText").innerHTML="";
 		document.getElementById("loading").style="display:none"
 		document.getElementById("drgb").style="display:";
-		var modes = ["pure", "normal","whiteBal","demosaiced","sRGB","full"];
-		for(var i =0; i <modes.length; i++){
+		let modes = ["pure", "normal","whiteBal","demosaiced","sRGB","full"];
+		for(let i =0; i <modes.length; i++){
 			document.getElementById(modes[i]).disabled=false;
 		}
 		changeButtonState(true);
@@ -64,32 +64,30 @@ function startLoadingAnimation(){
 /* Showing the most user relevant parts of the meta data to the user */
 function initialiseSiteUI(){
 		//Reset radio buttons
-		var modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
-		for(var i =0; i <modes.length; i++){
+		let modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+		for(let i =0; i <modes.length; i++){
 			document.getElementById(modes[i]).disabled=false;
 		}
-		var output =[];
-		var sof3=metaData.get("SOF3");
-		var slices=metaData.get("Slices");
+		let output =[];
+		let sof3=metaData.get("SOF3");
+		let slices=metaData.get("Slices");
 	
-		var canonFormat;
+		let canonFormat;
 		switch(sof3.get("HSF")*sof3.get("VSF")){
 			case 1:
 				canonFormat="RAW";
-				var width = (slices[0]*slices[1]+slices[2]);
 				break;
 			case 2:
 				canonFormat="sRAW";
-				var width = (slices[0]*slices[1]+slices[2])/2;
 				document.getElementById("demosaiced").disabled=true;
 				break;
 			case 4:
 				canonFormat="mRAW";
-				var width = (slices[0]*slices[1]+slices[2])/3;
 				document.getElementById("demosaiced").disabled=true;
 				break;
 		}
-	
+		let width =metaData.get("SensorInfo")[0];
+		let height =metaData.get("SensorInfo")[1];
 		output.push("<p><b>Camera Model: </b><br>" + metaData.get("ModelName"));
 		output.push("<p><b>Size of Raw: </b><br>" + (metaData.get("RawLength")/(1024*1024)).toFixed(2) +" MB");
 		output.push("<p><b>Dimensions: </b><br>" +width+"x"+sof3.get("NumberOfLines"));
@@ -126,16 +124,17 @@ function initialiseSiteUI(){
 		for(let i =0; i <elems.length;i++){
 			elems[i].checked=false;
 		}
-	
+		//Set base values for these fields
 		document.getElementById("pure").checked=true;
 		document.getElementById("cropMode").disabled=true;
 		cropMode=false;	
 }
 
+//Function that sets the JPEG image in the center of the UI
 function setImage(data){
-	var blob = new Blob([data], {type: 'image/jpeg'});
+	let blob = new Blob([data], {type: 'image/jpeg'});
 	// Use createObjectURL to make a URL for the blob
-	var image = new Image();
+	let image = new Image();
 	image.src = URL.createObjectURL(blob);
 	image.style.width="90%";
 	image.style.border="1px solid black"
