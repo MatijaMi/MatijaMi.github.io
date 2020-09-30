@@ -31,6 +31,7 @@ function initialiseDecodeUI(){
 	for(let i =0; i <modes.length; i++){
 		document.getElementById(modes[i]).disabled=true;
 	}
+	document.getElementById("cropMode").disabled=true;
 	changeButtonState(false);
 }
 /*Shows the UI for a completed decode */
@@ -43,6 +44,7 @@ function showDecodeEndUI(){
 		for(let i =0; i <modes.length; i++){
 			document.getElementById(modes[i]).disabled=false;
 		}
+		document.getElementById("cropMode").disabled=false;
 		changeButtonState(true);
 }
 /*Updating the progress bar with appropriate text and width */
@@ -64,10 +66,11 @@ function startLoadingAnimation(){
 /* Showing the most user relevant parts of the meta data to the user */
 function initialiseSiteUI(){
 		//Reset radio buttons
-		let modes = ["pure", "normal","whiteBal","demosaiced","sRGB"];
+		let modes = ["pure", "normal","whiteBal","demosaiced","sRGB","full"];
 		for(let i =0; i <modes.length; i++){
 			document.getElementById(modes[i]).disabled=false;
 		}
+		document.getElementById("cropMode").disabled=false;
 		let output =[];
 		let sof3=metaData.get("SOF3");
 		let slices=metaData.get("Slices");
@@ -126,7 +129,7 @@ function initialiseSiteUI(){
 		}
 		//Set base values for these fields
 		document.getElementById("pure").checked=true;
-		document.getElementById("cropMode").disabled=true;
+		document.getElementById("cropMode").checked=false;
 		cropMode=false;	
 }
 

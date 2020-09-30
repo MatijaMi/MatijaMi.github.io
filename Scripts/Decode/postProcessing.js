@@ -140,11 +140,16 @@ function correctGamma(image){
 	outside of the sensor borders */
 function cropImage(image,metaData){
 	let newImg=[];
+	let mul=1;
 	let sensorBorders =metaData.get("SensorInfo");
-	let x0 = sensorBorders[2]*3;
+	let hsf = metaData.get("SOF3").get("HSF");
+	if(hsf>1){
+		mul=3;
+	}
 	let y0 = sensorBorders[3];
 	let height = sensorBorders[5];
-	let width = sensorBorders[4]*3;
+	let x0 = sensorBorders[2]*mul;
+	let width = sensorBorders[4]*mul;
 	for(let i =y0; i <height;i++){
 		newImg.push(image[i].slice(x0,width));
 	}

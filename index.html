@@ -90,23 +90,23 @@
 					<u>Decode Levels</u>
 					<br><br>
 					<label for="pure">Sensor</label>
-					<input type="radio" id="pure" name="decodeMode" value="pure" checked onclick="disableAdOptions()"><br>
+					<input type="radio" id="pure" name="decodeMode" value="pure" checked><br>
 					
 					<label for="normal">Normalized</label>
-					<input type="radio" id="normal" name="decodeMode" value="normal" onclick="disableAdOptions()"><br>
+					<input type="radio" id="normal" name="decodeMode" value="normal"><br>
 					
 					<label for="whiteBal">White Balanced </label>
-					<input type="radio" id="whiteBal" name="decodeMode" value="whiteBal" onclick="disableAdOptions()"><br>
+					<input type="radio" id="whiteBal" name="decodeMode" value="whiteBal"><br>
 					
 					<label for="demosaiced">Demosaiced</label>
-					<input type="radio" id="demosaiced" name="decodeMode" value="demosaiced" onclick="enableAdOptions()"><br>
+					<input type="radio" id="demosaiced" name="decodeMode" value="demosaiced"><br>
 					
 					<label for="sRGB">sRGB</label>
-					<input type="radio" id="sRGB" name="decodeMode" value="sRGB" onclick="enableAdOptions()">
+					<input type="radio" id="sRGB" name="decodeMode" value="sRGB">
 					<br>
 					
 					<label for="full">Fully Processed</label>
-					<input type="radio" id="full" name="decodeMode" value="full" onclick="enableAdOptions()">
+					<input type="radio" id="full" name="decodeMode" value="full">
 					<br><br>
 					
 					<u>Additional Options</u><br><br>
@@ -152,15 +152,6 @@
 			
 			function changeCropMode(){
 				cropMode=!cropMode;
-			}
-			
-			function disableAdOptions(){
-				document.getElementById("cropMode").checked=false;
-				document.getElementById("cropMode").disabled=true;
-				cropMode=false;
-			}
-			function enableAdOptions(){
-				document.getElementById("cropMode").disabled=false;
 			}
 			
 		</script>
