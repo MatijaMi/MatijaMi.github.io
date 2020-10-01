@@ -21,7 +21,7 @@ function decodeImage(rgb){
 		Worker is already initialised with the site to allow termination at any point */	
 	w.postMessage([bytes,metaData,colorFormat,decodeMode,cropMode]);
 	
-	//React to messages from worker
+	//React to messages from the worker
 	w.onmessage=function(e){
 		switch(e.data[0]){
 			case "RES"://RES = Result
