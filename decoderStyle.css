@@ -88,6 +88,10 @@
 	line-height: 1.6;
 }
 
+.intro a {
+	color:black;
+}
+
 .image{
 	margin-bottom: 30px;
 	

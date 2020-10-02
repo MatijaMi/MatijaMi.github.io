@@ -77,6 +77,10 @@ body{
 	padding-right: 30px;
 }
 
+.textContent p a{
+	color:black;
+}
+
 .textContent li{
 	text-align: left;
 }
